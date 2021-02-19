@@ -128,7 +128,7 @@ function getReadableMove(payloadObj){
 function getReadableAccuse(payloadObj){
     var player = payloadObj['player'];
     var weapon = payloadObj['weapon'];
-    var location = payloadObj['location'];
+    var location = payloadObj['room'];
     return "Accuse player " + player + " of using the " + weapon + " in " + location;
 }
 
@@ -136,7 +136,7 @@ function getReadableAccuse(payloadObj){
 function getReadableSuggest(payloadObj){
     var player = payloadObj['player'];
     var weapon = payloadObj['weapon'];
-    var location = payloadObj['location'];
+    var location = payloadObj['room'];
    return `Suggest player ${player} of using the ${weapon} in ${location}`;
 }
 
