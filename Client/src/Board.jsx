@@ -7,6 +7,8 @@ class Board extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            x: 0,
+            y: 0,
             //this sets up an empty board
             //"+"" represenets an empty square, "b" is a black stone and "w" is a white stone
             'grid': Array(19).fill().map(x => Array(19).fill("+"))
@@ -20,6 +22,13 @@ class Board extends React.Component {
     handleReset() {
         let newGrid = Array(19).fill().map(x => Array(19).fill("+"));
         this.setState({ 'grid': newGrid });
+    }
+
+    async componentWillReceiveProps(nextProps) {
+        console.log(nextProps);
+        this.handleClick(nextProps.x, nextProps.y);
+        await this.setState({ x: nextProps.x, y: nextProps.y });
+
     }
 
     handleClick(x, y) {
