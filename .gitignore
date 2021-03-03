@@ -6,6 +6,10 @@ __pycache__/
 # C extensions
 *.so
 
+# React / Node Modules
+UI/build
+UI/node_modules
+
 # Distribution / packaging
 .Python
 build/
