@@ -1,5 +1,6 @@
 import mongoengine
 import logging
+from datetime import datetime
 
 from mongoengine import (
     register_connection, connect, disconnect, 
@@ -28,6 +29,7 @@ from mongoengine.connection import ConnectionFailure
     References: 
         *** https://cheatography.com/amicheletti/cheat-sheets/mongoengine
         *** http://docs.mongoengine.org
+        *** https://docs.mongoengine.org/apireference.html
         *** https://github.com/MongoEngine/mongoengine/tree/master/mongoengine 
 """
 
@@ -48,7 +50,7 @@ class DBOperationsHandler:
         super().__init__()
         self.db_server = 'localhost'
         self.db_port = 27017
-        self.db_name = 'test'
+        self.db_name = 'cluelite'
         self.db_status = DB_NEW_CONNECTION
 
     def conn(self, alias=None):
@@ -132,32 +134,53 @@ class Users(Document):
     Users documents to hold user related information: email, username, firstName, and lastName
     """
     email = EmailField(required=True, unique=True, default=None)
-    username = StringField(max_length=50, required=False, default=None)
+    username = StringField(max_length=50, unique=True, required=False, default=None)
     firstName = StringField(max_length=50, required=False, default=None)
     lastName = StringField(max_length=50, required=False, default=None)
+    created = DateTimeField(required=True, default=datetime.now())
+    updated = DateTimeField(required=False, default=None)
+    status = StringField(required=True, default='active')
 
-    meta = {"db_alias": "users-db", 'collection':'users'}
+    meta = {
+        "db_alias": "users-db", 
+        'collection':'users',
+        'auto_create_index': True,
+        'index_background': True,
+        'indexes': [ #Add #for hashed indexes and $ for text indexes. Note hased indexes do not support multi-key (i.e. arrays) indexes.
+            {
+                'name': 'properties',
+                'fields': ('status', 'created', 'updated')
+            },
+            {
+                'name': 'full_name',
+                'fields': ('firstName', 'lastName')
+            },
+            {
+                'name': 'identifiers',
+                'fields': ('email', 'username'),
+                'unique': True
+            }
+        ]
+    }
 
 class Weapons(DynamicDocument):
     """
     TO_DO: Define layout of the collection
     """
-
 class Characters(Document):
     """
     TO_DO: Define layout of the collection
     """
-
 """
 Testing calls for DBOperationsHandler() and its methods
 """
-newDocument = {'email': 'hatakora@alarm.com', 'username': 'newhatakora', 'firstName': 'hamdy', 'lastName': 'newatakora'}
-filter = {'email':'hatakora@alarm.com'}
+newDocument = {'updated':datetime.now()}
+filter = {'email': 'hatakora@alarm.com'}
 
 object = DBOperationsHandler()
-object.conn('users-db')
-object.disconn('users-db')
-object.insert_document(Users, newDocument)
-object.update_document(Users, newDocument,filter)
-object.get_document(Users, filter)
-object.delete_document(Users, filter)
+# object.conn('users-db')
+# object.disconn('users-db')
+# object.insert_document(Users, newDocument)
+# object.update_document(Users, newDocument,filter)
+# object.get_document(Users, filter)
+# object.delete_document(Users, filter)
