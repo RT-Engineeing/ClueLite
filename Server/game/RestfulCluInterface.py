@@ -64,7 +64,7 @@ def adduser():
             board = gamestate.getGameBoard()
             board[player.getLocation()[0]][player.getLocation()[1]][0] = len(playerarray)
             gamestate.setGameBoard(board)
-            return jsonify({"result":"success"})      
+            return jsonify({"result":"success", "playernum":gamestate.numofplayers})      
         #for the time being we will have a default of 4 players
     else:
         return jsonify({'result': 'Error'})
@@ -118,6 +118,16 @@ def Accuse():
         return jsonify({'you sent': some_json})
     else:
         return jsonify({'result': 'Error'})
+@app.route('/Endturn', methods=['POST'])
+def EndTurn():
+    if(request.method == 'POST'):
+        some_json = request.get_json()
+        planernum = some_json["playernum"]
+        #will need to add validation for the playernum 
+        if(gamestate.getPlayerturn() == 4):
+            gamestate.setPlayerturn = 1
+        else:
+            gamestate.setPlayerturn(gamestate.getPlayerturn + 1)
 
 if __name__ == "__main__":
     app.run(debug=True)
