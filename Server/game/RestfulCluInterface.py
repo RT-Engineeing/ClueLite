@@ -15,7 +15,7 @@ characselectdeck = ["Miss Scarlet", "Mrs. White", "Mrs. Peacock", "Professor Plu
 weapondeck = weapdeck(["Rope", "Lead Pipe", "Knife", "Wrench", "Candlestick", "Revolver"])
 totaldeck = ["Miss Scarlet", "Mrs. White", "Mrs. Peacock", "Professor Plum", "Mr.Green", "Colonel Mustard", "Rope", "Lead Pipe", "Knife", "Wrench", "Candlestick", "Revolver", "Kitchen", "Conservatory", "Dining Room", "Ballroom", "Study Hall", "Lounge", "Library", "Billiard Room"]
 playerarray = []
-gamestate = GameState(0, 0, False, [[0,0,0,0,0],[0,99,0,99,0],[0,0,0,0,0],[0,99,0,99,0],[0,0,0,0,0]], False)
+gamestate = GameState(0, 0, False, [[[0,0,0,0,0,0],[0],[0,0,0,0,0,0],[0],[0,0,0,0,0,0]],[[0],[99],[0],[99],[0]],[[0,0,0,0,0,0],[0],[0,0,0,0,0,0],[0],[0,0,0,0,0,0]],[[0],[99],[0],[99],[0]],[[0,0,0,0,0,0],[0],[0,0,0,0,0,0],[0],[0,0,0,0,0,0]]], False)
 @app.route('/signup', methods=['POST'])
 def adduser():
     #adds playersd 
@@ -62,7 +62,7 @@ def adduser():
             if (len(playerarray) > 4):
                 return jsonify({"result":"Maximum number of players"})
             board = gamestate.getGameBoard()
-            board[player.getLocation()[0]][player.getLocation()[1]] = len(playerarray)
+            board[player.getLocation()[0]][player.getLocation()[1]][0] = len(playerarray)
             gamestate.setGameBoard(board)
             return jsonify({"result":"success"})      
         #for the time being we will have a default of 4 players
@@ -86,7 +86,20 @@ def hello():
 def Move():
     if (request.method == 'POST'):
         some_json = request.get_json()
-        return jsonify({'you sent': some_json})
+        character = some_json["character"]
+        xcoordinate = some_json["x"]
+        ycoordinate = some_json["y"]
+        newLocation = [xcoordinate, ycoordinate]
+        count = 1 
+        for x in playerarray:
+            if(x.getCharacter() == character):
+                oldLocation = x.getLocation()
+                board = gamestate.getGameBoard()
+                board[oldLocation[0]][oldLocation[1]][0] = 0
+                board[newLocation[0]][newLocation[1]][0] = count
+                x.setLocation(newLocation) 
+            count+=1
+        return jsonify({'result': 'success'})
     else:
         return jsonify({'result': 'Error'})
 
