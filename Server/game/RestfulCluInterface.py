@@ -107,15 +107,55 @@ def Move():
 def Suggest():
     if (request.method == 'POST'):
         some_json = request.get_json()
-        return jsonify({'you sent': some_json})
+        weapon = some_json["weapon"]
+        suspect = some_json["suspect"]
+        character = some_json["character"]
+        xcoordinate = some_json["x"]
+        ycoordinate = some_json["y"]
+        newLocation = [xcoordinate, ycoordinate]
+        count = 1 
+        for x in playerarray:
+            if(x.getCharacter() == character):
+                oldLocation = x.getLocation()
+                board = gamestate.getGameBoard()
+                board[oldLocation[0]][oldLocation[1]][0] = 0
+                board[newLocation[0]][newLocation[1]][0] = count
+                x.setLocation(newLocation)
+                message = "{0} suggest that the murder was committed by {1} in the {2} with a {3}".format(
+                    x.getCharacter, 
+                    suspect,
+                    newLocation,
+                    weapon)
+            count+=1
+        return jsonify(result='success', message=message)
     else:
-        return jsonify({'result': 'Error'})
+        return jsonify(result='error')
 
 @app.route('/Accusation', methods=['POST'])
 def Accuse():
     if (request.method == 'POST'):
         some_json = request.get_json()
-        return jsonify({'you sent': some_json})
+        weapon = some_json["weapon"]
+        suspect = some_json["suspect"]
+        character = some_json["character"]
+        xcoordinate = some_json["x"]
+        ycoordinate = some_json["y"]
+        newLocation = [xcoordinate, ycoordinate]
+        count = 1 
+        for x in playerarray:
+            if(x.getCharacter() == character):
+                oldLocation = x.getLocation()
+                board = gamestate.getGameBoard()
+                board[oldLocation[0]][oldLocation[1]][0] = 0
+                board[newLocation[0]][newLocation[1]][0] = count
+                x.setLocation(newLocation)
+                message = "{0} has made the accusation that the murder was committed by {1} in the {2} with a {3}".format(
+                    x.getCharacter, 
+                    suspect,
+                    newLocation,
+                    weapon)
+            count+=1
+        return jsonify(result='success', message=message)
     else:
         return jsonify({'result': 'Error'})
 
