@@ -157,7 +157,7 @@ def Accuse():
             count+=1
         return jsonify(result='success', message=message)
     else:
-        return jsonify({'result': 'Error'})
+        return jsonify(result= 'error')
 
 if __name__ == "__main__":
     app.run(debug=True)
