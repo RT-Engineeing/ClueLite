@@ -9,16 +9,17 @@
  */
 
 //If you're going to add a new action, add it to this array
-let actions = ["move", "accuse", "suggest"];
+let actions = ["signup", "move", "accuse", "suggest"];
 
 let baseUrl = "http://localhost:5000";
 
 //Add the required parameters for the actions to this array,
 //the selector/input fields will auto populate from this data
 let requiredParameters = {
+    "signup": ["playername", "character"],
     "move" : ["character", "playername", "x", "y"],
-    "accuse" : ["player", "room", "weapon"],
-    "suggest" : ["player", "room", "weapon"]
+    "accuse" : ["suspect", "room", "weapon", "character"],
+    "suggest" : ["suspect", "x", "y", "room", "weapon", "character"]
 }
 
 //Generates input fields for the parameters for a given action, adds it to screen
@@ -49,41 +50,31 @@ function getInputs(action) {
 //Called when submit button is pressed, packages data into JSON and transmits to server
 function submit() {
     var actionName = $("#action_selector").val();
-    var payload = [];
+    let toTransmit = {};
+    
     $('input[type=text]').each(function() {
+        console.log("found input method");
         var paramName = $(this).attr("placeholder"); //paramater names are the placeholder attributes for the inputs, we can just pull those for the key
         var paramValue = $(this).val();
-        payload[paramName] = paramValue;
+        toTransmit[paramName] = paramValue;
+        console.log("set payload value " + paramName + " as " + paramValue);
+        console.log("current payload: " + toTransmit);
     });
 
-    console.log(payload);
-
-    console.log('transmission not yet implemented');
-
+    console.log("movement payload: " + toTransmit);
 
     if(actionName === "move"){
-        $.ajax({
-            contentType: "application/json; charset=utf-8",
-            type: "POST",
-            url: baseUrl + "/Movement",
-            data: payload,
-            crossDomain:true,
-            success: function(data) {
-                console.log("movement submitted successfully");
-                console.log(data);
-                
-            },
-            error: function(data, error) {
-                console.log("error submitting movement: " + JSON.stringify(data));
-                console.log(error);
-            }
-        });
+        submitRequest(toTransmit, "Movement");
     } else if(actionName === "accuse"){
-
+        submitRequest(toTransmit, "Accusation");
+    } else if(actionName === "suggest") {
+        submitRequest(toTransmit, "Suggestion");
+    } else if(actionName === "signup"){
+        submitRequest(toTransmit, "signup");
     }
 
 
-    var updatedGamestate = requestGameState();
+    
 
 //   console.log(JSON.parse(updatedGamestate));
 
@@ -91,17 +82,39 @@ function submit() {
    // interpret(JSON.stringify(payload));
 }
 
+function submitRequest(transmission, endpoint){
+
+    console.log("submitting request "+  JSON.stringify(transmission) + " to endpoint " + endpoint);
+    $.ajax({
+        contentType: "application/json",
+        type: "POST",
+        url: baseUrl + "/" + endpoint,
+        data: JSON.stringify(transmission),
+        crossDomain:true,
+        success: function(data) {
+            console.log("payload submitted successfully");
+            displayResponsePayload(JSON.stringify(data));
+            console.log(data);
+            requestGameState();
+            
+        },
+        error: function(data, error) {
+            console.log("error submitting payload: " + JSON.stringify(data));
+            console.log(error);
+        }
+    });
+}
+
 function requestGameState() {
     console.log("requesting game state");
-
-
     $.ajax({
         contentType: "application/json; charset=utf-8",
         type: "GET",
         url: baseUrl + "/getstate",
         crossDomain:true,
         success: function(data) {
-            console.log(data);
+            console.log("updated state: " + data);
+            interpret(JSON.stringify(data));
             return data;
         },
         error: function(data) {
@@ -128,7 +141,9 @@ function interpret(payload){
     var payloadObj = JSON.parse(payload);
    
     var readableInterpretation = getReadableString(payloadObj); //Fetch a human-readable interpretation of the payload
-    interpretDiv.appendChild(document.createTextNode(readableInterpretation));
+
+    $("#interpretDiv").append(readableInterpretation);
+    // interpretDiv.appendChild(document.createTextNode(readableInterpretation));
 }
 
 //Displays the raw JSON contents of the payload
@@ -138,6 +153,16 @@ function displayRawPayload(payload){
     content.innerHTML = payload;
     payloadDiv.appendChild(content);
 }
+
+function displayResponsePayload(payload){
+    var responseDiv = document.getElementById("responseDiv");
+    responseDiv.innerHTML = "";
+    var content = document.createElement("pre");
+    
+    content.innerHTML = payload;
+    responseDiv.appendChild(content);
+}
+
 
 //Generates the 'Submit' button, binds its onclick to submit()
 function getSubmitButton() {
@@ -153,16 +178,96 @@ function getSubmitButton() {
 
 //Generates a human-readable interpretation of a payload object
 function getReadableString(payloadObj){
-    var action = payloadObj["action"];
-    if(action === 'move'){
-        return getReadableMove(payloadObj);
-    } else if(action === 'accuse'){
-        return getReadableAccuse(payloadObj);
-    } else if(action === 'suggest'){
-        return getReadableSuggest(payloadObj);
-    } 
-    return 'Unsupported action.';
+    // var action = payloadObj["action"];
+    // if(action === 'move'){
+    //     return getReadableMove(payloadObj);
+    // } else if(action === 'accuse'){
+    //     return getReadableAccuse(payloadObj);
+    // } else if(action === 'suggest'){
+    //     return getReadableSuggest(payloadObj);
+    // } 
+    console.log("beginning interpretation of " + JSON.stringify(payloadObj));
 
+    var player = payloadObj["Player1"];
+
+    var character = player["character"];
+    var hand = player["hand"];
+    var location = player["location"];
+    var name = player["name"];
+
+    var gameboard = payloadObj["gameboard"];
+
+    var gamestatus = payloadObj["gamestatus"];
+    var numberofplayers = payloadObj["numberofplayers"];
+    var playerturn = payloadObj["playerturn"];
+
+    
+    var output = "<b> Players </b> <br /> "
+
+    var playerArray = [];
+    var i = 0;
+    for(i = 0; i < numberofplayers; i++){
+        var key = "Player" + (i + 1);
+        console.log("fetching key " + key);
+        var currentPlayer = payloadObj[key];
+        console.log(JSON.stringify(currentPlayer));
+        output += "Number: " + (i + 1) + "<br />";
+        output += "Player Name: " + currentPlayer["name"] + "<br />";
+        output += "Character: " + currentPlayer["character"] + "<br />";
+        output += "Hand: ";
+        
+        var currentHand = currentPlayer["hand"];
+        var j;
+        for(j = 0; j < currentHand.length-1; j++){
+            output += currentHand[j] + ", ";
+        }
+        output += currentHand[currentHand.length-1] + "<br />";
+
+        var currentLocation = currentPlayer["location"];
+        output += "Player Location: (" + currentLocation[0] + ", " + currentLocation[1] + ")<br />";
+
+        output += "<hr />";
+    }
+
+    output += gameboardAsString(gameboard);
+
+    console.log(output);
+
+    return output;
+
+}
+
+function gameboardAsString(gameboard){
+    var gameboardLength = gameboard.length;
+    var i = 0;
+    var output = "";
+    for(i = 0; i < gameboardLength; i++){
+        for(j = 0; j < gameboard[i].length; j++){
+            var entry = gameboard[i][j];
+            var s = sum(entry);
+            console.log("(" + i + ", " + j + ")" + s);
+            output += s + " ";
+        }
+        output += "<br />";
+    }
+    return output;
+}
+
+function sum(arr){
+    var i;
+    var sum = 0;
+
+    for(i = 0; i < arr.length; i++){
+        sum += arr[i];
+    }
+
+    if(sum === 0){
+        return "&#129001;";
+    }
+    if(sum === 99){
+        return "&#128997";
+    }
+    return "&#128100;";
 }
 
 //Generates a human-readable interpretation of a move payload
@@ -249,19 +354,3 @@ function getSelector() {
     return selector;
 }
 
-function init() {
-
-
-
-    $.ajax({
-        contentType: "application/json; charset=utf-8",
-        type: "POST",
-        url: baseUrl + "/signup",
-        data: payload,
-        crossDomain:true,
-        success: function(data) {
-            console.log(data);
-            
-        }
-    });
-}

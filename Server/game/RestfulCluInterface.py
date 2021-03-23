@@ -6,7 +6,7 @@ from roomdeck import roomsdeck
 from characterdeck import chardeck
 from random import randint
 import random
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, render_template
 app = Flask(__name__)
 #weapon numbers 7 = rope 8 = lead pipe 9 = knife 10 = wrench 11 = candlestick 12 = revolver 
 playerturn = 0
@@ -107,14 +107,21 @@ def hello():
         return jsonify({'numberofplayers': gamestate.getNumOfPlayers(), 'Player1': {'name': playerarray[0].getName(), 'character': playerarray[0].getCharacter(), 'location': playerarray[0].getLocation(), 'hand': playerarray[0].getHand()}, 'Player2': {'name': playerarray[1].getName(), 'character': playerarray[1].getCharacter(), 'location': playerarray[1].getLocation(), 'hand': playerarray[1].getHand()}, 'Player3': {'name': playerarray[2].getName(), 'character': playerarray[2].getCharacter(), 'location': playerarray[2].getLocation(), 'hand': playerarray[2].getHand()}, 'playerturn': gamestate.getPlayerturn(), 'gamestatus': gamestate.getGameWon(), 'gameboard': gamestate.getGameBoard()})
     if (len(playerarray) == 4):
         return jsonify({'numberofplayers': gamestate.getNumOfPlayers(), 'Player1': {'name': playerarray[0].getName(), 'character': playerarray[0].getCharacter(), 'location': playerarray[0].getLocation(), 'hand': playerarray[0].getHand()}, 'Player2': {'name': playerarray[1].getName(), 'character': playerarray[1].getCharacter(), 'location': playerarray[1].getLocation(), 'hand': playerarray[1].getHand()}, 'Player3': {'name': playerarray[2].getName(), 'character': playerarray[2].getCharacter(), 'location': playerarray[2].getLocation(), 'hand': playerarray[2].getHand()}, 'Player4': {'name': playerarray[3].getName(), 'character': playerarray[3].getCharacter(), 'location': playerarray[3].getLocation(), 'hand': playerarray[3].getHand()},'playerturn': gamestate.getPlayerturn(), 'gamestatus': gamestate.getGameWon(), 'gameboard': gamestate.getGameBoard()})
-
+    return jsonify({'error': 'error'})
 @app.route('/Movement', methods=['POST'])
 def Move():
     if (request.method == 'POST'):
         some_json = request.get_json()
+        
         character = some_json["character"]
         xcoordinate = some_json["x"]
         ycoordinate = some_json["y"]
+        
+        if(not isinstance(xcoordinate, int)):
+            xcoordinate =  int(xcoordinate)
+        ycoordinate = some_json["y"]
+        if(not isinstance(ycoordinate, int)):
+            ycoordinate =  int(ycoordinate)
         newLocation = [xcoordinate, ycoordinate]
         count = 1 
         for x in playerarray:
@@ -140,6 +147,13 @@ def Suggest():
         playercharacter = some_json["playerchar"]
         xcoordinate = some_json["x"]
         ycoordinate = some_json["y"]
+        
+        if(not isinstance(xcoordinate, int)):
+            xcoordinate =  int(xcoordinate)
+        ycoordinate = some_json["y"]
+        if(not isinstance(ycoordinate, int)):
+            ycoordinate =  int(ycoordinate)
+            
         newLocation = [xcoordinate, ycoordinate]
         weaponloc = []
         weaponnum = 0
@@ -185,7 +199,11 @@ def Accuse():
         character = some_json["character"]
         room = some_json["room"]
         xcoordinate = some_json["x"]
+        if(not isinstance(xcoordinate, int)):
+            xcoordinate =  int(xcoordinate)
         ycoordinate = some_json["y"]
+        if(not isinstance(ycoordinate, int)):
+            ycoordinate =  int(ycoordinate)
         newLocation = [xcoordinate, ycoordinate]
         count = 1 
         for x in playerarray:
@@ -196,7 +214,7 @@ def Accuse():
                 board[newLocation[0]][newLocation[1]][0] = count
                 x.setLocation(newLocation)
                 message = "{0} has made the accusation that the murder was committed by {1} in the {2} with a {3}".format(
-                    x.getCharacter, 
+                    x.getCharacter(), 
                     suspect,
                     newLocation,
                     weapon)
@@ -231,6 +249,10 @@ def SubTurnReq():
     del subturnqueue[0]
     gamestate.setSubturn(0)
     return jsonify({'card': card})
+@app.route('/')
+def index():
+    return render_template('index.html')
 
 if __name__ == "__main__":
     app.run(debug=True)
+
