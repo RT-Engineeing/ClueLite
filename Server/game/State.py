@@ -1,11 +1,17 @@
 class GameState: 
-    def __init__(self, numofplayers, playerturn, gamewon, gameboard, gamerunning):
+    def __init__(self, casefile, numofplayers, playerturn, gamewon, gameboard, gamerunning, subturn):
         self.numofplayers = numofplayers
         self.playerturn = playerturn
         self.gamewon = gamewon
         self.gameboard = gameboard
         self.gamerunning = gamerunning 
+        self.casefile = casefile
+        self.subturn = subturn
 
+    def getSubturn(self):
+        return self.subturn
+    def getCasefile(self):
+        return self.casefile
     def getNumOfPlayers(self):
         return self.numofplayers
     def getPlayerturn(self):
@@ -16,6 +22,10 @@ class GameState:
         return self.gameboard
     def getGameRunning(self):
         return self.gamerunning
+    def setSubturn(self):
+        self.subturn = subturn
+    def setCasefile(self, casefile):
+        self.casefile = casefile
     def setGameBoard(self, gameboard):
         self.gameboard = gameboard
     def setPlayerturn(self, playerturn):
