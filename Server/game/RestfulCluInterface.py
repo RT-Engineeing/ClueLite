@@ -192,6 +192,7 @@ def Suggest():
 
 @app.route('/Accusation', methods=['POST'])
 def Accuse():
+    #needs to finish cleaning this out
     if (request.method == 'POST'):
         some_json = request.get_json()
         weapon = some_json["weapon"]

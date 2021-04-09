@@ -22,7 +22,7 @@ class GameState:
         return self.gameboard
     def getGameRunning(self):
         return self.gamerunning
-    def setSubturn(self):
+    def setSubturn(self, subturn):
         self.subturn = subturn
     def setCasefile(self, casefile):
         self.casefile = casefile
