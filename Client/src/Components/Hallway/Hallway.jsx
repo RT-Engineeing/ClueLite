@@ -6,13 +6,22 @@ import HallwayImageHorizontal from '../../Images/horizontal_hallway.png'
 
 export class Hallway extends React.Component {
 
+    constructor(props) {
+        super(props);
+        console.log(`x =${props.x}`)
+        console.log(`y =${props.y}`)
+        console.log(`roomName =${props.name}`)
+    }
+
+    handleClick = (button) => {
+        console.log("Clicked button");
+    }
+
     render() {
         return (
-            <div>
-                <img src={this.props.orientation === "vertical" ? HallwayImageVertical : HallwayImageHorizontal}
-                    alt='Room'
-                    className='hallway' />
-            </div>
+            <div className={this.props.orientation === "vertical" ? "hallway-vertical" : "hallway-horizontal"}
+                onClick={this.handleClick}>
+            </div >
         );
     }
 }

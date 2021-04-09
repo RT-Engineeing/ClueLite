@@ -4,10 +4,24 @@ import "./Room.css";
 import RoomImage from '../../Images/room.png'
 
 export class Room extends React.Component {
+
+    constructor(props) {
+        super(props);
+        console.log(`x =${props.x}`)
+        console.log(`y =${props.y}`)
+        console.log(`roomName =${props.name}`)
+    }
+
+    handleClick = (button) => {
+        console.log("Clicked button");
+    }
+
     render() {
         return (
             <div>
-                <img src={RoomImage} alt='Room' className="room" />
+                <div className="room" onClick={this.handleClick} >
+                    {this.props.name}
+                </div>
             </div>
         );
     }

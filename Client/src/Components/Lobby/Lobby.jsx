@@ -31,7 +31,7 @@ export class Lobby extends React.Component {
                 <Card className="playerNamesList" text="white">
                     <ListGroup variant="flush">
                         {this.state.playerNames.map(playerName => (
-                            <ListGroup.Item variant="dark">{playerName}</ListGroup.Item>))}
+                            <ListGroup.Item key={playerName} variant="dark">{playerName}</ListGroup.Item>))}
                     </ListGroup>
                 </Card >
                 <Link to="/game" style={{ textDecoration: 'none' }} >

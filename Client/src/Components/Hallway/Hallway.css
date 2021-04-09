@@ -1,18 +1,23 @@
-.hallway {
-    max-height: 140px;
-    max-width: 140px;
-}
-
-.col-md-2 {
+.hallway-vertical {
+    height: 140px;
     width: 140px;
-    max-width: 140px; 
-    padding: 0px !important;
-    margin: 0 auto;
-    line-height: 140px;
+    background: url('../../Images/vertical_hallway.png') no-repeat ;
+    background-position: 66% 75%;
+    background-size: 45px 130px;
+    text-align: center;
+    padding-top: 60px;
+    padding-bottom: 60px;
 }
 
-.col-md-3 {
-    flex: 0 0 33.33%;
-    padding: 0px !important;
+.hallway-horizontal {
+    max-height: 141px;
+    max-width: 141px;
+    background: url(../../Images/horizontal_hallway.png) no-repeat ;
+    background-position: center;
+    background-size: 120px 40px;
     text-align: center;
+    padding-top: 60px;
+    padding-bottom: 60px;
+
 }
+

@@ -1,10 +1,13 @@
 .room {
-    max-height: 140px;
-    max-width: 140px;
+    height: 141px;
+    width: 141px;
+    background: url('../../Images/room.png') no-repeat ;
+    background-size: 140px 140px;
+    text-align: center;
 }
 
-.col-md-2 {
-    width: 140px;
-    max-width: 140px; 
-    padding: 0px !important;
+.name {
+    position: absolute;
+    padding: 0px;
 }
+
