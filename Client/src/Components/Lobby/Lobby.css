@@ -8,6 +8,7 @@
 }
 
 .playerNameText {
+    /* Text outline */ 
     color: white;
     -webkit-text-stroke-width: 1px;
     -webkit-text-stroke-color: black;
@@ -26,7 +27,7 @@
 }
 
 
-.startButtonSmall {
+  .lobbyStartButton {
     width: 300px;
     height: 60px;
     border-color: lime !important;
@@ -34,31 +35,31 @@
     display: inline-flex;
     align-items: center; 
     padding: 10px !important;
-  }
-  
-  .lobbyStartButton {
     left: 55%;
     position: absolute;
     top: 25%
-    
   } 
 
   #playersReadyText {
     position: absolute;
-    left: 56%;
+    left: 55%;
     top: 10%;
+    /* Text outline */ 
     color: white !important;
+    font-family: 'Rockwell' !important;
     -webkit-text-stroke-width: 1px;
     -webkit-text-stroke-color: black;
   }
 
   .lobbyStartText {
-    font-size: 40px;
+    font-size: 35px;
+    position: relative;
+    top: -2px;
+    left: 7px;
+    /* Text outline */ 
     color: white !important;
     -webkit-text-stroke-width: 1px;
     -webkit-text-stroke-color: black;
     font-family: 'Rockwell' !important;
-    position: relative;
-    top: -6px;
-    left: 2px;
+
   }

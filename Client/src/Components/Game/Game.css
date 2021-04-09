@@ -1,9 +1,6 @@
-.row {
-    margin-top: 0px !important;
-}
-
 #game {
-    min-height: 700px;
+    height: 700px;
+    width: 700px;
     background-color: #777;
 }
 
@@ -15,7 +12,6 @@
     color: white;
     -webkit-text-stroke-width: 0.5px;
     -webkit-text-stroke-color: black;
-    font-family: "Rockwell";
     font-size: 20px;
     background-color: #777;
 }
@@ -46,11 +42,6 @@
 }
 
 #gamePageContainer {
-    width: 80%;
-    justify-content: center;
     margin: 3%;
-}
-
-.cardCol {
-    justify-content: center;
+    min-width: 1400px;
 }

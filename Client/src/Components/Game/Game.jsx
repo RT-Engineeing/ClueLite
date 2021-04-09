@@ -2,65 +2,64 @@ import './Game.css'
 import React from 'react';
 import Card from 'react-bootstrap/Card'
 import Button from 'react-bootstrap/Button'
+import GameBoard from '../GameBoard/GameBoard';
 import 'bootstrap/dist/css/bootstrap.min.css';
+
+const TMP_PLAYER_CARDS = [
+    "CARD 1", "CARD 2", "CARD 3", "CARD 4", "CARD 5"
+];
 
 export class Game extends React.Component {
     render() {
         return (
-            <div class="d-flex justify-content-center">
-                <div id="gamePageContainer" className="container" align="center">
+            <div class="d-flex justify-content-center" style={{ minWidth: '1800px' }}>
+                <div id="gamePageContainer" className="container-fluid">
                     <div className="row">
-                        <div className="col">
-                            <div id="gameBoardContainer" className="container text-center">
-                                <div className="row">
-                                    <div className="col">
-                                        <Card id="game" text="white">
-                                        </Card >
-                                    </div>
-                                </div>
-                            </div>
+                        <div className="col-md-5" style={{ maxHeight: '700px' }} >
+                            <Card id="game" text="white">
+                                {/* <GameBoard /> */}
+                            </Card >
                         </div>
-                        <div className="col">
+                        <div className="col-md-5" style={{ maxHeight: '700px' }}>
                             <div className="container">
-                                <div id="gameUpdatesContainer" className="row ">
+                                <div id="gameUpdatesContainer" className="row">
                                     <div className="col d-flex justify-content-center">
                                         <Card id="updatesContainer" text="white">
                                             <Card.Header className="justify-content-center d-flex" style={{ width: "100%" }}>Game Updates</Card.Header>
-                                            <div>
-                                            </div>
                                         </Card >
                                     </div>
                                 </div>
+                                {/* Currently, some elements do not scale properly with page resizing. This should be fixed in the target increment */}
                                 <div id="cards" className="row">
                                     <div className="col d-flex justify-content-center">
                                         <div className="container">
                                             <div className="cardRow row">
                                                 <div className="cardCol col" align="right">
-                                                    <Card className="playerCard" text="white">
-                                                        Card1
-                                                </Card>
+                                                    <Card className="playerCard" text="black" align="center">
+                                                        {TMP_PLAYER_CARDS[0]}
+                                                    </Card>
                                                 </div>
                                                 <div className="cardCol col" align="center">
-                                                    <Card className="playerCard" text="white">
-                                                        Card2
-                                                </Card>
+                                                    <Card className="playerCard" text="black" align="center">
+                                                        {TMP_PLAYER_CARDS[1]}
+                                                    </Card>
                                                 </div>
                                                 <div className="cardCol col" align="left">
-                                                    <Card className="playerCard" text="white">
-                                                        Card3
-                                                </Card>
+                                                    <Card className="playerCard" text="black" align="center">
+                                                        {TMP_PLAYER_CARDS[2]}
+                                                    </Card>
                                                 </div>
                                             </div>
                                             <div className="cardRow row">
                                                 <div className="cardCol col" align="right">
-                                                    <Card className="playerCard" text="white">
-                                                        Card4
-                                                </Card>
+                                                    <Card className="playerCard" text="black" align="center">
+                                                        {TMP_PLAYER_CARDS[3]}
+                                                    </Card>
                                                 </div>
                                                 <div className="cardCol col" align="left">
-                                                    <Card className="playerCard" text="white">
-                                                        Card5
-                                                </Card>
+                                                    <Card className="playerCard" text="black" align="center">
+                                                        {TMP_PLAYER_CARDS[4]}
+                                                    </Card>
                                                 </div>
                                             </div>
                                         </div>
@@ -77,7 +76,7 @@ export class Game extends React.Component {
                             </div >
                         </div >
                     </div >
-                </div>
+                </div >
             </div>
         )
     }

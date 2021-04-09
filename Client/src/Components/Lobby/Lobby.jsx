@@ -35,7 +35,7 @@ export class Lobby extends React.Component {
                     </ListGroup>
                 </Card >
                 <Link to="/game" style={{ textDecoration: 'none' }} >
-                    <Button variant="success" className="startButtonSmall lobbyStartButton">
+                    <Button variant="success" className="lobbyStartButton">
                         <p className="lobbyStartText">
                             Start Game
                         </p>
