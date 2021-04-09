@@ -18,7 +18,9 @@ margin-right:30px;
 text-align:right;
 }
 
-
+#grad {
+    background-image: radial-gradient(circle, red, yellow, green);
+}
 
 #parent {
   display: flex;
