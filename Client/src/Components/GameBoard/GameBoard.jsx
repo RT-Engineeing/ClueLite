@@ -1,21 +1,18 @@
 import React from 'react';
-import Button from 'react-bootstrap/Button';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './GameBoard.css'
 
-import HorizontalHallway from '../../Images/horizontal_hallway.png';
-import VerticalHallway from '../../Images/vertical_hallway.png'
-import PlayerBlue from '../../Images/player-blue.png';
-import PlayerGreen from '../../Images/player-green.png';
-import PlayerOrange from '../../Images/player-orange.png';
-import PlayerYellow from '../../Images/player-yellow.png';
+// import PlayerBlue from '../../Images/player-blue.png';
+// import PlayerGreen from '../../Images/player-green.png';
+// import PlayerOrange from '../../Images/player-orange.png';
+// import PlayerYellow from '../../Images/player-yellow.png';
 import Room from '../../Components/Room/Room'
 import Hallway from '../../Components/Hallway/Hallway'
 
 export class GameBoard extends React.Component {
     render() {
         return (
-            <div className='container' >
+            <div className='container' id="boardContainer"  >
                 <div className='row' style={{ justifyContent: 'space-between' }}>
                     <div className='col-md-2' >
                         <Room x='0' y='0' name='USA' />
