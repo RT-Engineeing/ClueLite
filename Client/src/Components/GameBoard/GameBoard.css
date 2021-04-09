@@ -1,0 +1,17 @@
+.col-md-2 {
+    width: 140px;
+    max-width: 140px; 
+    padding: 0px !important;
+    margin: 0 auto;
+    line-height: 140px;
+}
+
+.col-md-3 {
+    flex: 0 0 33.33%;
+    padding: 0px !important;
+    text-align: center !important;
+}
+
+.game-row {
+    justify-content: space-between;
+}

@@ -16,7 +16,7 @@ export class GameBoard extends React.Component {
     render() {
         return (
             <div className="container" >
-                <div className="row">
+                <div className="row" style={{ justifyContent: 'space-between' }}>
                     <div className="col-md-2">
                         <Room />
                     </div>
@@ -33,7 +33,7 @@ export class GameBoard extends React.Component {
                         <Room />
                     </div>
                 </div>
-                <div className="row">
+                <div className="row" style={{ justifyContent: 'space-between' }}>
                     <div className="col-md-3">
                         <Hallway orientation="vertical" />
                     </div>
@@ -44,7 +44,8 @@ export class GameBoard extends React.Component {
                         <Hallway orientation="vertical" />
                     </div>
                 </div>
-                <div className="row">
+                <div className="row" style={{ justifyContent: 'space-between' }}>
+
                     <div className="col-md-2">
                         <Room />
                     </div>
@@ -61,7 +62,7 @@ export class GameBoard extends React.Component {
                         <Room />
                     </div>
                 </div>
-                <div className="row">
+                <div className="row" style={{ justifyContent: 'space-between' }}>
                     <div className="col-md-3">
                         <Hallway orientation="vertical" />
                     </div>
@@ -72,7 +73,7 @@ export class GameBoard extends React.Component {
                         <Hallway orientation="vertical" />
                     </div>
                 </div>
-                <div className="row">
+                <div className="row" style={{ justifyContent: 'space-between' }}>
                     <div className="col-md-2">
                         <Room />
                     </div>
