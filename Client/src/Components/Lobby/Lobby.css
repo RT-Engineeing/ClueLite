@@ -1,0 +1,64 @@
+.playerNamesList {
+    padding-top: 10px;
+    width: 25%;
+    top: 5%;
+    left: 20%;
+    min-height: 26rem;
+    background-color: #777 !important;
+}
+
+.playerNameText {
+    color: white;
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: black;
+    font-family: "Rockwell";
+}
+
+.list-group-item {
+    text-align: center;
+    margin: 5px;
+    font-family: "Rockwell";
+    background-color: #555 !important;
+    -webkit-text-stroke-width: 0.5px;
+    -webkit-text-stroke-color: black;
+    font-size: 20px;
+    color: white !important;
+}
+
+
+.startButtonSmall {
+    width: 300px;
+    height: 60px;
+    border-color: lime !important;
+    border-width: 2px !important;
+    display: inline-flex;
+    align-items: center; 
+    padding: 10px !important;
+  }
+  
+  .lobbyStartButton {
+    left: 55%;
+    position: absolute;
+    top: 25%
+    
+  } 
+
+  #playersReadyText {
+    position: absolute;
+    left: 56%;
+    top: 10%;
+    color: white !important;
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: black;
+  }
+
+  .lobbyStartText {
+    font-size: 40px;
+    color: white !important;
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: black;
+    font-family: 'Rockwell' !important;
+    position: relative;
+    top: -6px;
+    left: 2px;
+  }

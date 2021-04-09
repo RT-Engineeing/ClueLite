@@ -1,13 +1,23 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@font-face {
+  font-family: 'Rockwell';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Rockwell'), url('./fonts/ROCK.TTF'); 
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+
+body {
+  background: radial-gradient(#9198e5, #FF8C00);
+  background-repeat: no-repeat;
+  height: 100%;
 }
+
+html {
+  height: 100%;
+  font-family: 'Rockwell' !important;
+}
+
+body > #root  {
+  height: 100vh;
+}
+

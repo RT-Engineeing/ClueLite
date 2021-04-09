@@ -1,15 +1,31 @@
 import './App.css';
-import POCComponent from './POCComponent'
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect
+} from "react-router-dom";
+import Lobby from './Components/Lobby/Lobby';
+import LandingPage from './Components/LandingPage/LandingPage';
+import Game from './Components/Game/Game'
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
   return (
-    <div className="App">
-      <div className="POC">
-        <POCComponent />
-      </div>
-      <hr></hr>
-    </div>
-
+    <Router>
+      <Redirect to="/start" />
+      <Switch>
+        <Route path="/start">
+          <LandingPage />
+        </Route>
+        <Route path="/lobby">
+          <Lobby />
+        </Route>
+        <Route path="/game">
+          <Game />
+        </Route>
+      </Switch>
+    </Router >
   );
 }
 

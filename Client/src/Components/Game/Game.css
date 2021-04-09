@@ -1,0 +1,56 @@
+.row {
+    margin-top: 0px !important;
+}
+
+#game {
+    min-height: 700px;
+    background-color: #777;
+}
+
+#updatesContainer {
+    min-height: 250px;
+    width: 100%;
+    align-items: center;
+    font-family: "Rockwell";
+    color: white;
+    -webkit-text-stroke-width: 0.5px;
+    -webkit-text-stroke-color: black;
+    font-family: "Rockwell";
+    font-size: 20px;
+    background-color: #777;
+}
+
+.actionButton {
+    width: 100%;
+    background-color: #777;
+    font-family: 'Rockwell';
+    padding: 10px;
+    font-size: 20px;
+    height: 50px;
+    color: white;
+    -webkit-text-stroke-width: 0.5px;
+    -webkit-text-stroke-color: black;
+    font-family: "Rockwell";
+}
+
+#cards {
+    /* Make sure (height + margin-top) == 400 is true! */
+    height: 375px; 
+    margin-top: 25px !important;
+}
+
+.playerCard {
+    height: 160px;
+    width: 120px;
+    margin-bottom: 15px;
+}
+
+#gamePageContainer {
+    width: 80%;
+    justify-content: center;
+    margin: 3%;
+}
+
+.cardCol {
+    justify-content: center;
+}
