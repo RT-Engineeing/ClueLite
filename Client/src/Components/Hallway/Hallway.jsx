@@ -9,7 +9,9 @@ export class Hallway extends React.Component {
     render() {
         return (
             <div>
-                <img src={this.props.orientation === "vertical" ? HallwayImageVertical : HallwayImageHorizontal} alt='Room' />
+                <img src={this.props.orientation === "vertical" ? HallwayImageVertical : HallwayImageHorizontal}
+                    alt='Room'
+                    className='hallway' />
             </div>
         );
     }

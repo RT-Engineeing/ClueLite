@@ -17,75 +17,75 @@ export class GameBoard extends React.Component {
         return (
             <div className="container" >
                 <div className="row">
-                    <div className="col-md-3">
+                    <div className="col-md-2">
                         <Room />
                     </div>
-                    <div className="col-md-3">
+                    <div className="col-md-2">
                         <Hallway orientation="horizontal" />
                     </div>
-                    <div className="col-md-3">
+                    <div className="col-md-2">
                         <Room />
                     </div>
-                    <div className="col-md-3">
+                    <div className="col-md-2">
                         <Hallway orientation="horizontal" />
                     </div>
-                    <div className="col-md-3">
+                    <div className="col-md-2">
                         <Room />
                     </div>
                 </div>
                 <div className="row">
-                    <div className="col">
+                    <div className="col-md-3">
                         <Hallway orientation="vertical" />
                     </div>
-                    <div className="col">
+                    <div className="col-md-3">
                         <Hallway orientation="vertical" />
                     </div>
-                    <div className="col">
-                        <Hallway orientation="vertical" />
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="col">
-                        <Room />
-                    </div>
-                    <div className="col">
-                        <Hallway orientation="horizontal" />
-                    </div>
-                    <div className="col">
-                        <Room />
-                    </div>
-                    <div className="col">
-                        <Hallway orientation="horizontal" />
-                    </div>
-                    <div className="col">
-                        <Room />
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="col">
-                        <Hallway orientation="vertical" />
-                    </div>
-                    <div className="col">
-                        <Hallway orientation="vertical" />
-                    </div>
-                    <div className="col">
+                    <div className="col-md-3">
                         <Hallway orientation="vertical" />
                     </div>
                 </div>
                 <div className="row">
-                    <div className="col">
+                    <div className="col-md-2">
                         <Room />
                     </div>
-                    <div className="col">
+                    <div className="col-md-2">
                         <Hallway orientation="horizontal" />
                     </div>
-                    <div className="col">
+                    <div className="col-md-2">
                         <Room />
                     </div>
-                    <div className="col">
+                    <div className="col-md-2">
                         <Hallway orientation="horizontal" />
                     </div>
-                    <div className="col">
+                    <div className="col-md-2">
+                        <Room />
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-md-3">
+                        <Hallway orientation="vertical" />
+                    </div>
+                    <div className="col-md-3">
+                        <Hallway orientation="vertical" />
+                    </div>
+                    <div className="col-md-3">
+                        <Hallway orientation="vertical" />
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-md-2">
+                        <Room />
+                    </div>
+                    <div className="col-md-2">
+                        <Hallway orientation="horizontal" />
+                    </div>
+                    <div className="col-md-2">
+                        <Room />
+                    </div>
+                    <div className="col-md-2">
+                        <Hallway orientation="horizontal" />
+                    </div>
+                    <div className="col-md-2">
                         <Room />
                     </div>
                 </div>

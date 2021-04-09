@@ -1,11 +1,11 @@
 #game {
-    height: 700px;
-    width: 700px;
+    height: 710px;
+    width: 710px;
     background-color: #777;
 }
 
 #updatesContainer {
-    min-height: 250px;
+    min-height: 260px;
     width: 100%;
     align-items: center;
     font-family: "Rockwell";

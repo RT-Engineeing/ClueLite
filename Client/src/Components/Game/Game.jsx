@@ -12,15 +12,15 @@ const TMP_PLAYER_CARDS = [
 export class Game extends React.Component {
     render() {
         return (
-            <div class="d-flex justify-content-center" style={{ minWidth: '1800px' }}>
+            <div className="d-flex justify-content-center" style={{ minWidth: '1800px' }}>
                 <div id="gamePageContainer" className="container-fluid">
                     <div className="row">
-                        <div className="col-md-5" style={{ maxHeight: '700px' }} >
+                        <div className="col-md-5" style={{ maxHeight: '710px' }} >
                             <Card id="game" text="white">
-                                {/* <GameBoard /> */}
+                                {<GameBoard />}
                             </Card >
                         </div>
-                        <div className="col-md-5" style={{ maxHeight: '700px' }}>
+                        <div className="col-md-5" style={{ maxHeight: '710px' }}>
                             <div className="container">
                                 <div id="gameUpdatesContainer" className="row">
                                     <div className="col d-flex justify-content-center">
