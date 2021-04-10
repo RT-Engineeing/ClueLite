@@ -2,6 +2,7 @@
     height: 710px;
     width: 710px;
     background-color: #777;
+
 }
 
 #updatesContainer {
@@ -44,4 +45,43 @@
 #gamePageContainer {
     margin: 3%;
     min-width: 1400px;
+}
+
+.suggestionModal {
+    min-height: 400px;
+    background-color: goldenrod;
+}
+
+.accusationModal {
+    min-height: 400px;
+    background-color: goldenrod;
+}
+
+.modalHeader {
+    /* Text outline */ 
+    color: black;
+    -webkit-text-stroke-width: 0.5px;
+    -webkit-text-stroke-color: white;
+    font-family: "Rockwell";
+    align-self: center;
+    border-bottom: 0px solid !important;
+}
+
+.modalFooterButtons {
+    color: black;
+    -webkit-text-stroke-width: 0px;
+    -webkit-text-stroke-color: white;
+    font-family: "Rockwell";
+}
+
+.carouselItem {
+    max-height: 60px;
+    text-align: center;
+        /* Text outline */ 
+    color: black;
+    -webkit-text-stroke-width: 0.5px;
+    -webkit-text-stroke-color: white;
+    font-family: "Rockwell";
+    font-size: 30px;
+    padding-top: 9px
 }
