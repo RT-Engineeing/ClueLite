@@ -11,3 +11,18 @@
     padding: 0px;
 }
 
+.suggestionModal {
+    font-family: 'Rockwell';
+    min-height: 400px;
+    background-color: goldenrod;
+    /* Text outline */ 
+    color: white;
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: black;
+    font-family: "Rockwell";
+}
+
+.modalHeader {
+    align-self: center;
+    border-bottom: 0px solid !important;
+}
