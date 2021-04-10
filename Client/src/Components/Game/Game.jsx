@@ -32,7 +32,8 @@ export class Game extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            showSuggestModal: false
+            showSuggestModal: false,
+            showAccusationModal: false
         }
     }
 
@@ -42,6 +43,12 @@ export class Game extends React.Component {
         }
         const hideSuggestionModal = () => {
             this.setState({ showSuggestModal: false });
+        }
+        const showAccusationModal = () => {
+            this.setState({ showAccusationModal: true });
+        }
+        const hideAccusationModal = () => {
+            this.setState({ showAccusationModal: false });
         }
 
         const suggestionModal = (
@@ -95,6 +102,57 @@ export class Game extends React.Component {
             </Modal >
         );
 
+        const accusationModal = (
+            <Modal
+                show={this.state.showAccusationModal}
+                onHide={hideAccusationModal}
+                backdrop="static"
+                keyboard={false}
+                centered
+                size="lg"
+                contentClassName="accusationModal"
+            >
+                <Modal.Header className="modalHeader">
+                    <Modal.Title>Make an Accusation</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Carousel interval={null} indicators={false}>
+                        {TMP_CHARACTERS.map((character) =>
+                        (
+                            <Carousel.Item className="carouselItem">
+                                {character}
+                            </Carousel.Item>
+                        ))}
+                    </Carousel>
+                    <Carousel interval={null} indicators={false}>
+                        {TMP_WEAPONS.map((weapon) =>
+                        (
+                            <Carousel.Item className="carouselItem">
+                                {weapon}
+                            </Carousel.Item>
+                        ))}
+                    </Carousel>
+                    <Carousel interval={null} indicators={false}>
+                        {TMP_ROOMS.map((room) =>
+                        (
+                            <Carousel.Item className="carouselItem">
+                                {room}
+                            </Carousel.Item>
+                        ))}
+                    </Carousel>
+
+                </Modal.Body>
+                <Modal.Footer className="modalFooterButtons">
+                    <Button variant="secondary" onClick={hideAccusationModal}>
+                        Cancel
+                     </Button>
+                    <Button variant="primary" onClick={hideAccusationModal}>
+                        Accuse
+                    </Button>
+                </Modal.Footer>
+            </Modal >
+        );
+
         const gameBoard = (
             <Card id="game" text="white">
                 {<GameBoard />}
@@ -116,6 +174,7 @@ export class Game extends React.Component {
                 <div className="col d-flex justify-content-center">
                     <div>
                         {suggestionModal}
+                        {accusationModal}
                     </div>
                     <div className="container">
                         <div className="cardRow row">
@@ -159,7 +218,8 @@ export class Game extends React.Component {
                         onClick={showSuggestionModal}>Suggest</Button>
                 </div>
                 <div id="accuseButton" className="col d-flex justify-content-center">
-                    <Button className="actionButton">Accuse</Button>
+                    <Button className="actionButton"
+                        onClick={showAccusationModal}>Accuse</Button>
                 </div>
             </div>
         );

@@ -52,6 +52,11 @@
     background-color: goldenrod;
 }
 
+.accusationModal {
+    min-height: 400px;
+    background-color: goldenrod;
+}
+
 .modalHeader {
     /* Text outline */ 
     color: black;
