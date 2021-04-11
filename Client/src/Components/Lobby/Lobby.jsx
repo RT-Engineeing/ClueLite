@@ -14,24 +14,30 @@ export class Lobby extends React.Component {
     constructor(props) {
         super();
         this.state = {
-            playerNames: [
-                "player1",
-                "player2",
-                "player3",
-                "player4",
-                "player5",
-                "player6",
+            players: [
+                ["Player1", "false"],
+                ["Player2", "false"],
+                ["Player3", "false"],
+                ["Player4", "false"],
+                ["Player5", "false"],
+                ["Player6", "false"],
             ]
         }
     }
 
     render() {
+
+        
         return (
             <React.Fragment>
                 <Card className="playerNamesList" text="white">
                     <ListGroup variant="flush">
-                        {this.state.playerNames.map(playerName => (
-                            <ListGroup.Item key={playerName} variant="dark">{playerName}</ListGroup.Item>))}
+                        {this.state.players.map(player => (
+                            <ListGroup.Item key={player[0]} variant="dark">
+                           
+                                {player[0]} &#x1F534;
+                                
+                                </ListGroup.Item>))}
                     </ListGroup>
                 </Card >
                 <Link to="/game" style={{ textDecoration: 'none' }} >
@@ -42,7 +48,7 @@ export class Lobby extends React.Component {
                     </Button>
                 </Link>
                 <h2 id="playersReadyText">
-                    {this.state.playerNames.length}/{MAX_PLAYERS} Players Present
+                    {this.state.players.length}/{MAX_PLAYERS} Players Present
                 </h2>
             </React.Fragment >
         )

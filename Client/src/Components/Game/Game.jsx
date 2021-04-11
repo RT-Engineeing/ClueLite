@@ -211,7 +211,7 @@ export class Game extends React.Component {
             </div>
         );
 
-        const accuseSuggest = (
+        const accuseSuggestEndTurn = (
             <div id="accuseSuggest" className="row">
                 <div id="suggestButton" className="col d-flex justify-content-center">
                     <Button className="actionButton"
@@ -220,6 +220,16 @@ export class Game extends React.Component {
                 <div id="accuseButton" className="col d-flex justify-content-center">
                     <Button className="actionButton"
                         onClick={showAccusationModal}>Accuse</Button>
+                </div>
+
+                <div>
+                    <div id="endTurnButton" className="col d-flex justify-content-center">
+                        <Button className="actionButton"
+                    //    onClick={window.endTurn()}
+                    >
+                        End Turn
+                    </Button>
+                    </div>
                 </div>
             </div>
         );
@@ -236,7 +246,7 @@ export class Game extends React.Component {
                                 {updatesContainer}
                                 {/* Currently, some elements do not scale properly with page resizing. This should be fixed in the target increment */}
                                 {cards}
-                                {accuseSuggest}
+                                {accuseSuggestEndTurn}
                             </div >
                         </div >
                     </div >

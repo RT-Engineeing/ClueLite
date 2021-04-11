@@ -12,7 +12,8 @@ export class Room extends React.Component {
     }
 
     handleClick = (button) => {
-        console.log("Clicked button");
+        let name = this.props.name;
+        console.log(`clicked on room ${name}`);
     }
 
     render() {
