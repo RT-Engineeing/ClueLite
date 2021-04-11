@@ -52,6 +52,10 @@
     background-color: goldenrod;
 }
 
+.secondarySuggestionModal {
+    background-color: goldenrod;
+}
+
 .accusationModal {
     min-height: 400px;
     background-color: goldenrod;
@@ -85,3 +89,9 @@
     font-size: 30px;
     padding-top: 9px
 }
+
+.secondarySuggestionInstructions {
+    display: flex;
+    justify-content: center;
+    padding-bottom: 15px;
+} 

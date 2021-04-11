@@ -12,7 +12,7 @@ const TMP_PLAYER_CARDS = [
 ];
 
 const TMP_WEAPONS = [
-    "Flamethrower", "Shuriken", "Poison", "Glitter Cannon", "Dark Magic", ""
+    "Flamethrower", "Shuriken", "Poison", "Glitter Cannon", "Dark Magic"
 ]
 
 const TMP_CHARACTERS = [
@@ -34,7 +34,8 @@ export class Game extends React.Component {
         super(props);
         this.state = {
             showSuggestModal: false,
-            showAccusationModal: false
+            showAccusationModal: false,
+            showSecondarySuggestionModal: false
         }
     }
 
@@ -44,6 +45,12 @@ export class Game extends React.Component {
         }
         const hideSuggestionModal = () => {
             this.setState({ showSuggestModal: false });
+        }
+        const showSecondarySuggestionModal = () => {
+            this.setState({ showSecondarySuggestionModal: true });
+        }
+        const hideSecondarySuggestionModal = () => {
+            this.setState({ showSecondarySuggestionModal: false });
         }
         const showAccusationModal = () => {
             this.setState({ showAccusationModal: true });
@@ -154,6 +161,43 @@ export class Game extends React.Component {
             </Modal >
         );
 
+        const secondarySuggestionModal = (
+            <Modal
+                show={this.state.showSecondarySuggestionModal}
+                onHide={hideSecondarySuggestionModal}
+                backdrop="static"
+                keyboard={false}
+                centered
+                size="lg"
+                contentClassName="secondarySuggestionModal"
+            >
+                <Modal.Header className="modalHeader">
+                    <Modal.Title>Respond to the Suggestion</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <div className="secondarySuggestionInstructions" >
+                        Choose a card to disprove the suggesiton
+                    </div>
+                    <Carousel interval={null} indicators={false}>
+                        {TMP_PLAYER_CARDS.map((card) =>
+                        (
+                            <Carousel.Item className="carouselItem">
+                                {card}
+                            </Carousel.Item>
+                        ))}
+                    </Carousel>
+                </Modal.Body>
+                <Modal.Footer className="modalFooterButtons">
+                    <Button variant="secondary" onClick={hideSecondarySuggestionModal}>
+                        Pass
+                     </Button>
+                    <Button variant="primary" onClick={hideSecondarySuggestionModal}>
+                        Show Card
+                    </Button>
+                </Modal.Footer>
+            </Modal >
+        );
+
         const gameBoard = (
             <Card id="game" text="white">
                 {<GameBoard />}
@@ -176,6 +220,7 @@ export class Game extends React.Component {
                     <div>
                         {suggestionModal}
                         {accusationModal}
+                        {secondarySuggestionModal}
                     </div>
                     <div className="container">
                         <div className="cardRow row">
@@ -221,6 +266,11 @@ export class Game extends React.Component {
                 <div id="accuseButton" className="col d-flex justify-content-center">
                     <Button className="actionButton"
                         onClick={showAccusationModal}>Accuse</Button>
+                </div>
+
+                <div id="suggestButton2" className="col d-flex justify-content-center">
+                    <Button className="actionButton"
+                        onClick={showSecondarySuggestionModal}>TMP</Button>
                 </div>
             </div>
         );
