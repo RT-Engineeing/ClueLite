@@ -188,9 +188,6 @@ export class Game extends React.Component {
                     </Carousel>
                 </Modal.Body>
                 <Modal.Footer className="modalFooterButtons">
-                    <Button variant="secondary" onClick={hideSecondarySuggestionModal}>
-                        Pass
-                     </Button>
                     <Button variant="primary" onClick={hideSecondarySuggestionModal}>
                         Show Card
                     </Button>

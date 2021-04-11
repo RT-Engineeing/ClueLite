@@ -22,10 +22,12 @@
     padding-bottom: 60px;
     display: flex;
     justify-content: center;
+    line-height: normal !important;
 }
 
 .hallwayPieceHorizontal {
     bottom: 8% !important;
+    position: relative;
 }
 
 .hallwayPieceVertical {
