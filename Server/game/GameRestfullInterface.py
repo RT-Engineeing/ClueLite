@@ -2,10 +2,11 @@ from GameState import GameState
 from GameOperations import Players, Weapons, SessionState, Weapdeck, Roomsdeck, Chardeck
 from random import randint
 from flask import Flask, jsonify, request, render_template, session
-from flask_session import Session
+from flask_session.__init__ import Session
 import uuid
 import datetime
 import random
+import os
 
 rooms = [
     "Kitchen",
@@ -33,12 +34,12 @@ weapons = [
     "Candlestick",  # 11
     "Revolver"  # 12
 ]
-characselectdeck = []
+
 app = Flask(__name__)
 SESSION_TYPE = 'filesystem'
 app.config.from_object(__name__)
 app.permanent_session_lifetime = datetime.timedelta(days=365)
-app.secret_key = "00000000"
+app.secret_key = os.urandom(24)
 Session(app)
 
 playerturn = 0
@@ -57,22 +58,18 @@ playerarray = []
 selectedChars = []
 casefile = []
 subturnqueue = []
+characselectdeck = []
 gamestate = GameState(casefile, 0, 0, False, [[[0, 0, 0, 7, 0, 0], [0], [0, 0, 0, 8, 0, 0], [0], [0, 0, 0, 9, 0, 0]],
                                               [[0], [99], [0], [99], [0]],
                                               [[0, 0, 0, 10, 0, 0], [0], [0, 0, 0, 11, 0, 0], [0], [0, 0, 0, 12, 0, 0]],
                                               [[0], [99], [0], [99], [0]],
                                               [[0, 0, 0, 0, 0, 0], [0], [0, 0, 0, 0, 0, 0], [0], [0, 0, 0, 0, 0, 0]]],
                       False, 0)
-
-uid = ""
-playername = ""
-maxSessionPlayers = 6
-isSessionFull = False
+uid=""
+maxSessionPlayers = 0
 isPlayerReady = False
-sessionstate = SessionState(playername, uid)
-
-
-def adduser(uid):
+sessionstate = SessionState(uid, gamestate)
+def adduser():
     if len(playerarray) == 0:
         random.shuffle(rooms)
         casefile.append(rooms[0])
@@ -89,7 +86,7 @@ def adduser(uid):
         gamestate.setCasefile(casefile)
 
     for i in range(5):
-        playername = "Player" + str(i + 1)
+        playername = "Player" + str(i+1)
         character = characters[i]
         characselectdeck.append(character)
         hand = []
@@ -112,45 +109,31 @@ def adduser(uid):
             location = [1, 4]
         player = Players(playername, character, hand, location)
         playerarray.append(player)
-        if len(playerarray) == 1:
-            gamestate.setNumOfPlayers(1)
-        elif len(playerarray) == 2:
-            gamestate.setNumOfPlayers(2)
-        elif len(playerarray) == 3:
-            gamestate.setNumOfPlayers(3)
-        elif len(playerarray) == 4:
-            gamestate.setNumOfPlayers(4)
-        elif len(playerarray) == 5:
-            gamestate.setNumOfPlayers(5)
-        elif len(playerarray) == 6:
-            gamestate.setNumOfPlayers(6)
-            gamestate.setGameRunning(True)
-            gamestate.setPlayerturn(1)
-            sessionstate.isSessionFull(True)
+        maxSessionPlayers = len(playerarray)
+        for p in range(len(playerarray)):
+            if 1 >= p <= 5:
+                gamestate.setNumOfPlayers(p)
+            elif p == 6:
+                gamestate.setNumOfPlayers(p)
+                gamestate.setGameRunning(True)
+                gamestate.setPlayerturn(1)
         board = gamestate.getGameBoard()
         board[player.getLocation()[0]][player.getLocation()[1]][0] = len(playerarray)
         gamestate.setGameBoard(board)
+        sessionstate.setGameState(gamestate)
         sessionstate.setUid(uid)
-        sessionstate.setName(playername)
-        return jsonify(result="success", Player1=playername, isSessionFull=isSessionFull)
-
+        return sessionstate.createSession(playername, maxSessionPlayers)
 
 @app.route('/getsession')
 @app.route('/makeready')
+
 @app.route('/session')
 def sessions():
-    if 'uid' not in session:
-        session['uid'] = uuid.uuid4()
-        uid = session['uid']
-    else:
-        uid = session['uid']
-    return adduser(uid)
+    return adduser()
 
-@app.route('/killsession')
-def popsession():
-    session.pop('uid', None)
-    gamestate.setGameRunning(False)
-    return "Session deleted"
+@app.route('/endsession')
+def endsession():
+    return sessionstate.endSession(uid, gamestate)
 
 
 @app.route('/getstate', methods=['GET'])
