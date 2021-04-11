@@ -2,11 +2,11 @@
   font-family: 'Rockwell';
   font-style: normal;
   font-weight: 400;
-  src: local('Rockwell'), url('./fonts/ROCK.TTF'); 
+  src: local('Rockwell'), url('./Fonts/ROCK.TTF'); 
 }
 
-
 body {
+  font-family: "Rockwell" !important;
   background: radial-gradient(#9198e5, #FF8C00);
   background-repeat: no-repeat;
   height: 100%;

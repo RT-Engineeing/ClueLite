@@ -6,22 +6,45 @@ export class Room extends React.Component {
 
     constructor(props) {
         super(props);
-        console.log(`x =${props.x}`)
-        console.log(`y =${props.y}`)
-        console.log(`roomName =${props.name}`)
+        this.state = {
+            pieces: [1, 2]
+        }
     }
 
-    handleClick = (button) => {
-        let name = this.props.name;
-        console.log(`clicked on room ${name}`);
+    handleClick = (event) => {
+        event.preventDefault(); // Prevents display of context menu
+        if (event.button === 2) {
+            if (this.state.pieces.length > 0) {
+                let pieces = this.state.pieces;
+                pieces.pop();
+                this.setState({ pieces })
+            }
+        } else if (event.button === 0) {
+            let pieces = this.state.pieces;
+            if (pieces.length === 0) {
+                pieces.push(1);
+            } else {
+                pieces.push(this.state.pieces[this.state.pieces.length - 1] + 1);
+            }
+            this.setState({ pieces });
+        }
     }
 
     render() {
         return (
-            <div>
-                <div className="room" onClick={this.handleClick} >
+            <div className="room" onClick={this.handleClick} onContextMenu={this.handleClick}>
+                <div className="roomName">
                     {this.props.name}
                 </div>
+                <span className="gamePieceContainer">
+                    {
+                        this.state.pieces.map((piece, idx) => (
+                            <span key={idx}>
+                                [{piece}]
+                            </span>
+                        ))
+                    }
+                </span>
             </div>
         );
     }

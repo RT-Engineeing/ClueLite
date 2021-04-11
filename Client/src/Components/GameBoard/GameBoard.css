@@ -1,3 +1,4 @@
+/* Ideally, we wouldn't override these globally */
 .col-md-2 {
     width: 140px;
     max-width: 140px; 
@@ -13,8 +14,8 @@
 }
 
 #boardContainer {
-    margin-top: 3px;
-    -webkit-user-select: none;  /* Chrome all / Safari all */
+  margin-top: 3px;
+  -webkit-user-select: none;  /* Chrome all / Safari all */
   -moz-user-select: none;     /* Firefox all */
   -ms-user-select: none;      /* IE 10+ */
   user-select: none;          /* Likely future */      

@@ -2,14 +2,15 @@
     height: 710px;
     width: 710px;
     background-color: #777;
-
+    color: white;
+    -webkit-text-stroke-width: 0.5px;
+    -webkit-text-stroke-color: black;
 }
 
 #updatesContainer {
     min-height: 260px;
     width: 100%;
     align-items: center;
-    font-family: "Rockwell";
     color: white;
     -webkit-text-stroke-width: 0.5px;
     -webkit-text-stroke-color: black;
@@ -20,14 +21,12 @@
 .actionButton {
     width: 100%;
     background-color: #777;
-    font-family: 'Rockwell';
     padding: 10px;
     font-size: 20px;
     height: 50px;
     color: white;
     -webkit-text-stroke-width: 0.5px;
     -webkit-text-stroke-color: black;
-    font-family: "Rockwell";
 }
 
 #cards {
@@ -40,15 +39,21 @@
     height: 160px;
     width: 120px;
     margin-bottom: 15px;
+    -webkit-text-stroke-width: 0.5px;
+    -webkit-text-stroke-color: black;
 }
 
 #gamePageContainer {
     margin: 3%;
-    min-width: 1400px;
+    min-width: 1800px;
 }
 
 .suggestionModal {
     min-height: 400px;
+    background-color: goldenrod;
+}
+
+.secondarySuggestionModal {
     background-color: goldenrod;
 }
 
@@ -62,7 +67,6 @@
     color: black;
     -webkit-text-stroke-width: 0.5px;
     -webkit-text-stroke-color: white;
-    font-family: "Rockwell";
     align-self: center;
     border-bottom: 0px solid !important;
 }
@@ -71,7 +75,6 @@
     color: black;
     -webkit-text-stroke-width: 0px;
     -webkit-text-stroke-color: white;
-    font-family: "Rockwell";
 }
 
 .carouselItem {
@@ -81,7 +84,17 @@
     color: black;
     -webkit-text-stroke-width: 0.5px;
     -webkit-text-stroke-color: white;
-    font-family: "Rockwell";
     font-size: 30px;
     padding-top: 9px
 }
+
+.secondarySuggestionInstructions {
+    /* Text outline */ 
+    color: black;
+    font-size: 20px;
+    -webkit-text-stroke-width: 0.5px;
+    -webkit-text-stroke-color: white;
+    display: flex;
+    justify-content: center;
+    padding-bottom: 15px;
+} 

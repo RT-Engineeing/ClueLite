@@ -6,19 +6,44 @@ export class Hallway extends React.Component {
 
     constructor(props) {
         super(props);
-        console.log(`x =${props.x}`)
-        console.log(`y =${props.y}`)
-        console.log(`roomName =${props.name}`)
+        this.state = {
+            pieces: [1]
+        }
     }
 
-    handleClick = (button) => {
-        console.log("Clicked button");
+    handleClick = (event) => {
+        event.preventDefault(); // Prevents display of context menu
+        if (event.button === 2) {
+            if (this.state.pieces.length > 0) {
+                let pieces = this.state.pieces;
+                pieces.pop();
+                this.setState({ pieces })
+            }
+        } else if (event.button === 0) {
+            let pieces = this.state.pieces;
+            if (pieces.length === 0) {
+                pieces.push(1);
+            } else {
+                pieces.push(this.state.pieces[this.state.pieces.length - 1] + 1);
+            }
+            this.setState({ pieces });
+        }
     }
 
     render() {
+        const classNames = `gamePieceContainer ${this.props.orientation === "vertical" ? "hallwayPieceVertical" : "hallwayPieceHorizontal"}`;
         return (
             <div className={this.props.orientation === "vertical" ? "hallway-vertical" : "hallway-horizontal"}
-                onClick={this.handleClick}>
+                onClick={this.handleClick} onContextMenu={this.handleClick} >
+                <span className={classNames}>
+                    {
+                        this.state.pieces.map((piece, idx) => (
+                            <div key={idx}>
+                                [{piece}]
+                            </div>
+                        ))
+                    }
+                </span>
             </div >
         );
     }

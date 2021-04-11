@@ -11,7 +11,7 @@ export class LandingPage extends React.Component {
     render() {
         return (
             <center>
-                <div id="pageContainer" className="container" >
+                <div id="landingPageContainer" className="container">
                     <div className="row">
                         <div className="col">
                             <h1 className="title">

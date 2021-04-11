@@ -1,4 +1,4 @@
-  #pageContainer {
+  #landingPageContainer {
     top: 20%;
     max-width: 100%;
     position: absolute;
@@ -10,8 +10,6 @@
     border-color: lime !important;
     border-width: 2px !important;
     display: inline-flex;
-    align-items: center; 
-    padding: 14px !important;
     margin: 20px;
   }
   
@@ -20,17 +18,14 @@
     color: white !important;
     -webkit-text-stroke-width: 1px;
     -webkit-text-stroke-color: black;
-    font-family: 'Rockwell' !important;
     position: relative;
-    top: 13px;
+    top: 7px;
   }
   
   .title {
-    font-family: 'Rockwell' !important;
-    font-size: 3.5rem;
+    font-size: 55px;
     color: white;
     -webkit-text-stroke-width: 1px;
     -webkit-text-stroke-color: black;
-  
   }
   

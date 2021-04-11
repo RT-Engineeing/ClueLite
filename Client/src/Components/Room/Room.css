@@ -4,25 +4,15 @@
     background: url('../../Images/room.png') no-repeat ;
     background-size: 140px 140px;
     text-align: center;
+    line-height: 20px !important;
+    padding: 7px;
+    display: flex;
+    justify-content: center;
 }
 
-.name {
+.gamePieceContainer {
     position: absolute;
-    padding: 0px;
-}
-
-.suggestionModal {
-    font-family: 'Rockwell';
-    min-height: 400px;
-    background-color: goldenrod;
-    /* Text outline */ 
-    color: white;
-    -webkit-text-stroke-width: 1px;
-    -webkit-text-stroke-color: black;
-    font-family: "Rockwell";
-}
-
-.modalHeader {
-    align-self: center;
-    border-bottom: 0px solid !important;
+    bottom: 44%; 
+    /* In a future iteration, this could be improved by centering elements vertically 
+    rather than setting the "floor" at 44% */
 }
