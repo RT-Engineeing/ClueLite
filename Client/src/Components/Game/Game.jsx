@@ -6,34 +6,11 @@ import GameBoard from '../GameBoard/GameBoard';
 import Modal from 'react-bootstrap/Modal'
 import Carousel from 'react-bootstrap/Carousel'
 import 'bootstrap/dist/css/bootstrap.min.css';
-
-import exLeftArm from '../../Images/Characters/exLeftArm.jpg'
-import exBody from '../../Images/Characters/exBody.jpg'
-import exRightArm from '../../Images/Characters/exRightArm.jpg'
-import exLeftLeg from '../../Images/Characters/exLeftLeg.png'
-import exRightLeg from '../../Images/Characters/exRightLeg.jpg'
-
+import { characters, weapons, rooms, cardImages } from '../../Cards/Cards';
 
 const TMP_PLAYER_CARDS = [
-    "CARD 1", "CARD 2", "CARD 3", "CARD 4", "CARD 5"
+    "exodiaRightArm", "exodiaBody", "exodiaLeftArm", "exodiaRightLeg", "exodiaLeftLeg"
 ];
-const TMP_WEAPONS = [
-    "Flamethrower", "Shuriken", "Poison", "Glitter Cannon", "Dark Magic"
-]
-const TMP_CHARACTERS = [
-    "Jordan DeBarth", "Elon Musk", "Sam Schappelle", "Jeffery Garonzik", "Joe DeMasco", "Brian's Future Wife", "Mace Windu", "The Colonel"
-]
-const TMP_ROOMS = [
-    "Popeyes", "Lockheed Martin HQ", "Boeing HQ", "Ft. Meade", "Alarm.com Zoom Meeting", "Sam's Doppleganger's Office"
-]
-
-const cardImages = {
-    "CARD 1": exRightArm,
-    "CARD 2": exBody,
-    "CARD 3": exLeftArm,
-    "CARD 4": exRightLeg,
-    "CARD 5": exLeftLeg
-}
 
 export class Game extends React.Component {
 
@@ -81,7 +58,7 @@ export class Game extends React.Component {
                 </Modal.Header>
                 <Modal.Body>
                     <Carousel interval={null} indicators={false}>
-                        {TMP_CHARACTERS.map((character) =>
+                        {characters.map((character) =>
                         (
                             <Carousel.Item className="carouselItem">
                                 {character}
@@ -89,7 +66,7 @@ export class Game extends React.Component {
                         ))}
                     </Carousel>
                     <Carousel interval={null} indicators={false}>
-                        {TMP_WEAPONS.map((weapon) =>
+                        {weapons.map((weapon) =>
                         (
                             <Carousel.Item className="carouselItem">
                                 {weapon}
@@ -97,7 +74,7 @@ export class Game extends React.Component {
                         ))}
                     </Carousel>
                     <Carousel interval={null} indicators={false}>
-                        {TMP_ROOMS.map((room) =>
+                        {rooms.map((room) =>
                         (
                             <Carousel.Item className="carouselItem">
                                 {room}
@@ -131,7 +108,7 @@ export class Game extends React.Component {
                 </Modal.Header>
                 <Modal.Body>
                     <Carousel interval={null} indicators={false}>
-                        {TMP_CHARACTERS.map((character) =>
+                        {characters.map((character) =>
                         (
                             <Carousel.Item className="carouselItem">
                                 {character}
@@ -139,7 +116,7 @@ export class Game extends React.Component {
                         ))}
                     </Carousel>
                     <Carousel interval={null} indicators={false}>
-                        {TMP_WEAPONS.map((weapon) =>
+                        {weapons.map((weapon) =>
                         (
                             <Carousel.Item className="carouselItem">
                                 {weapon}
@@ -147,7 +124,7 @@ export class Game extends React.Component {
                         ))}
                     </Carousel>
                     <Carousel interval={null} indicators={false}>
-                        {TMP_ROOMS.map((room) =>
+                        {rooms.map((room) =>
                         (
                             <Carousel.Item className="carouselItem">
                                 {room}
@@ -288,12 +265,12 @@ export class Game extends React.Component {
 
 
                 <div id="endTurnButton" className="col d-flex justify-content-center">
-                        <Button className="actionButton"
+                    <Button className="actionButton"
                     //    onClick={window.endTurn()}
                     >
                         End Turn
                     </Button>
-                    </div>
+                </div>
             </div>
         );
 
