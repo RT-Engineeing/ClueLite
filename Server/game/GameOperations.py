@@ -81,7 +81,7 @@ class Weapons:
         self.location = location
 
 
-class weapdeck:
+class Weapdeck:
     def __init__(self, deck):
         self.cards = deck
 
@@ -90,7 +90,7 @@ class weapdeck:
         return self.cards[val]
 
 
-class chardeck:
+class Chardeck:
     def __init__(self, deck):
         self.cards = deck
 
@@ -99,7 +99,7 @@ class chardeck:
         return self.cards[val]
 
 
-class roomsdeck:
+class Roomsdeck:
     def __init__(self, deck):
         self.cards = deck
 

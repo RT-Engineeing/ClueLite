@@ -1,5 +1,5 @@
 from GameState import GameState
-from GameOperations import Players, Weapons, SessionState, weapdeck, roomsdeck, chardeck
+from GameOperations import Players, Weapons, SessionState, Weapdeck, Roomsdeck, Chardeck
 from random import randint
 from flask import Flask, jsonify, request, render_template, session
 from flask_session import Session
@@ -42,9 +42,9 @@ app.secret_key = "00000000"
 Session(app)
 
 playerturn = 0
-roomzdeck = roomsdeck(rooms)
-characdeck = chardeck(characters)
-weapondeck = weapdeck(weapons)
+roomzdeck = Roomsdeck(rooms)
+characdeck = Chardeck(characters)
+weapondeck = Weapdeck(weapons)
 rope = Weapons(weapons[0], [0, 0, 3], 7)
 leadpipe = Weapons(weapons[1], [0, 2, 3], 8)
 knife = Weapons(weapons[2], [0, 4, 3], 9)
