@@ -7,19 +7,11 @@ import Modal from 'react-bootstrap/Modal'
 import Carousel from 'react-bootstrap/Carousel'
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { characters, weapons, rooms, cardImages } from '../../Cards/Cards';
 
 const TMP_PLAYER_CARDS = [
-    "CARD 1", "CARD 2", "CARD 3", "CARD 4", "CARD 5"
+    "exodiaRightArm", "exodiaBody", "exodiaLeftArm", "exodiaRightLeg", "exodiaLeftLeg"
 ];
-const TMP_WEAPONS = [
-    "Flamethrower", "Shuriken", "Poison", "Glitter Cannon", "Dark Magic"
-]
-const TMP_CHARACTERS = [
-    "Jordan DeBarth", "Elon Musk", "Sam Schappelle", "Jeffery Garonzik", "Joe DeMasco", "Brian's Future Wife", "Mace Windu", "The Colonel"
-]
-const TMP_ROOMS = [
-    "Popeyes", "Lockheed Martin HQ", "Boeing HQ", "Ft. Meade", "Alarm.com Zoom Meeting", "Sam's Doppleganger's Office"
-]
 
 export class Game extends React.Component {
 
@@ -64,6 +56,86 @@ async fetchGameState() {
     const response = await axios.get("http://localhost:5000/getstate");
     console.log(response.data);
 
+}
+
+getGameState() {
+    return {
+        gameBoard: [
+            [
+                [
+                    1
+                ],
+                [
+                    2
+                ],
+                [
+                    3
+                ],
+                [
+                    4
+                ],
+                [
+                    5
+                ]
+            ],
+            [
+                [
+                    6
+                ],
+                [
+                    7
+                ],
+                [
+                    8
+                ],
+            ],
+            [
+                [
+                    9
+                ],
+                [
+                    10
+                ],
+                [
+                    11
+                ],
+                [
+                    12
+                ],
+                [
+                    13
+                ]
+            ],
+            [
+                [
+                    14
+                ],
+                [
+                    15
+                ],
+                [
+                    16
+                ],
+            ],
+            [
+                [
+                    17
+                ],
+                [
+                    18
+                ],
+                [
+                    19
+                ],
+                [
+                    20
+                ],
+                [
+                    21
+                ]
+            ]
+        ]
+    }
 }
 
 render() {
@@ -136,48 +208,48 @@ render() {
         </Modal >
     );
 
-    const accusationModal = (
-        <Modal
-            show={this.state.showAccusationModal}
-            onHide={hideAccusationModal}
-            backdrop="static"
-            keyboard={false}
-            centered
-            size="lg"
-            contentClassName="accusationModal"
-        >
-            <Modal.Header className="modalHeader">
-                <Modal.Title>Make an Accusation</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-                <Carousel interval={null} indicators={false}>
-                    {TMP_CHARACTERS.map((character) =>
-                    (
-                        <Carousel.Item className="carouselItem">
-                            {character}
-                        </Carousel.Item>
-                    ))}
-                </Carousel>
-                <Carousel interval={null} indicators={false}>
-                    {TMP_WEAPONS.map((weapon) =>
-                    (
-                        <Carousel.Item className="carouselItem">
-                            {weapon}
-                        </Carousel.Item>
-                    ))}
-                </Carousel>
-                <Carousel interval={null} indicators={false}>
-                    {TMP_ROOMS.map((room) =>
-                    (
-                        <Carousel.Item className="carouselItem">
-                            {room}
-                        </Carousel.Item>
-                    ))}
-                </Carousel>
-            </Modal.Body>
-            <Modal.Footer className="modalFooterButtons">
-                <Button variant="secondary" onClick={hideAccusationModal}>
-                    Cancel
+        const accusationModal = (
+            <Modal
+                show={this.state.showAccusationModal}
+                onHide={hideAccusationModal}
+                backdrop="static"
+                keyboard={false}
+                centered
+                size="lg"
+                contentClassName="accusationModal"
+            >
+                <Modal.Header className="modalHeader">
+                    <Modal.Title>Make an Accusation</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Carousel interval={null} indicators={false}>
+                        {characters.map((character) =>
+                        (
+                            <Carousel.Item className="carouselItem">
+                                {character}
+                            </Carousel.Item>
+                        ))}
+                    </Carousel>
+                    <Carousel interval={null} indicators={false}>
+                        {weapons.map((weapon) =>
+                        (
+                            <Carousel.Item className="carouselItem">
+                                {weapon}
+                            </Carousel.Item>
+                        ))}
+                    </Carousel>
+                    <Carousel interval={null} indicators={false}>
+                        {rooms.map((room) =>
+                        (
+                            <Carousel.Item className="carouselItem">
+                                {room}
+                            </Carousel.Item>
+                        ))}
+                    </Carousel>
+                </Modal.Body>
+                <Modal.Footer className="modalFooterButtons">
+                    <Button variant="secondary" onClick={hideAccusationModal}>
+                        Cancel
                      </Button>
                 <Button variant="primary" onClick={hideAccusationModal}>
                     Accuse
@@ -221,11 +293,11 @@ render() {
         </Modal >
     );
 
-    const gameBoard = (
-        <Card id="game">
-            { <GameBoard />}
-        </Card >
-    )
+        const gameBoard = (
+            <Card id="game">
+                { <GameBoard gameState={this.getGameState} />}
+            </Card >
+        )
 
     const updatesContainer = (
         <div className="row">
@@ -297,14 +369,14 @@ render() {
             </div>
 
 
-            <div id="endTurnButton" className="col d-flex justify-content-center">
-                <Button className="actionButton"
-                //    onClick={window.endTurn()}
-                >
-                    End Turn
+                <div id="endTurnButton" className="col d-flex justify-content-center">
+                    <Button className="actionButton"
+                    //    onClick={window.endTurn()}
+                    >
+                        End Turn
                     </Button>
+                </div>
             </div>
-        </div>
     );
 
     return (
