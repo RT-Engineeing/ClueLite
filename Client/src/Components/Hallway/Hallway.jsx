@@ -11,24 +11,22 @@ export class Hallway extends React.Component {
         }
     }
 
-    handleEvent = (event) => {
-        if (event.type === "mousedown") {
-            this.mouseDown = true;
-            this.mouseDownTime = performance.now();
-        } else {
-            this.mouseDown = false;
-            const clickDuration = performance.now() - this.mouseDownTime;
-            if (clickDuration > 250.0) {
-                if (this.state.pieces.length > 0) {
-                    let pieces = this.state.pieces;
-                    pieces.pop();
-                    this.setState({ pieces })
-                }
-            } else {
+    handleClick = (event) => {
+        event.preventDefault(); // Prevents display of context menu
+        if (event.button === 2) {
+            if (this.state.pieces.length > 0) {
                 let pieces = this.state.pieces;
-                pieces.push(this.state.pieces[this.state.pieces.length - 1] + 1)
+                pieces.pop();
                 this.setState({ pieces })
             }
+        } else if (event.button === 0) {
+            let pieces = this.state.pieces;
+            if (pieces.length === 0) {
+                pieces.push(1);
+            } else {
+                pieces.push(this.state.pieces[this.state.pieces.length - 1] + 1);
+            }
+            this.setState({ pieces });
         }
     }
 
@@ -36,7 +34,7 @@ export class Hallway extends React.Component {
         const classNames = `gamePieceContainer ${this.props.orientation === "vertical" ? "hallwayPieceVertical" : "hallwayPieceHorizontal"}`;
         return (
             <div className={this.props.orientation === "vertical" ? "hallway-vertical" : "hallway-horizontal"}
-                onMouseDown={this.handleEvent} onMouseUp={this.handleEvent} >
+                onClick={this.handleClick} onContextMenu={this.handleClick} >
                 <span className={classNames}>
                     {
                         this.state.pieces.map((piece, idx) => (

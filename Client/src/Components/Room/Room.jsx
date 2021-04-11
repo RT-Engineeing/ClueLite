@@ -16,15 +16,19 @@ export class Room extends React.Component {
 
     handleClick = (event) => {
         event.preventDefault(); // Prevents display of context menu
-        if (event.button === 0) {
+        if (event.button === 2) {
             if (this.state.pieces.length > 0) {
                 let pieces = this.state.pieces;
                 pieces.pop();
                 this.setState({ pieces })
             }
-        } else if (event.button === 2) {
+        } else if (event.button === 0) {
             let pieces = this.state.pieces;
-            pieces.push(this.state.pieces[this.state.pieces.length - 1] + 1);
+            if (pieces.length === 0) {
+                pieces.push(1);
+            } else {
+                pieces.push(this.state.pieces[this.state.pieces.length - 1] + 1);
+            }
             this.setState({ pieces });
         }
     }
