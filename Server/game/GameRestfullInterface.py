@@ -3,9 +3,11 @@ from GameOperations import Players, Weapons, SessionState, Weapdeck, Roomsdeck, 
 from random import randint
 from flask import Flask, jsonify, request, render_template, session
 from flask_session import Session
+from flask_cors import CORS
 import uuid
 import datetime
 import random
+
 
 rooms = [
     "Kitchen",
@@ -71,8 +73,10 @@ isSessionFull = False
 isPlayerReady = False
 sessionstate = SessionState(playername, uid)
 
+CORS(app)
 
 def adduser(uid):
+    print("Number of players:  " + str(len(playerarray)))
     if len(playerarray) == 0:
         random.shuffle(rooms)
         casefile.append(rooms[0])
