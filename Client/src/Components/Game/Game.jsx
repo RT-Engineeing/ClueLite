@@ -270,7 +270,7 @@ export class Game extends React.Component {
             </div >
         );
 
-        const accuseSuggestButtons = (
+        const accuseSuggestEndTurn = (
             <div id="accuseSuggest" className="row">
                 <div id="suggestButton" className="col d-flex justify-content-center">
                     <Button className="actionButton"
@@ -285,6 +285,15 @@ export class Game extends React.Component {
                     <Button className="actionButton"
                         onClick={showSecondarySuggestionModal}>Suggestion (2)</Button>
                 </div>
+
+
+                <div id="endTurnButton" className="col d-flex justify-content-center">
+                        <Button className="actionButton"
+                    //    onClick={window.endTurn()}
+                    >
+                        End Turn
+                    </Button>
+                    </div>
             </div>
         );
 
@@ -299,7 +308,7 @@ export class Game extends React.Component {
                             <div className="container">
                                 {updatesContainer}
                                 {cards}
-                                {accuseSuggestButtons}
+                                {accuseSuggestEndTurn}
                             </div >
                         </div >
                     </div >
