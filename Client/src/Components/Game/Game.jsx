@@ -23,6 +23,86 @@ export class Game extends React.Component {
         }
     }
 
+    getGameState() {
+        return {
+            gameBoard: [
+                [
+                    [
+                        1
+                    ],
+                    [
+                        2
+                    ],
+                    [
+                        3
+                    ],
+                    [
+                        4
+                    ],
+                    [
+                        5
+                    ]
+                ],
+                [
+                    [
+                        6
+                    ],
+                    [
+                        7
+                    ],
+                    [
+                        8
+                    ],
+                ],
+                [
+                    [
+                        9
+                    ],
+                    [
+                        10
+                    ],
+                    [
+                        11
+                    ],
+                    [
+                        12
+                    ],
+                    [
+                        13
+                    ]
+                ],
+                [
+                    [
+                        14
+                    ],
+                    [
+                        15
+                    ],
+                    [
+                        16
+                    ],
+                ],
+                [
+                    [
+                        17
+                    ],
+                    [
+                        18
+                    ],
+                    [
+                        19
+                    ],
+                    [
+                        20
+                    ],
+                    [
+                        21
+                    ]
+                ]
+            ]
+        }
+    }
+
     render() {
         const showSuggestionModal = () => {
             this.setState({ showSuggestModal: true });
@@ -180,7 +260,7 @@ export class Game extends React.Component {
 
         const gameBoard = (
             <Card id="game">
-                { <GameBoard />}
+                { <GameBoard gameState={this.getGameState} />}
             </Card >
         )
 

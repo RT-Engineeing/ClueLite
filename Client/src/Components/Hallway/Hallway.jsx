@@ -6,8 +6,10 @@ export class Hallway extends React.Component {
 
     constructor(props) {
         super(props);
+        const pieces = this.props.gameState ?
+            this.props.gameState.gameBoard[this.props.y][this.props.x] : [];
         this.state = {
-            pieces: [1]
+            pieces
         }
     }
 
