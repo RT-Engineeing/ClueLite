@@ -1,0 +1,18 @@
+.room {
+    height: 141px;
+    width: 141px;
+    background: url('../../Images/room.png') no-repeat ;
+    background-size: 140px 140px;
+    text-align: center;
+    line-height: 20px !important;
+    padding: 7px;
+    display: flex;
+    justify-content: center;
+}
+
+.gamePieceContainer {
+    position: absolute;
+    bottom: 44%; 
+    /* In a future iteration, this could be improved by centering elements vertically 
+    rather than setting the "floor" at 44% */
+}

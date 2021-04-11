@@ -7,8 +7,8 @@ __pycache__/
 *.so
 
 # React / Node Modules
-UI/build
-UI/node_modules
+Client/build
+Client/node_modules
 
 # Distribution / packaging
 .Python

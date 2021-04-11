@@ -1,0 +1,37 @@
+.hallway-vertical {
+    height: 140px;
+    width: 140px;
+    background: url('../../Images/vertical_hallway.png') no-repeat ;
+    background-position: 66% 50%;
+    background-size: 45px 130px;
+    text-align: center;
+    padding-top: 60px;
+    padding-bottom: 60px;
+    display: flex;
+    justify-content: center;
+}
+
+.hallway-horizontal {
+    max-height: 141px;
+    max-width: 141px;
+    background: url(../../Images/horizontal_hallway.png) no-repeat ;
+    background-position: center;
+    background-size: 120px 40px;
+    text-align: center;
+    padding-top: 60px;
+    padding-bottom: 60px;
+    display: flex;
+    justify-content: center;
+    line-height: normal !important;
+}
+
+.hallwayPieceHorizontal {
+    bottom: 8% !important;
+    position: relative;
+}
+
+.hallwayPieceVertical {
+    left: 43% !important;
+}
+
+
