@@ -3,22 +3,19 @@
     width: 25%;
     top: 5%;
     left: 20%;
-    min-height: 26rem;
+    min-height: 416px;
     background-color: #777 !important;
 }
 
 .playerNameText {
-    /* Text outline */ 
     color: white;
     -webkit-text-stroke-width: 1px;
     -webkit-text-stroke-color: black;
-    font-family: "Rockwell";
 }
 
 .list-group-item {
     text-align: center;
     margin: 5px;
-    font-family: "Rockwell";
     background-color: #555 !important;
     -webkit-text-stroke-width: 0.5px;
     -webkit-text-stroke-color: black;
@@ -46,7 +43,6 @@
     top: 10%;
     /* Text outline */ 
     color: white !important;
-    font-family: 'Rockwell' !important;
     -webkit-text-stroke-width: 1px;
     -webkit-text-stroke-color: black;
   }
@@ -60,6 +56,5 @@
     color: white !important;
     -webkit-text-stroke-width: 1px;
     -webkit-text-stroke-color: black;
-    font-family: 'Rockwell' !important;
 
   }

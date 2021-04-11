@@ -4,9 +4,6 @@ import "./Room.css";
 
 export class Room extends React.Component {
 
-    mouseDown = false;
-    mouseDownTime = 0.0;
-
     constructor(props) {
         super(props);
         this.state = {

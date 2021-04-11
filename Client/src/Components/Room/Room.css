@@ -10,12 +10,9 @@
     justify-content: center;
 }
 
-.name {
-    position: absolute;
-    padding: 0px;
-}
-
 .gamePieceContainer {
     position: absolute;
-    bottom: 50%;
+    bottom: 44%; 
+    /* In a future iteration, this could be improved by centering elements vertically 
+    rather than setting the "floor" at 44% */
 }
