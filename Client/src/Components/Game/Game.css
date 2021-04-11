@@ -41,6 +41,9 @@
     margin-bottom: 15px;
     -webkit-text-stroke-width: 0.5px;
     -webkit-text-stroke-color: black;
+    background-position: 66% 50%;
+    background-size: 120px 160px;
+
 }
 
 #gamePageContainer {

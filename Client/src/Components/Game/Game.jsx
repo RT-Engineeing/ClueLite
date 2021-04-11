@@ -7,6 +7,13 @@ import Modal from 'react-bootstrap/Modal'
 import Carousel from 'react-bootstrap/Carousel'
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+import exLeftArm from '../../Images/Characters/exLeftArm.jpg'
+import exBody from '../../Images/Characters/exBody.jpg'
+import exRightArm from '../../Images/Characters/exRightArm.jpg'
+import exLeftLeg from '../../Images/Characters/exLeftLeg.png'
+import exRightLeg from '../../Images/Characters/exRightLeg.jpg'
+
+
 const TMP_PLAYER_CARDS = [
     "CARD 1", "CARD 2", "CARD 3", "CARD 4", "CARD 5"
 ];
@@ -19,6 +26,14 @@ const TMP_CHARACTERS = [
 const TMP_ROOMS = [
     "Popeyes", "Lockheed Martin HQ", "Boeing HQ", "Ft. Meade", "Alarm.com Zoom Meeting", "Sam's Doppleganger's Office"
 ]
+
+const cardImages = {
+    "CARD 1": exRightArm,
+    "CARD 2": exBody,
+    "CARD 3": exLeftArm,
+    "CARD 4": exRightLeg,
+    "CARD 5": exLeftLeg
+}
 
 export class Game extends React.Component {
 
@@ -214,35 +229,45 @@ export class Game extends React.Component {
                         <div className="cardRow row">
                             <div className="cardCol col" align="right">
                                 <Card className="playerCard" align="center">
-                                    {TMP_PLAYER_CARDS[0]}
+                                    <Card.Img src={cardImages[TMP_PLAYER_CARDS[0]]} />
+                                    <Card.ImgOverlay>
+                                    </Card.ImgOverlay>
                                 </Card>
                             </div>
                             <div className="cardCol col" align="center">
                                 <Card className="playerCard" align="center">
-                                    {TMP_PLAYER_CARDS[1]}
+                                    <Card.Img src={cardImages[TMP_PLAYER_CARDS[1]]} />
+                                    <Card.ImgOverlay>
+                                    </Card.ImgOverlay>
                                 </Card>
                             </div>
                             <div className="cardCol col" align="left">
                                 <Card className="playerCard" align="center">
-                                    {TMP_PLAYER_CARDS[2]}
+                                    <Card.Img src={cardImages[TMP_PLAYER_CARDS[2]]} />
+                                    <Card.ImgOverlay>
+                                    </Card.ImgOverlay>
                                 </Card>
                             </div>
                         </div>
                         <div className="cardRow row">
                             <div className="cardCol col" align="right">
                                 <Card className="playerCard" align="center">
-                                    {TMP_PLAYER_CARDS[3]}
+                                    <Card.Img src={cardImages[TMP_PLAYER_CARDS[3]]} />
+                                    <Card.ImgOverlay>
+                                    </Card.ImgOverlay>
                                 </Card>
                             </div>
                             <div className="cardCol col" align="left">
                                 <Card className="playerCard" align="center">
-                                    {TMP_PLAYER_CARDS[4]}
+                                    <Card.Img src={cardImages[TMP_PLAYER_CARDS[4]]} />
+                                    <Card.ImgOverlay>
+                                    </Card.ImgOverlay>
                                 </Card>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </div >
         );
 
         const accuseSuggestButtons = (
