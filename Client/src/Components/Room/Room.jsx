@@ -1,26 +1,26 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./Room.css";
+import GamePieceContainer from '../GamePieceContainer/GamePieceContainer';
 
 export class Room extends React.Component {
 
     constructor(props) {
         super(props);
-        console.log(`x =${props.x}`)
-        console.log(`y =${props.y}`)
-        console.log(`roomName =${props.name}`)
     }
 
     handleClick = (button) => {
-        console.log("Clicked button");
     }
 
     render() {
         return (
-            <div>
-                <div className="room" onClick={this.handleClick} >
+            <div className="room" onClick={this.handleClick} >
+                <div className="roomName">
                     {this.props.name}
                 </div>
+                <span className="gamePieceContainer">
+                    <GamePieceContainer />
+                </span>
             </div>
         );
     }

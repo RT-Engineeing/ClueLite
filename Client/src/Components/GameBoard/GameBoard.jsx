@@ -50,7 +50,7 @@ export class GameBoard extends React.Component {
                         <Hallway orientation='horizontal' x='1' y='2' name='Atlantic Ocean' />
                     </div>
                     <div className='col-md-2'>
-                        <Room x='2' y='2' name='The Congo' />
+                        <Room x='2' y='2' name='Congo' />
                     </div>
                     <div className='col-md-2'>
                         <Hallway orientation='horizontal' x='3' y='2' name='India' />
@@ -72,13 +72,13 @@ export class GameBoard extends React.Component {
                 </div>
                 <div className='row' style={{ justifyContent: 'space-between' }}>
                     <div className='col-md-2'>
-                        <Room x='0' y='4' name='Southern Ocean 1' />
+                        <Room x='0' y='4' name='Southern Ocean' />
                     </div>
                     <div className='col-md-2'>
-                        <Hallway orientation='horizontal' x='1' y='4' name='Southern Ocean 2' />
+                        <Hallway orientation='horizontal' x='1' y='4' name='Southern Ocean' />
                     </div>
                     <div className='col-md-2'>
-                        <Room x='2' y='4' name='Southern Ocean 3' />
+                        <Room x='2' y='4' name='Southern Ocean' />
                     </div>
                     <div className='col-md-2'>
                         <Hallway orientation='horizontal' x='3' y='4' name='Antarctica' />

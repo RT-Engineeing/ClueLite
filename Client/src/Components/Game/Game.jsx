@@ -12,11 +12,11 @@ const TMP_PLAYER_CARDS = [
 ];
 
 const TMP_WEAPONS = [
-    "Flamethrower", "Shuriken", "Poison", "Glitter Cannon", "Dark Magic"
+    "Flamethrower", "Shuriken", "Poison", "Glitter Cannon", "Dark Magic", ""
 ]
 
 const TMP_CHARACTERS = [
-    "Elon Musk", "Terry Davis", "Brian's Future Wife", "Mace Windu", "The Colonel"
+    "Jordan DeBarth", "Elon Musk", "Sam Schappelle", "Jeffery Garonzik", "Joe DeMasco", "Brian's Future Wife", "Mace Windu", "The Colonel"
 ]
 
 const TMP_ROOMS = [
@@ -24,7 +24,8 @@ const TMP_ROOMS = [
     "Lockheed Martin HQ",
     "Boeing HQ",
     "Ft. Meade",
-    "Apple Park",
+    "Alarm.com Zoom Meeting",
+    "Sam's Doppleganger's Office"
 ]
 
 export class Game extends React.Component {

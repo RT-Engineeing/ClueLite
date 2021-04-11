@@ -4,6 +4,10 @@
     background: url('../../Images/room.png') no-repeat ;
     background-size: 140px 140px;
     text-align: center;
+    line-height: 20px !important;
+    padding: 7px;
+    display: flex;
+    justify-content: center;
 }
 
 .name {
@@ -11,18 +15,7 @@
     padding: 0px;
 }
 
-.suggestionModal {
-    font-family: 'Rockwell';
-    min-height: 400px;
-    background-color: goldenrod;
-    /* Text outline */ 
-    color: white;
-    -webkit-text-stroke-width: 1px;
-    -webkit-text-stroke-color: black;
-    font-family: "Rockwell";
-}
-
-.modalHeader {
-    align-self: center;
-    border-bottom: 0px solid !important;
+.gamePieceContainer {
+    position: absolute;
+    bottom: 50%;
 }

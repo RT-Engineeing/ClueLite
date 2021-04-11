@@ -2,11 +2,13 @@
     height: 140px;
     width: 140px;
     background: url('../../Images/vertical_hallway.png') no-repeat ;
-    background-position: 66% 75%;
+    background-position: 66% 50%;
     background-size: 45px 130px;
     text-align: center;
     padding-top: 60px;
     padding-bottom: 60px;
+    display: flex;
+    justify-content: center;
 }
 
 .hallway-horizontal {
@@ -18,10 +20,16 @@
     text-align: center;
     padding-top: 60px;
     padding-bottom: 60px;
-
+    display: flex;
+    justify-content: center;
 }
 
-.carouselItem {
-    max-height: 60px;
+.hallwayPieceHorizontal {
+    bottom: 8% !important;
 }
+
+.hallwayPieceVertical {
+    left: 43% !important;
+}
+
 
