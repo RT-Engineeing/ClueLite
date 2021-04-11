@@ -1,0 +1,22 @@
+
+epython:S1854P"HRemove this assignment to local variable 'uid'; the value is never used.(Ğİ®˜ÿÿÿÿÿ
+^python:S1763R"GDelete this unreachable code or refactor the code to make it reachable.(Æëâ"
+lpython:S3776Z"TRefactor this function to reduce its Cognitive Complexity from 30 to the 15 allowed.(¸Š’¼
+npython:S1854¬"PRemove this assignment to local variable 'ycoordinate'; the value is never used.(²¨›èùÿÿÿÿ
+ypython:S117³"\Rename this local variable "newLocation" to match the regular expression ^[_a-z][a-z0-9_]*$.(©ÂÓúûÿÿÿÿ
+tpython:S117·"\Rename this local variable "oldLocation" to match the regular expression ^[_a-z][a-z0-9_]*$.(¢Òíà
+hpython:S1542¦"JRename function "Move" to match the regular expression ^[a-z_][a-z0-9_]*$.(Ğ§ó¢ùÿÿÿÿ
+npython:S1854Ë"PRemove this assignment to local variable 'ycoordinate'; the value is never used.(²¨›èùÿÿÿÿ
+ypython:S117Ó"\Rename this local variable "newLocation" to match the regular expression ^[_a-z][a-z0-9_]*$.(©ÂÓúûÿÿÿÿ
+tpython:S117İ"\Rename this local variable "oldLocation" to match the regular expression ^[_a-z][a-z0-9_]*$.(¢Òíà
+kpython:S1542Ã"MRename function "Suggest" to match the regular expression ^[a-z_][a-z0-9_]*$.(È·¨¼øÿÿÿÿ
+rpython:S3776Ã"TRefactor this function to reduce its Cognitive Complexity from 30 to the 15 allowed.(È·¨¼øÿÿÿÿ
+ypython:S117†"\Rename this local variable "newLocation" to match the regular expression ^[_a-z][a-z0-9_]*$.(©ÂÓúûÿÿÿÿ
+tpython:S117Š"\Rename this local variable "oldLocation" to match the regular expression ^[_a-z][a-z0-9_]*$.(¢Òíà
+epython:S1542ø"LRename function "Accuse" to match the regular expression ^[a-z_][a-z0-9_]*$.(á•şÈ
+Fpython:S1481ÿ"(Remove the unused local variable "room".(âçÕÕúÿÿÿÿ
+kpython:S1542š"MRename function "EndTurn" to match the regular expression ^[a-z_][a-z0-9_]*$.(âñ¥úÿÿÿÿ
+Epython:S1481"-Remove the unused local variable "planernum".(Ó•‹X
+fpython:S1542¥"MRename function "SubTurn" to match the regular expression ^[a-z_][a-z0-9_]*$.(È”÷Á
+Kpython:S1481©"-Remove the unused local variable "character".(°¸À“úÿÿÿÿ
+hpython:S1542®"PRename function "SubTurnReq" to match the regular expression ^[a-z_][a-z0-9_]*$.(Áûó1
