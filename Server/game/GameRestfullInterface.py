@@ -49,12 +49,12 @@ playerturn = 0
 roomzdeck = Roomsdeck(rooms)
 characdeck = Chardeck(characters)
 weapondeck = Weapdeck(weapons)
-rope = Weapons(weapons[0], [0, 0, 3], 7)
-leadpipe = Weapons(weapons[1], [0, 2, 3], 8)
-knife = Weapons(weapons[2], [0, 4, 3], 9)
-wrench = Weapons(weapons[3], [2, 0, 3], 10)
-candlestick = Weapons(weapons[4], [2, 2, 3], 11)
-revolver = Weapons(weapons[5], [2, 4, 3], 12)
+rope = Weapons(weapons[0], [0, 0], 7)
+leadpipe = Weapons(weapons[1], [0, 2], 8)
+knife = Weapons(weapons[2], [0, 4], 9)
+wrench = Weapons(weapons[3], [2, 0], 10)
+candlestick = Weapons(weapons[4], [2, 2], 11)
+revolver = Weapons(weapons[5], [2, 4], 12)
 weaponsarray = [knife, rope, leadpipe, wrench, candlestick, revolver]
 totaldeck = []
 playerarray = []
@@ -62,6 +62,7 @@ selectedChars = []
 casefile = []
 subturnqueue = []
 characselectdeck = []
+suggestionmessage =[]
 gamestate = GameState(casefile, 0, 0, False, [[["Rope"], [], ["Lead Pipe"], [], ["Knife"]],
                                               [[], [], [], [], []],
                                               [["Wrench"], [], ["Candlestick"], [], ["Revolver"]],
@@ -131,6 +132,7 @@ def adduser():
             sessionkey=str(session.getUid()),
             playername=playername,
             totalPlayers=session.getPlayernum(),
+            yourcharacter=player.getCharacter(),
             result=playername + "has been added to the session.",
         )
         return sessionstring
@@ -178,6 +180,7 @@ def adduser():
             sessionId=str(session.getUid()),
             playername=playername,
             totalPlayers=session.getPlayernum(),
+            yourcharacter=player.getCharacter(),
             result=playername + "has been added to the session.",
         )
         return sessionstring
@@ -300,8 +303,14 @@ def Move():
             if (x.getCharacter() == character):
                 oldLocation = x.getLocation()
                 board = gamestate.getGameBoard()
-                board[oldLocation[0]][oldLocation[1]][0] = 0
-                board[newLocation[0]][newLocation[1]][0] = count
+                arr = board[oldLocation[0]][oldLocation[1]]
+                arr2 = board[newLocation[0]][newLocation[1]]
+                for character in range(len(arr)):
+                    if arr[character] == x.getCharacter():
+                        arr.pop(character)
+                arr2.append(x.getCharacter())
+                board[oldLocation[0]][oldLocation[1]] = arr
+                board[newLocation[0]][newLocation[1]] = arr2
                 x.setLocation(newLocation)
                 gamestate.setGameBoard(board)
             count += 1
@@ -329,36 +338,48 @@ def Suggest():
 
         newLocation = [xcoordinate, ycoordinate]
         weaponloc = []
-        weaponnum = 0
+        weaponname = ""
         for x in weaponsarray:
             if (x.getName() == weapon):
                 weaponloc = x.getLocation()
-                weaponnum = x.getWeapon()
+                weaponname = x.getName()
         count = 1
         for x in playerarray:
             if (x.getCharacter() == character):
                 oldLocation = x.getLocation()
                 board = gamestate.getGameBoard()
-                board[oldLocation[0]][oldLocation[1]][0] = 0
-                board[weaponloc[0]][weaponloc[1]][weaponloc[2]] = 0
-                board[newLocation[0]][newLocation[1]][0] = count
-                board[newLocation[0]][newLocation[1]][3] = weaponnum
+                arr = board[oldLocation[0]][oldLocation[1]]
+                for character in range(len(arr)):
+                    if arr[character] == x.getCharacter():
+                        arr.pop(character)
+                board[oldLocation[0]][oldLocation[1]] = arr
+                arr2 = board[weaponloc[0]][weaponloc[1]]
+                for weapon in range(len(arr2)):
+                    if arr2[weapon] == weaponname:
+                        arr2.pop(weapon)
+                board[weaponloc[0]][weaponloc[1]] = arr2
+                arr3 = board[newLocation[0]][newLocation[1]]
+                arr3.append(weapon)
+                arr3.append(character)
+                board[newLocation[0]][newLocation[1]] = arr3
                 x.setLocation(newLocation)
                 for x in weaponsarray:
                     if (x.getName() == weapon):
-                        x.setLocation([newLocation[0], newLocation[1], 3])
+                        x.setLocation([newLocation[0], newLocation[1]])
                 gamestate.setGameBoard(board)
                 message = "{0} suggest that the murder was committed by {1} in the {2} with a {3}".format(
                     playercharacter,
                     character,
                     room,
                     weapon)
+                suggestionmessage.append(message)
             count += 1
         counter = 1
         for x in playerarray:
             if (x.getCharacter() == character):
                 gamestate.setSubturn(counter)
             count += 1
+
         return jsonify(result='success', message=message)
     else:
         return jsonify(result='error')
@@ -405,7 +426,7 @@ def EndTurn():
         some_json = request.get_json()
         playernum = some_json["playernum"]
         # will need to add validation for the playernum
-        if (gamestate.getPlayerturn() == 4):
+        if (gamestate.getPlayerturn() == 6):
             gamestate.setPlayerturn = 1
         else:
             gamestate.setPlayerturn(gamestate.getPlayerturn + 1)
