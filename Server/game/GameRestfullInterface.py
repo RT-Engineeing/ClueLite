@@ -127,7 +127,7 @@ def adduser():
         session.setGameState(newgamestate)
         session.setPlayernum(len(playerarray))
         sessionstring = jsonify(
-            sessionkey=str(session.getSessionid()),
+            sessionId=str(session.getSessionid()),
             playername=playername,
             totalPlayers=session.getPlayernum(),
             yourcharacter=player.getCharacter(),
@@ -188,6 +188,7 @@ def adduser():
 def playersready():
     if request.method == 'POST':
         some_json = request.get_json()
+        print("fetched json " + str(some_json))
         playername = some_json["playername"]
         sessionId = some_json["sessionId"]
         playerready = some_json["playerready"]

@@ -18,8 +18,7 @@ function App() {
         <Route path="/start">
           <LandingPage />
         </Route>
-        <Route path="/lobby">
-          <Lobby />
+        <Route path="/lobby" component={Lobby}>
         </Route>
         <Route path="/game">
           <Game />
