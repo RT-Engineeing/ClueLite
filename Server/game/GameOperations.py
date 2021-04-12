@@ -1,4 +1,6 @@
 from random import randint
+from flask import session, jsonify
+import uuid
 
 
 class Players:
@@ -31,30 +33,6 @@ class Players:
 
     def setLocation(self, location):
         self.location = location
-
-
-class SessionState:
-    def __init__(self, name, uid):
-        self.name = name
-        self.uid = uid
-
-    def getName(self):
-        return self.name
-
-    def getUid(self):
-        return self.uid
-
-    def setName(self, name):
-        self.name = name
-
-    def setUid(self, uid):
-        self.uid = uid
-
-    def isSessionFull(self, uid, sessionplayers):
-        if sessionplayers == 6:
-            return True
-        return False
-
 
 class Weapons:
     def __init__(self, name, location, weapnum):

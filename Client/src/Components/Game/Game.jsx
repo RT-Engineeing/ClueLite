@@ -124,7 +124,7 @@ export class Game extends React.Component {
 
 
     componentDidMount() {
-        this.interval = setInterval(() => this.pollGameState(), 1000);
+        this.interval = setInterval(() => this.pollGameState(), 5000);
     }
 
     componentWillUnmount() {

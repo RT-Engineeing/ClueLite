@@ -7,18 +7,34 @@ import RTTLogo from '../../Images/RTTLogo.png';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./LandingPage.css"
 import axios from 'axios';
-import { Route, useHistory } from 'react-router';
+import getUserUUID from '../../UUID/UUID';
 
 export class LandingPage extends React.Component {
 
     constructor(props) {
         super(props);
+        console.log(getUserUUID());
         this.state = {
-            canJoin: false
+            sessionKey: undefined,
+            playerName: undefined,
+            uuid: undefined
         }
     }
 
     render() {
+
+        const playButton = (
+            <Button variant="success" className="startButton justify-content-center">
+                <p className="startText">Play</p>
+            </Button>
+        );
+
+        const loadingButton = (
+            <Button variant="success" className="loadingButton justify-content-center">
+                <p className="startText">Loading...</p>
+            </Button>
+        );
+
         return (
             <center>
                 <div id="landingPageContainer" className="container">
@@ -31,10 +47,16 @@ export class LandingPage extends React.Component {
                     </div>
                     <div className="row">
                         <div className="col text-center">
-                            <Link to="/lobby" style={{ textDecoration: 'none' }} >
-                                <Button variant="success" className="startButton justify-content-center">
-                                    <p className="startText">Play</p>
-                                </Button>
+                            <Link to={{
+                                pathname: '/lobby',
+                                state: {
+                                    sessionKey: this.state.sessionKey,
+                                    playername: this.state.playername
+                                }
+                            }} style={{ textDecoration: 'none' }} params={{
+                                key: "test"
+                            }} >
+                                {this.state.sessionKey ? playButton : loadingButton}
                             </Link>
                         </div>
                     </div>
@@ -53,21 +75,19 @@ export class LandingPage extends React.Component {
     }
 
     async findLobby() {
-
         const response = await axios.get("http://localhost:5000/session");
-        console.log(response.data);
-        const isSessionFull = response.data["isSessionFull"];
-        console.log(isSessionFull);
-        if (isSessionFull === false) {
-            this.setState({ canJoin: !isSessionFull });
-            console.log(this.state);
-        }
+
+        const playername = response.data["playername"];
+        const sessionKey = response.data["sessionId"];
+
+        // console.log("session key: " + sessionKey);
+        this.setState({
+            sessionKey: sessionKey,
+            playername: playername
+        });
+        // console.log("updated state: " + this.state);
+
     }
 
-    processSessionResponse(sessionResponse) {
-        if (sessionResponse["isSessionFull"] === false) {
-            console.log("open session yee haw");
-        }
-    }
 }
 export default LandingPage;

@@ -1,25 +1,31 @@
+from Session import Session
 from GameState import GameState
-from GameOperations import Players, Weapons, SessionState, Weapdeck, Roomsdeck, Chardeck
-from random import randint
-from flask import Flask, jsonify, request, render_template, session
-from flask_session import Session
+from GameOperations import Players, Weapons, Weapdeck, Roomsdeck, Chardeck
+from flask import Flask, jsonify, request, render_template
 from flask_cors import CORS
-import uuid
-import datetime
 import random
 
-
+app = Flask(__name__)
 rooms = [
     "Kitchen",
     "Conservatory",
     "Dining Room",
     "Ballroom",
-    "Study Hall",
+    "Study",
+    "Hall",
     "Lounge",
     "Library",
     "Billiard Room"
 ]
 characters = [
+    "Miss Scarlet",
+    "Mrs. White",
+    "Mrs. Peacock",
+    "Professor Plum",
+    "Mr.Green",
+    "Colonel Mustard"
+]
+charactersind = [
     "Miss Scarlet",
     "Mrs. White",
     "Mrs. Peacock",
@@ -35,48 +41,38 @@ weapons = [
     "Candlestick",  # 11
     "Revolver"  # 12
 ]
-characselectdeck = []
-app = Flask(__name__)
-SESSION_TYPE = 'filesystem'
-app.config.from_object(__name__)
-app.permanent_session_lifetime = datetime.timedelta(days=365)
-app.secret_key = "00000000"
-Session(app)
 
 playerturn = 0
 roomzdeck = Roomsdeck(rooms)
 characdeck = Chardeck(characters)
 weapondeck = Weapdeck(weapons)
-rope = Weapons(weapons[0], [0, 0, 3], 7)
-leadpipe = Weapons(weapons[1], [0, 2, 3], 8)
-knife = Weapons(weapons[2], [0, 4, 3], 9)
-wrench = Weapons(weapons[3], [2, 0, 3], 10)
-candlestick = Weapons(weapons[4], [2, 2, 3], 11)
-revolver = Weapons(weapons[5], [2, 4, 3], 12)
+rope = Weapons(weapons[0], [0, 0], 7)
+leadpipe = Weapons(weapons[1], [0, 2], 8)
+knife = Weapons(weapons[2], [0, 4], 9)
+wrench = Weapons(weapons[3], [2, 0], 10)
+candlestick = Weapons(weapons[4], [2, 2], 11)
+revolver = Weapons(weapons[5], [2, 4], 12)
 weaponsarray = [knife, rope, leadpipe, wrench, candlestick, revolver]
 totaldeck = []
 playerarray = []
 selectedChars = []
 casefile = []
 subturnqueue = []
-gamestate = GameState(casefile, 0, 0, False, [[[0, 0, 0, 7, 0, 0], [0], [0, 0, 0, 8, 0, 0], [0], [0, 0, 0, 9, 0, 0]],
-                                              [[0], [99], [0], [99], [0]],
-                                              [[0, 0, 0, 10, 0, 0], [0], [0, 0, 0, 11, 0, 0], [0], [0, 0, 0, 12, 0, 0]],
-                                              [[0], [99], [0], [99], [0]],
-                                              [[0, 0, 0, 0, 0, 0], [0], [0, 0, 0, 0, 0, 0], [0], [0, 0, 0, 0, 0, 0]]],
+characselectdeck = []
+suggestionmessage = []
+gamestate = GameState(casefile, 0, 0, False, [[["Rope"], [], ["Lead Pipe"], [], ["Knife"]],
+                                              [[], [], [], [], []],
+                                              [["Wrench"], [], ["Candlestick"], [], ["Revolver"]],
+                                              [[], [], [], [], []],
+                                              [[], [], [], [], []]],
                       False, 0)
-
-uid = ""
-playername = ""
-maxSessionPlayers = 6
-isSessionFull = False
+maxSessionPlayer = 0
 isPlayerReady = False
-sessionstate = SessionState(playername, uid)
+tempvar = 0
+session = Session(random.randint(100000, 999999), gamestate)
 
 CORS(app)
-
-def adduser(uid):
-    print("Number of players:  " + str(len(playerarray)))
+def adduser():
     if len(playerarray) == 0:
         random.shuffle(rooms)
         casefile.append(rooms[0])
@@ -87,14 +83,14 @@ def adduser(uid):
         random.shuffle(weapons)
         casefile.append(weapons[0])
         del weapons[0]
-        totaldeck.append(rooms)
-        totaldeck.append(characters)
-        totaldeck.append(weapons)
-        gamestate.setCasefile(casefile)
-
-    for i in range(5):
-        playername = "Player" + str(i + 1)
-        character = characters[i]
+        global totaldeck
+        totaldeck.extend(rooms)
+        totaldeck.extend(weapons)
+        totaldeck.extend(characters)
+        newgamestate = gamestate
+        newgamestate.setCasefile(casefile)
+        playername = "Player" + str(len(playerarray) + 1)
+        character = charactersind[len(playerarray)]
         characselectdeck.append(character)
         hand = []
         location = []
@@ -102,59 +98,125 @@ def adduser(uid):
             random.shuffle(totaldeck)
             hand.append(totaldeck[0])
             del totaldeck[0]
-        if character == characselectdeck[0]:
+        if character == 'Miss Scarlet':
             location = [0, 3]
-        elif character == characselectdeck[1]:
+        elif character == 'Mrs. White':
             location = [4, 3]
-        elif character == characselectdeck[2]:
+        elif character == 'Mrs. Peacock':
             location = [3, 0]
-        elif character == characselectdeck[3]:
+        elif character == 'Professor Plum':
             location = [1, 0]
-        elif character == characselectdeck[4]:
+        elif character == 'Mr.Green':
             location = [4, 1]
-        elif character == characselectdeck[5]:
+        elif character == 'Colonel Mustard':
             location = [1, 4]
         player = Players(playername, character, hand, location)
         playerarray.append(player)
-        if len(playerarray) == 1:
-            gamestate.setNumOfPlayers(1)
-        elif len(playerarray) == 2:
-            gamestate.setNumOfPlayers(2)
-        elif len(playerarray) == 3:
-            gamestate.setNumOfPlayers(3)
-        elif len(playerarray) == 4:
-            gamestate.setNumOfPlayers(4)
-        elif len(playerarray) == 5:
-            gamestate.setNumOfPlayers(5)
-        elif len(playerarray) == 6:
-            gamestate.setNumOfPlayers(6)
-            gamestate.setGameRunning(True)
-            gamestate.setPlayerturn(1)
-            sessionstate.isSessionFull(True)
-        board = gamestate.getGameBoard()
-        board[player.getLocation()[0]][player.getLocation()[1]][0] = len(playerarray)
-        gamestate.setGameBoard(board)
-        sessionstate.setUid(uid)
-        sessionstate.setName(playername)
-        return jsonify(result="success", Player1=playername, isSessionFull=isSessionFull)
+        p = len(playerarray)
+        if 1 >= p <= 5:
+            newgamestate.setNumOfPlayers(p)
+        elif p == 6:
+            newgamestate.setNumOfPlayers(p)
+            newgamestate.setGameRunning(True)
+            newgamestate.setPlayerturn(1)
+        board = newgamestate.getGameBoard()
+        arr = board[player.getLocation()[0]][player.getLocation()[1]]
+        arr.append(player.getCharacter())
+        board[player.getLocation()[0]][player.getLocation()[1]] = arr
+        newgamestate.setGameBoard(board)
+        session.setGameState(newgamestate)
+        session.setPlayernum(len(playerarray))
+        sessionstring = jsonify(
+            sessionId=str(session.getSessionid()),
+            playername=playername,
+            totalPlayers=session.getPlayernum(),
+            yourcharacter=player.getCharacter(),
+            result=playername + " has been added to the session.",
+        )
+        return sessionstring
+    else:
+        newgamestate = session.getGameState()
+        playername = "Player" + str(session.getPlayernum() + 1)
+        character = charactersind[session.getPlayernum()]
+        characselectdeck.append(character)
+        hand = []
+        location = []
+        for i in range(3):
+            random.shuffle(totaldeck)
+            hand.append(totaldeck[0])
+            del totaldeck[0]
+        if character == 'Miss Scarlet':
+            location = [0, 3]
+        elif character == 'Mrs. White':
+            location = [4, 3]
+        elif character == 'Mrs. Peacock':
+            location = [3, 0]
+        elif character == 'Professor Plum':
+            location = [1, 0]
+        elif character == 'Mr.Green':
+            location = [4, 1]
+        elif character == 'Colonel Mustard':
+            location = [1, 4]
+        player = Players(playername, character, hand, location)
+        playerarray.append(player)
+        p = len(playerarray)
+        if 1 <= p <= 5:
+            newgamestate.setNumOfPlayers(p)
+        elif p == 6:
+            newgamestate.setNumOfPlayers(p)
+            # newgamestate.setGameRunning(True)
+            # newgamestate.setPlayerturn(1)
+        board = newgamestate.getGameBoard()
+        arr = board[player.getLocation()[0]][player.getLocation()[1]]
+        arr.append(player.getCharacter())
+        board[player.getLocation()[0]][player.getLocation()[1]] = arr
+        newgamestate.setGameBoard(board)
+        session.setGameState(newgamestate)
+        session.setPlayernum(len(playerarray))
+        # session.addPlayer(player)
+        sessionstring = jsonify(
+            sessionId=str(session.getSessionid()),
+            playername=playername,
+            totalPlayers=session.getPlayernum(),
+            yourcharacter=player.getCharacter(),
+            result=playername + " has been added to the session.",
+        )
+        return sessionstring
 
 
-@app.route('/getsession')
-@app.route('/makeready')
+@app.route('/ready', methods=['POST', 'GET'])
+def playersready():
+    if request.method == 'POST':
+        some_json = request.get_json()
+        print("fetched json " + str(some_json))
+        playername = some_json["playername"]
+        sessionId = some_json["sessionId"]
+        playerready = some_json["playerready"]
+        if playerready == "True":
+            isReady = True
+            session.addPlayer(playername)
+            return session.setReady(sessionId, playername, isReady)
+        else:
+            session.removePlayer(playername)
+            isReady = False
+            return session.setReady(sessionId, playername, isReady)
+    elif request.method == 'GET':
+        if len(session.getReady()) == 6:
+            return jsonify(status='true',
+                           playersready=session.getReady())
+        else:
+            return jsonify(status='false',
+                           playersready=session.getReady())
+    else:
+        return jsonify(
+            result="error",
+            message="The following method is not supported."
+        )
+
+
 @app.route('/session')
 def sessions():
-    if 'uid' not in session:
-        session['uid'] = uuid.uuid4()
-        uid = session['uid']
-    else:
-        uid = session['uid']
-    return adduser(uid)
-
-@app.route('/killsession')
-def popsession():
-    session.pop('uid', None)
-    gamestate.setGameRunning(False)
-    return "Session deleted"
+    return adduser()
 
 
 @app.route('/getstate', methods=['GET'])
@@ -164,6 +226,7 @@ def hello():
                         'Player1': {'name': playerarray[0].getName(), 'character': playerarray[0].getCharacter(),
                                     'location': playerarray[0].getLocation(), 'hand': playerarray[0].getHand()},
                         'playerturn': gamestate.getPlayerturn(), 'gamestatus': gamestate.getGameWon(),
+                        'gamerunning': gamestate.getGameRunning(),
                         'gameboard': gamestate.getGameBoard()})
     if (len(playerarray) == 2):
         return jsonify({'numberofplayers': gamestate.getNumOfPlayers(),
@@ -172,6 +235,7 @@ def hello():
                         'Player2': {'name': playerarray[1].getName(), 'character': playerarray[1].getCharacter(),
                                     'location': playerarray[1].getLocation(), 'hand': playerarray[1].getHand()},
                         'playerturn': gamestate.getPlayerturn(), 'gamestatus': gamestate.getGameWon(),
+                        'gamerunning': gamestate.getGameRunning(),
                         'gameboard': gamestate.getGameBoard()})
     if (len(playerarray) == 3):
         return jsonify({'numberofplayers': gamestate.getNumOfPlayers(),
@@ -182,6 +246,7 @@ def hello():
                         'Player3': {'name': playerarray[2].getName(), 'character': playerarray[2].getCharacter(),
                                     'location': playerarray[2].getLocation(), 'hand': playerarray[2].getHand()},
                         'playerturn': gamestate.getPlayerturn(), 'gamestatus': gamestate.getGameWon(),
+                        'gamerunning': gamestate.getGameRunning(),
                         'gameboard': gamestate.getGameBoard()})
     if (len(playerarray) == 4):
         return jsonify({'numberofplayers': gamestate.getNumOfPlayers(),
@@ -194,6 +259,39 @@ def hello():
                         'Player4': {'name': playerarray[3].getName(), 'character': playerarray[3].getCharacter(),
                                     'location': playerarray[3].getLocation(), 'hand': playerarray[3].getHand()},
                         'playerturn': gamestate.getPlayerturn(), 'gamestatus': gamestate.getGameWon(),
+                        'gamerunning': gamestate.getGameRunning(),
+                        'gameboard': gamestate.getGameBoard()})
+    if (len(playerarray) == 5):
+        return jsonify({'numberofplayers': gamestate.getNumOfPlayers(),
+                        'Player1': {'name': playerarray[0].getName(), 'character': playerarray[0].getCharacter(),
+                                    'location': playerarray[0].getLocation(), 'hand': playerarray[0].getHand()},
+                        'Player2': {'name': playerarray[1].getName(), 'character': playerarray[1].getCharacter(),
+                                    'location': playerarray[1].getLocation(), 'hand': playerarray[1].getHand()},
+                        'Player3': {'name': playerarray[2].getName(), 'character': playerarray[2].getCharacter(),
+                                    'location': playerarray[2].getLocation(), 'hand': playerarray[2].getHand()},
+                        'Player4': {'name': playerarray[3].getName(), 'character': playerarray[3].getCharacter(),
+                                    'location': playerarray[3].getLocation(), 'hand': playerarray[3].getHand()},
+                        'Player5': {'name': playerarray[4].getName(), 'character': playerarray[4].getCharacter(),
+                                    'location': playerarray[4].getLocation(), 'hand': playerarray[4].getHand()},
+                        'playerturn': gamestate.getPlayerturn(), 'gamestatus': gamestate.getGameWon(),
+                        'gamerunning': gamestate.getGameRunning(),
+                        'gameboard': gamestate.getGameBoard()})
+    if (len(playerarray) == 6):
+        return jsonify({'numberofplayers': gamestate.getNumOfPlayers(),
+                        'Player1': {'name': playerarray[0].getName(), 'character': playerarray[0].getCharacter(),
+                                    'location': playerarray[0].getLocation(), 'hand': playerarray[0].getHand()},
+                        'Player2': {'name': playerarray[1].getName(), 'character': playerarray[1].getCharacter(),
+                                    'location': playerarray[1].getLocation(), 'hand': playerarray[1].getHand()},
+                        'Player3': {'name': playerarray[2].getName(), 'character': playerarray[2].getCharacter(),
+                                    'location': playerarray[2].getLocation(), 'hand': playerarray[2].getHand()},
+                        'Player4': {'name': playerarray[3].getName(), 'character': playerarray[3].getCharacter(),
+                                    'location': playerarray[3].getLocation(), 'hand': playerarray[3].getHand()},
+                        'Player5': {'name': playerarray[4].getName(), 'character': playerarray[4].getCharacter(),
+                                    'location': playerarray[4].getLocation(), 'hand': playerarray[4].getHand()},
+                        'Player6': {'name': playerarray[5].getName(), 'character': playerarray[5].getCharacter(),
+                                    'location': playerarray[5].getLocation(), 'hand': playerarray[5].getHand()},
+                        'playerturn': gamestate.getPlayerturn(), 'gamestatus': gamestate.getGameWon(),
+                        'gamerunning': gamestate.getGameRunning(),
                         'gameboard': gamestate.getGameBoard()})
     return jsonify({'error': 'error'})
 
@@ -220,10 +318,14 @@ def Move():
             if (x.getName() == character):
                 oldLocation = x.getLocation()
                 board = gamestate.getGameBoard()
-                board[oldLocation[0]][oldLocation[1]][0] = 0
-                board[newLocation[0]][newLocation[1]][0] = count
-                
-                print("Found match. Moving from " + str(oldLocation))
+                arr = board[oldLocation[0]][oldLocation[1]]
+                arr2 = board[newLocation[0]][newLocation[1]]
+                for character in range(len(arr)):
+                    if arr[character] == x.getCharacter():
+                        arr.pop(character)
+                arr2.append(x.getCharacter())
+                board[oldLocation[0]][oldLocation[1]] = arr
+                board[newLocation[0]][newLocation[1]] = arr2
                 x.setLocation(newLocation)
                 gamestate.setGameBoard(board)
             count += 1
@@ -251,83 +353,96 @@ def Suggest():
 
         newLocation = [xcoordinate, ycoordinate]
         weaponloc = []
-        weaponnum = 0
+        weaponname = ""
         for x in weaponsarray:
             if (x.getName() == weapon):
                 weaponloc = x.getLocation()
-                weaponnum = x.getWeapon()
+                weaponname = x.getName()
         count = 1
         for x in playerarray:
             if (x.getCharacter() == character):
                 oldLocation = x.getLocation()
                 board = gamestate.getGameBoard()
-                board[oldLocation[0]][oldLocation[1]][0] = 0
-                board[weaponloc[0]][weaponloc[1]][weaponloc[2]] = 0
-                board[newLocation[0]][newLocation[1]][0] = count
-                board[newLocation[0]][newLocation[1]][3] = weaponnum
+                arr = board[oldLocation[0]][oldLocation[1]]
+                for character in range(len(arr)):
+                    if arr[character] == x.getCharacter():
+                        arr.pop(character)
+                board[oldLocation[0]][oldLocation[1]] = arr
+                arr2 = board[weaponloc[0]][weaponloc[1]]
+                for weapon in range(len(arr2)):
+                    if arr2[weapon] == weaponname:
+                        arr2.pop(weapon)
+                board[weaponloc[0]][weaponloc[1]] = arr2
+                arr3 = board[newLocation[0]][newLocation[1]]
+                arr3.append(weapon)
+                arr3.append(character)
+                board[newLocation[0]][newLocation[1]] = arr3
                 x.setLocation(newLocation)
                 for x in weaponsarray:
                     if (x.getName() == weapon):
-                        x.setLocation([newLocation[0], newLocation[1], 3])
+                        x.setLocation([newLocation[0], newLocation[1]])
                 gamestate.setGameBoard(board)
                 message = "{0} suggest that the murder was committed by {1} in the {2} with a {3}".format(
                     playercharacter,
                     character,
                     room,
                     weapon)
+                suggestionmessage.append(message)
             count += 1
         counter = 1
         for x in playerarray:
             if (x.getCharacter() == character):
                 gamestate.setSubturn(counter)
             count += 1
+
         return jsonify(result='success', message=message)
     else:
         return jsonify(result='error')
 
 
-@app.route('/Accusation', methods=['POST'])
-def Accuse():
-    # needs to finish cleaning this out
-    if (request.method == 'POST'):
+@app.route('/accusation', methods=['POST'])
+def accuse():
+    if request.method == 'POST':
         some_json = request.get_json()
         weapon = some_json["weapon"]
         suspect = some_json["suspect"]
         character = some_json["character"]
         room = some_json["room"]
-        xcoordinate = some_json["x"]
-        if (not isinstance(xcoordinate, int)):
-            xcoordinate = int(xcoordinate)
-        ycoordinate = some_json["y"]
-        if (not isinstance(ycoordinate, int)):
-            ycoordinate = int(ycoordinate)
-        newLocation = [xcoordinate, ycoordinate]
-        count = 1
-        for x in playerarray:
-            if (x.getCharacter() == character):
-                oldLocation = x.getLocation()
-                board = gamestate.getGameBoard()
-                board[oldLocation[0]][oldLocation[1]][0] = 0
-                board[newLocation[0]][newLocation[1]][0] = count
-                x.setLocation(newLocation)
-                message = "{0} has made the accusation that the murder was committed by {1} in the {2} with a {3}".format(
-                    x.getCharacter(),
-                    suspect,
-                    newLocation,
-                    weapon)
-            count += 1
-        return jsonify(result='success', message=message)
-    else:
-        return jsonify(result='error')
+        accusation_set = [room, suspect, weapon]
+        message = "{0} has made the accusation that the murder was committed by {1} in the {2} with a {3}".format(
+            character,
+            suspect,
+            room,
+            weapon)
+        if set(accusation_set) == set(casefile):
+            message = "{0} has won the game.".format(character)
+            gamestate.setGameWon(True)
+            gamestate.setGameRunning(False)
+            return jsonify(
+                result="success",
+                gamewon=str(gamestate.getGameWon()),
+                gamerunning=str(gamestate.getGameRunning()),
+                message=message
+            )
+        message = "{0} has made a false accusation and can no longer win the game.".format(character)
+        return jsonify(
+            result="success",
+            message=message
+        )
+    message="The {0} is not supported by this endpoint. Please try again.".format(str(request.method))
+    return jsonify(
+        result="error",
+        message=message
+    )
 
 
 @app.route('/Endturn', methods=['POST'])
 def EndTurn():
-    if (request.method == 'POST'):
+    if request.method == 'POST':
         some_json = request.get_json()
         playernum = some_json["playernum"]
         # will need to add validation for the playernum
-        if (gamestate.getPlayerturn() == 4):
+        if gamestate.getPlayerturn() == 6:
             gamestate.setPlayerturn = 1
         else:
             gamestate.setPlayerturn(gamestate.getPlayerturn + 1)
@@ -335,7 +450,7 @@ def EndTurn():
 
 @app.route('/Subturn', methods=['POST'])
 def SubTurn():
-    if (request.method == 'POST'):
+    if request.method == 'POST':
         some_json = request.get_json()
         # needed for validation later
         character = some_json["character"]
