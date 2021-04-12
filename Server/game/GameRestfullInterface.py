@@ -126,7 +126,7 @@ def adduser():
         session.setGameState(newgamestate)
         session.setPlayernum(len(playerarray))
         sessionstring = jsonify(
-            sessionkey=str(session.getSessionid()),
+            sessionId=str(session.getSessionid()),
             playername=playername,
             totalPlayers=session.getPlayernum(),
             yourcharacter=player.getCharacter(),
