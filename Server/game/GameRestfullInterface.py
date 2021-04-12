@@ -191,7 +191,7 @@ def playersready():
     if request.method == 'POST':
         some_json = request.get_json()
         playername = some_json["playername"]
-        uid = some_json["uid"]
+        uid = some_json["lobbyid"]
         playerready = some_json["playerready"]
         if playerready == "True":
             isReady = True
