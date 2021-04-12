@@ -3,6 +3,11 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+*flask_session/
+env/
+.DS_Store
+__init__.py
+
 # C extensions
 *.so
 

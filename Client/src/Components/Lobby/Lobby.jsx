@@ -26,18 +26,16 @@ export class Lobby extends React.Component {
     }
 
     render() {
-
-        
         return (
             <React.Fragment>
                 <Card className="playerNamesList" text="white">
                     <ListGroup variant="flush">
                         {this.state.players.map(player => (
                             <ListGroup.Item key={player[0]} variant="dark">
-                           
+
                                 {player[0]} &#x1F534;
-                                
-                                </ListGroup.Item>))}
+
+                            </ListGroup.Item>))}
                     </ListGroup>
                 </Card >
                 <Link to="/game" style={{ textDecoration: 'none' }} >

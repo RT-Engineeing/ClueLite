@@ -31,7 +31,7 @@ export class Room extends React.Component {
             // } else {
             //     pieces.push(this.state.pieces[this.state.pieces.length - 1] + 1);
             // }
-     //       this.setState({ pieces });
+            //       this.setState({ pieces });
         }
     }
 
@@ -49,7 +49,6 @@ export class Room extends React.Component {
     }
 
     render() {
-        console.log(this.props);
         return (
             <div className="room" onClick={this.handleClick} onContextMenu={this.handleClick}>
                 <div className="roomName">

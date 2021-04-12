@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-   Link,
+    Link,
 } from "react-router-dom";
 import Button from 'react-bootstrap/Button';
 import RTTLogo from '../../Images/RTTLogo.png';
@@ -10,14 +10,14 @@ import axios from 'axios';
 import { Route, useHistory } from 'react-router';
 
 export class LandingPage extends React.Component {
-   
-    constructor (props) {
+
+    constructor(props) {
         super(props);
         this.state = {
             canJoin: false
         }
     }
-    
+
     render() {
         return (
             <center>
@@ -31,7 +31,7 @@ export class LandingPage extends React.Component {
                     </div>
                     <div className="row">
                         <div className="col text-center">
-                           <Link to="/lobby" style={{ textDecoration: 'none' }} >
+                            <Link to="/lobby" style={{ textDecoration: 'none' }} >
                                 <Button variant="success" className="startButton justify-content-center">
                                     <p className="startText">Play</p>
                                 </Button>
@@ -53,19 +53,19 @@ export class LandingPage extends React.Component {
     }
 
     async findLobby() {
-        
+
         const response = await axios.get("http://localhost:5000/session");
         console.log(response.data);
         const isSessionFull = response.data["isSessionFull"];
         console.log(isSessionFull);
-        if(isSessionFull === false){
-            this.setState({canJoin: !isSessionFull});
+        if (isSessionFull === false) {
+            this.setState({ canJoin: !isSessionFull });
             console.log(this.state);
         }
     }
 
-    processSessionResponse(sessionResponse){
-        if(sessionResponse["isSessionFull"] === false){
+    processSessionResponse(sessionResponse) {
+        if (sessionResponse["isSessionFull"] === false) {
             console.log("open session yee haw");
         }
     }
