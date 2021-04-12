@@ -8,6 +8,10 @@ class Session:
 
     def addPlayer(self, playername):
         self.players.append(playername)
+
+    def removePlayer(self, playername):
+        self.players.remove(playername)
+
     def getReady(self):
         return self.players
 
@@ -36,12 +40,19 @@ class Session:
 
     def setReady(self, uid, playername, isReady):
         if isReady is True:
-            self.gamestate.setGameRunning(True)
-            self.gamestate.setPlayerturn(1)
+            if self.getReady() is True:
+                self.gamestate.setGameRunning(True)
+                self.gamestate.setPlayerturn(1)
             return jsonify(
                 sessionId=uid,
                 playername=playername,
                 playerready=str(isReady),
                 result=playername + " is ready."
             )
+        return jsonify(
+            sessionId=uid,
+            playername=playername,
+            playerready=str(isReady),
+            result=playername + " is not ready."
+        )
 
