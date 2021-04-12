@@ -36,8 +36,9 @@ class Session:
 
     def setReady(self, uid, playername, isReady):
         if isReady is True:
-            self.gamestate.setGameRunning(True)
-            self.gamestate.setPlayerturn(1)
+            if self.getReady() is True:
+                self.gamestate.setGameRunning(True)
+                self.gamestate.setPlayerturn(1)
             return jsonify(
                 sessionId=uid,
                 playername=playername,
