@@ -23,7 +23,7 @@ export class Lobby extends React.Component {
                 ["Player5", "False"],
                 ["Player6", "False"],
             ],
-            myPlayer: props.location.state.playerName,
+            myPlayer: props.location.state.playername,
             myCurrentReadiness: false,
             sessionKey: props.location.state.sessionKey,
             gameCanStart: false
@@ -55,21 +55,28 @@ export class Lobby extends React.Component {
 
 
         var i;
-        for(i = 0; i < 6; i++){
+
+        for (i = 0; i < 6; i++) {
             var j;
             let player = playersCopy[i];
-            for(j = 0; j < readyPlayers.length; j++){
-                if(player[0] === readyPlayers[j]){
-                    player[1] = "True"; 
+            var isReady = false;
+            for (j = 0; j < readyPlayers.length; j++) {
+                if (player[0] === readyPlayers[j]) {
+                    player[1] = "True";
                     playersCopy[i] = player;
+                    isReady = true;
                 }
+            }
+            if(!isReady) {
+                player[1] = "False";
+                playersCopy[i] = player;
             }
         }
 
         console.log("state: " + JSON.stringify(this.state));
-        
+
         this.setState({
-            gameCanStart: responseData["status"],
+            gameCanStart: readyPlayers.length === 6,
             players: playersCopy
         });
 
@@ -82,6 +89,10 @@ export class Lobby extends React.Component {
     async changeReadiness() {
 
         let newReadiness = !this.state.myCurrentReadiness;
+
+        this.setState({
+            myCurrentReadiness: newReadiness
+        })
 
         let readinessTransmit = newReadiness ? "True" : "False";
 
@@ -96,7 +107,7 @@ export class Lobby extends React.Component {
 
     }
 
-    async componentDidMount(){
+    async componentDidMount() {
 
         console.log("props: " + JSON.stringify(this.props));
         console.log("state: " + JSON.stringify(this.state));
@@ -108,7 +119,7 @@ export class Lobby extends React.Component {
     handleClick = (event) => {
         event.preventDefault(); // Prevents display of context menu
         if (event.button === 2) {
-          
+
         } else if (event.button === 0) {
             this.changeReadiness();
         }
@@ -116,20 +127,26 @@ export class Lobby extends React.Component {
 
     render() {
         console.log("rendering with player " + this.state.myPlayer + " and session " + this.state.sessionKey);
+        
         return (
             <div>
                 <Card className="playerNamesList" text="white">
                     <ListGroup variant="flush">
                         {this.state.players.map(player => (
-                            <ListGroup.Item key={player[0]} variant="dark">
+                            <ListGroup.Item key={player[0]} variant="dark" style={{display: "flex"}}>
 
 
-                                {player[0]} {player[1]}
+                                {player[0]} 
+                                {player[1] === "False" ? "         \uD83D\uDD34" : "         \uD83D\uDFE2"}
+                                {player[0] === this.state.myPlayer ?
+                                    (<Button style={{marginLeft: "auto"}} onClick={this.handleClick}>
 
-                                <Button onClick={this.handleClick}> 
+                                        Ready Up
+                                    </Button>) :
+                                    ""
+                                }
 
-                                    {player[1] === "False" ? "\uD83D\uDD34" : "\uD83D\uDFE2"}
-                                </Button>
+                            
                             </ListGroup.Item>))}
                     </ListGroup>
                 </Card >
