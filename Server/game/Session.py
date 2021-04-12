@@ -1,7 +1,7 @@
 from flask import jsonify
 class Session:
-    def __init__(self, uid, gamestate):
-        self.uid = uid
+    def __init__(self, sessionId, gamestate):
+        self.sessionId = sessionId
         self.gamestate = gamestate
         self.playernum = 0
         self.players = []
@@ -21,11 +21,11 @@ class Session:
     def setPlayernum(self, playernum):
         self.playernum = playernum
 
-    def getUid(self):
-        return self.uid;
+    def getSessionid(self):
+        return self.sessionId;
 
-    def setUid(self, uid):
-        self.uid = uid
+    def setSessionid(self, sessionId):
+        self.sessionId = sessionId
 
     def getGameState(self):
         return self.gamestate
@@ -33,24 +33,24 @@ class Session:
     def setGameState(self, gamestate):
         return self.gamestate
 
-    def isSessionFull(self, uid, maxSessionPlayers):
+    def isSessionFull(self, sessionId, maxSessionPlayers):
         if maxSessionPlayers == 6:
             return True
         return False
 
-    def setReady(self, uid, playername, isReady):
+    def setReady(self, sessionId, playername, isReady):
         if isReady is True:
             if self.getReady() is True:
                 self.gamestate.setGameRunning(True)
                 self.gamestate.setPlayerturn(1)
             return jsonify(
-                sessionId=uid,
+                sessionId=sessionId,
                 playername=playername,
                 playerready=str(isReady),
                 result=playername + " is ready."
             )
         return jsonify(
-            sessionId=uid,
+            sessionId=sessionId,
             playername=playername,
             playerready=str(isReady),
             result=playername + " is not ready."
