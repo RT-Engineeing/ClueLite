@@ -82,7 +82,7 @@ export class Lobby extends React.Component {
 
         setTimeout(async () => {
             await this.pollForReadinessStatuses();
-        }, 5000);
+        }, 1000);
     }
 
 
@@ -129,7 +129,7 @@ export class Lobby extends React.Component {
         console.log("rendering with player " + this.state.myPlayer + " and session " + this.state.sessionKey);
         
         return (
-            <div>
+            <React.Fragment>
                 <Card className="playerNamesList" text="white">
                     <ListGroup variant="flush">
                         {this.state.players.map(player => (
@@ -160,7 +160,7 @@ export class Lobby extends React.Component {
                 <h2 id="playersReadyText">
                     {this.state.players.length}/{MAX_PLAYERS} Players Present
                 </h2>
-            </div >
+            </React.Fragment >
         )
     }
 }
