@@ -9,6 +9,7 @@ import { rooms } from '../../Cards/Cards'
 
 export class GameBoard extends React.Component {
     render() {
+        console.log("props: " + this.props.gameState());
         return (
             <div className='container' id="boardContainer"  >
                 <div className='row' style={{ justifyContent: 'space-between' }}>

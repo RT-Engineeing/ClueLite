@@ -49,7 +49,7 @@ export class Room extends React.Component {
     }
 
     render() {
-        console.log("building room")
+        console.log(this.props);
         return (
             <div className="room" onClick={this.handleClick} onContextMenu={this.handleClick}>
                 <div className="roomName">
