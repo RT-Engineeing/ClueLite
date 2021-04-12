@@ -7,7 +7,6 @@ import RTTLogo from '../../Images/RTTLogo.png';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./LandingPage.css"
 import axios from 'axios';
-import getUserUUID from '../../UUID/UUID';
 
 export class LandingPage extends React.Component {
 

@@ -15,7 +15,6 @@ export class Lobby extends React.Component {
 
     constructor(props) {
         super();
-        console.log(getUserUUID());
         this.state = {
             players: [
                 ["Player1", false],
@@ -25,7 +24,7 @@ export class Lobby extends React.Component {
                 ["Player5", false],
                 ["Player6", false],
             ],
-            myPlayer: props.location.state.playerName, // These props come from the Router/Switch
+            myPlayer: props.location.state.playername, // These props come from the Router/Switch
             sessionKey: props.location.state.sessionKey,
             myCurrentReadiness: false,
             gameCanStart: false
@@ -45,10 +44,9 @@ export class Lobby extends React.Component {
         let playersCopy = [...this.state.players];
 
         playersCopy.forEach(player => {
-            player[1] = (player[0] in readyPlayers) ? true : false;
+            player[1] = readyPlayers.includes(player[0]) ? true : false;
         });
 
-        console.log(responseData);
         this.setState({
             gameCanStart: responseData["status"] !== "false",
             players: playersCopy
@@ -67,7 +65,7 @@ export class Lobby extends React.Component {
     }
 
     async componentDidMount() {
-        this.interval = setInterval(() => this.pollForReadinessStatuses(), 5000);
+        this.interval = setInterval(() => this.pollForReadinessStatuses(), 1000);
     }
 
     componentWillUnmount() {
@@ -80,7 +78,6 @@ export class Lobby extends React.Component {
     }
 
     render() {
-
         const startButton = (
             <Button variant="success" disabled={!this.state.gameCanStart} className="lobbyStartButton">
                 <p className="lobbyStartText">
@@ -101,7 +98,8 @@ export class Lobby extends React.Component {
                 <Card className="playerNamesList" text="white">
                     <ListGroup variant="flush">
                         {this.state.players.map(player => (
-                            <ListGroup.Item key={player[0]} variant="dark">
+                            <ListGroup.Item key={player[0]} variant="dark" >
+                                {player[0] === this.state.myPlayer ? <span className="myPlayer">*</span> : ""}
                                 {player[0]}
                                 <Button onClick={this.handleClick}
                                     className={player[1] ? "readyButton" : "notReadyButton"} >

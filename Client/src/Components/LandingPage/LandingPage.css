@@ -16,7 +16,7 @@
   .loadingButton {
     width: 400px;
     height: 80px;
-    border-color: red !important;
+    border-color: white !important;
     border-width: 2px !important;
     background-color: gray;
     display: inline-flex;
