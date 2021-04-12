@@ -13,11 +13,9 @@ export class LandingPage extends React.Component {
 
     constructor(props) {
         super(props);
-        console.log(getUserUUID());
         this.state = {
             sessionKey: undefined,
             playerName: undefined,
-            uuid: undefined
         }
     }
 
