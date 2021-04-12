@@ -34,63 +34,6 @@ class Players:
     def setLocation(self, location):
         self.location = location
 
-
-class SessionState:
-    def __init__(self, uid, gamestate):
-        self.uid = uid
-        self.gamestate = gamestate
-
-    def getUid(self):
-        return session['uid']
-
-    def setUid(self, uid):
-        self.uid = uid
-
-    def getGameState(self):
-        return self.gamestate
-
-    def setGameState(self, gamestate):
-        return self.gamestate
-
-    def isSessionFull(self, uid, maxSessionPlayers):
-        if maxSessionPlayers == 6:
-            return True
-        return False
-
-    def createSession(self, playername, maxSessionPlayers):
-        if maxSessionPlayers == 0 or maxSessionPlayers >= 6:
-            session['uid'] = uuid.uuid4()
-            session['playername'] = playername
-            maxSessionPlayers += 1
-
-            return jsonify(
-                sessionId=str(session['uid']),
-                playername=session['playername'],
-                totalPlayers=maxSessionPlayers,
-                result=playername + "has been added to the session."
-            )
-        else:
-            session['uid'] = uuid.uuid4()
-            if 'playername' not in session:
-                session['playername'] = playername
-                maxSessionPlayers += 1
-            return jsonify(
-                sessionId=str(session['uid']),
-                playername=session['playername'],
-                totalPlayers=maxSessionPlayers,
-                result=playername + " has been added to the session."
-            )
-
-    def endSession(self, uid, gamestate):
-        uid = session['uid']
-        session.pop('uid', None)
-        gamestate.setGameRunning(False)
-        return jsonify(
-            sessionId=uid,
-            result="The session has been terminated."
-        )
-
-
 class Weapons:
     def __init__(self, name, location, weapnum):
         self.name = name
