@@ -1,12 +1,9 @@
-from _ast import Global
 from Session import Session
 from GameState import GameState
 from GameOperations import Players, Weapons, Weapdeck, Roomsdeck, Chardeck
-from random import randint
 from flask import Flask, jsonify, request, render_template
 import random
-import itertools
-import os
+
 
 app = Flask(__name__)
 rooms = [
@@ -133,7 +130,7 @@ def adduser():
             playername=playername,
             totalPlayers=session.getPlayernum(),
             yourcharacter=player.getCharacter(),
-            result=playername + "has been added to the session.",
+            result=playername + " has been added to the session.",
         )
         return sessionstring
     else:
@@ -181,7 +178,7 @@ def adduser():
             playername=playername,
             totalPlayers=session.getPlayernum(),
             yourcharacter=player.getCharacter(),
-            result=playername + "has been added to the session.",
+            result=playername + " has been added to the session.",
         )
         return sessionstring
 
