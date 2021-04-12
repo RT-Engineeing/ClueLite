@@ -194,15 +194,22 @@ def playersready():
             isReady = True
             session.addPlayer(playername)
             return session.setReady(uid, playername, isReady)
-        isReady = False
-        return session.setReady(uid, playername, isReady)
-    if request.method == 'GET':
+        else:
+            session.removePlayer(playername)
+            isReady = False
+            return session.setReady(uid, playername, isReady)
+    elif request.method == 'GET':
         if len(session.getReady()) == 6:
             return jsonify(status='true',
                            playersready=session.getReady())
         else:
             return jsonify(status='false',
                            playersready=session.getReady())
+    else:
+        return jsonify(
+            result="error",
+            message="The following method is not supported."
+        )
 
 
 @app.route('/session')

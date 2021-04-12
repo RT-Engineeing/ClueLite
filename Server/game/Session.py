@@ -8,6 +8,10 @@ class Session:
 
     def addPlayer(self, playername):
         self.players.append(playername)
+
+    def removePlayer(self, playername):
+        self.players.remove(playername)
+
     def getReady(self):
         return self.players
 
@@ -45,4 +49,10 @@ class Session:
                 playerready=str(isReady),
                 result=playername + " is ready."
             )
+        return jsonify(
+            sessionId=uid,
+            playername=playername,
+            playerready=str(isReady),
+            result=playername + " is not ready."
+        )
 
