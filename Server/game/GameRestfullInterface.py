@@ -212,14 +212,18 @@ def Move():
         ycoordinate = some_json["y"]
         if (not isinstance(ycoordinate, int)):
             ycoordinate = int(ycoordinate)
+        print("Moving player " + character + " to " + str(xcoordinate) + ", " + str(ycoordinate))
         newLocation = [xcoordinate, ycoordinate]
         count = 1
         for x in playerarray:
-            if (x.getCharacter() == character):
+            print("Checking " + character + " against " + x.getName())
+            if (x.getName() == character):
                 oldLocation = x.getLocation()
                 board = gamestate.getGameBoard()
                 board[oldLocation[0]][oldLocation[1]][0] = 0
                 board[newLocation[0]][newLocation[1]][0] = count
+                
+                print("Found match. Moving from " + str(oldLocation))
                 x.setLocation(newLocation)
                 gamestate.setGameBoard(board)
             count += 1

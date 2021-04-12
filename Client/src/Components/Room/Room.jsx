@@ -2,6 +2,8 @@ import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./Room.css";
 
+import axios from 'axios';
+
 export class Room extends React.Component {
 
     constructor(props) {
@@ -22,17 +24,32 @@ export class Room extends React.Component {
                 this.setState({ pieces })
             }
         } else if (event.button === 0) {
-            let pieces = this.state.pieces;
-            if (pieces.length === 0) {
-                pieces.push(1);
-            } else {
-                pieces.push(this.state.pieces[this.state.pieces.length - 1] + 1);
-            }
-            this.setState({ pieces });
+            this.sendMoveRequest();
+            // let pieces = this.state.pieces;
+            // if (pieces.length === 0) {
+            //     pieces.push(1);
+            // } else {
+            //     pieces.push(this.state.pieces[this.state.pieces.length - 1] + 1);
+            // }
+     //       this.setState({ pieces });
         }
     }
 
+    async sendMoveRequest() {
+        let newX = this.props.x;
+        let newY = this.props.y;
+        let movingPlayer = "Player1";
+
+        const response = await axios.post("http://localhost:5000/Movement", {
+            x: newX,
+            y: newY,
+            character: movingPlayer
+        });
+
+    }
+
     render() {
+        console.log("building room")
         return (
             <div className="room" onClick={this.handleClick} onContextMenu={this.handleClick}>
                 <div className="roomName">

@@ -21,7 +21,82 @@ export class Game extends React.Component {
             showSuggestModal: false,
             showAccusationModal: false,
             showSecondarySuggestionModal: false,
-            cards: ["1", "2", "3", "4", "5"]
+            cards: ["1", "2", "3", "4", "5"],
+            currentGameBoard: [
+                [
+                    [
+                        1
+                    ],
+                    [
+                        2
+                    ],
+                    [
+                        3
+                    ],
+                    [
+                        4
+                    ],
+                    [
+                        5
+                    ]
+                ],
+                [
+                    [
+                        6
+                    ],
+                    [
+                        7
+                    ],
+                    [
+                        8
+                    ],
+                ],
+                [
+                    [
+                        9
+                    ],
+                    [
+                        10
+                    ],
+                    [
+                        11
+                    ],
+                    [
+                        12
+                    ],
+                    [
+                        13
+                    ]
+                ],
+                [
+                    [
+                        14
+                    ],
+                    [
+                        15
+                    ],
+                    [
+                        16
+                    ],
+                ],
+                [
+                    [
+                        17
+                    ],
+                    [
+                        18
+                    ],
+                    [
+                        19
+                    ],
+                    [
+                        20
+                    ],
+                    [
+                        21
+                    ]
+                ]
+            ]
         }
     }
 
@@ -32,12 +107,20 @@ async setGameStatePoller(){
     const gamestate = response.data;
     const player1 = gamestate["Player1"];
     const playerHand = player1["hand"][0];
+    const oldboard = this.state.currentGameBoard;
     this.setState({cards: playerHand});
-    console.log(this.state);
+    this.setState({currentGameBoard: gamestate["gameboard"]});
+    console.log("gameboard: " + this.state.currentGameBoard);
+
+    if(oldboard != this.state.currentGameBoard){
+        console.log("game board updated. rerender");
+        this.render();
+    }
+    
 
     setTimeout(async () => {
         await this.setGameStatePoller();
-    }, 2000);
+    }, 5000);
     
 }
     
@@ -52,89 +135,11 @@ async componentDidMount() {
  
 }
 
-async fetchGameState() {
-    const response = await axios.get("http://localhost:5000/getstate");
-    console.log(response.data);
 
-}
-
-getGameState() {
+getGameState = () => {
+    const currGameBoard = this.state.currentGameBoard;
     return {
-        gameBoard: [
-            [
-                [
-                    1
-                ],
-                [
-                    2
-                ],
-                [
-                    3
-                ],
-                [
-                    4
-                ],
-                [
-                    5
-                ]
-            ],
-            [
-                [
-                    6
-                ],
-                [
-                    7
-                ],
-                [
-                    8
-                ],
-            ],
-            [
-                [
-                    9
-                ],
-                [
-                    10
-                ],
-                [
-                    11
-                ],
-                [
-                    12
-                ],
-                [
-                    13
-                ]
-            ],
-            [
-                [
-                    14
-                ],
-                [
-                    15
-                ],
-                [
-                    16
-                ],
-            ],
-            [
-                [
-                    17
-                ],
-                [
-                    18
-                ],
-                [
-                    19
-                ],
-                [
-                    20
-                ],
-                [
-                    21
-                ]
-            ]
-        ]
+        gameBoard: currGameBoard
     }
 }
 
@@ -173,7 +178,7 @@ render() {
             </Modal.Header>
             <Modal.Body>
                 <Carousel interval={null} indicators={false}>
-                    {TMP_CHARACTERS.map((character) =>
+                    {characters.map((character) =>
                     (
                         <Carousel.Item className="carouselItem">
                             {character}
@@ -181,7 +186,7 @@ render() {
                     ))}
                 </Carousel>
                 <Carousel interval={null} indicators={false}>
-                    {TMP_WEAPONS.map((weapon) =>
+                    {weapons.map((weapon) =>
                     (
                         <Carousel.Item className="carouselItem">
                             {weapon}
@@ -189,7 +194,7 @@ render() {
                     ))}
                 </Carousel>
                 <Carousel interval={null} indicators={false}>
-                    {TMP_ROOMS.map((room) =>
+                    {rooms.map((room) =>
                     (
                         <Carousel.Item className="carouselItem">
                             {room}
