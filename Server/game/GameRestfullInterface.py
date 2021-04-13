@@ -423,10 +423,12 @@ def suggest():
             playcounter += 1
         xcoordinate = 0
         ycoordinate = 0
+        tempcounter = 0
         for temp in suggrooms:
             if temp == room:
-                xcoordinate = temp[0]
-                ycoordinate = temp[1]
+                xcoordinate = roomcoordinates[tempcounter][0]
+                ycoordinate = roomcoordinates[tempcounter][1]
+            tempcounter += 1
 
         if not isinstance(xcoordinate, int):
             xcoordinate = int(xcoordinate)
@@ -491,8 +493,13 @@ def accuse():
         some_json = request.get_json()
         weapon = some_json["weapon"]
         suspect = some_json["suspect"]
-        character = some_json["character"]
+        uid = some_json["uid"]
         room = some_json["room"]
+        playcounter = 0
+        for x in uids:
+            if x == uid:
+                character = playerarray[playcounter].getCharacter()
+            playcounter += 1
         accusation_set = [room, suspect, weapon]
         message = "{0} has made the accusation that the murder was committed by {1} in the {2} with a {3}".format(
             character,
