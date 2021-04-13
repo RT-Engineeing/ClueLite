@@ -1,7 +1,4 @@
 from random import randint
-from flask import session, jsonify
-import uuid
-
 
 class Players:
     def __init__(self, name, character, hand, location):
