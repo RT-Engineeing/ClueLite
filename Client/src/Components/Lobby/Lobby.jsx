@@ -16,12 +16,6 @@ export class Lobby extends React.Component {
         super();
         this.state = {
             players: [
-                ["Player1", "False"],
-                ["Player2", "False"],
-                ["Player3", "False"],
-                ["Player4", "False"],
-                ["Player5", "False"],
-                ["Player6", "False"],
             ],
             myPlayer: props.location.state.playername,
             myCurrentReadiness: false,
@@ -30,17 +24,6 @@ export class Lobby extends React.Component {
             gameCanStart: false
         }
     }
-
-
-
-    // static getDerivedStateFromProps(props, state){
-    //     if(props.players !== state.propsPlayers) {
-    //         return {
-    //             players: props.players,
-    //             propsPlayers: props.players
-    //         }
-    //     }
-    // }
 
     toggleReadiness() {
         this.state.ready = !this.state.ready;
@@ -54,58 +37,25 @@ export class Lobby extends React.Component {
         const readyPlayers = responseData["playersready"];
         let playersCopy = [...this.state.players];
 
-
-        var i;
-
-        for (i = 0; i < 6; i++) {
-            var j;
-            let player = playersCopy[i];
-            var isReady = false;
-            for (j = 0; j < readyPlayers.length; j++) {
-                if (player[0] === readyPlayers[j]) {
-                    player[1] = "True";
-                    playersCopy[i] = player;
-                    isReady = true;
-                }
-            }
-            if(!isReady) {
-                player[1] = "False";
-                playersCopy[i] = player;
-            }
-        }
-
-        console.log("state: " + JSON.stringify(this.state));
-
-        this.setState({
-            gameCanStart: readyPlayers.length === 6,
-            players: playersCopy
+        playersCopy.forEach(player => {
+            player[1] = readyPlayers.includes(player[0]) ? true : false;
         });
 
-        setTimeout(async () => {
-            await this.pollForReadinessStatuses();
-        }, 1000);
+        this.setState({
+            gameCanStart: responseData["status"] !== "false",
+            players: playersCopy
+        });
     }
 
 
     async changeReadiness() {
-
         let newReadiness = !this.state.myCurrentReadiness;
-
-        this.setState({
-            myCurrentReadiness: newReadiness
-        })
-
         let readinessTransmit = newReadiness ? "True" : "False";
-
-
         const response = await axios.post("http://localhost:5000/ready", {
             playername: this.state.myPlayer,
             sessionId: this.state.sessionKey,
             playerready: readinessTransmit
         });
-
-
-
     }
 
     async componentDidMount() {
@@ -113,54 +63,49 @@ export class Lobby extends React.Component {
         console.log("props: " + JSON.stringify(this.props));
         console.log("state: " + JSON.stringify(this.state));
         await this.pollForReadinessStatuses();
+    }
 
+    componentWillUnmount() {
+        clearInterval(this.interval);
     }
 
 
     handleClick = (event) => {
-        event.preventDefault(); // Prevents display of context menu
-        if (event.button === 2) {
-
-        } else if (event.button === 0) {
-            this.changeReadiness();
-        }
+        this.changeReadiness();
     }
 
     render() {
-        console.log("rendering with player " + this.state.myPlayer + " and session " + this.state.sessionKey);
-        
+        const startButton = (
+            <Button variant="success" disabled={!this.state.gameCanStart} className="lobbyStartButton">
+                <p className="lobbyStartText">
+                    Start Game
+            </p>
+            </Button>
+        );
+
+        const waitingButton = (
+            <Button variant="success" disabled={!this.state.gameCanStart} className="lobbyWaitingButton">
+                <p className="lobbyWaitingText">
+                    Waiting for more players..
+                </p>
+            </Button>
+        )
         return (
-            <React.Fragment>
+            <React.Fragment id="lobbyContainer">
                 <Card className="playerNamesList" text="white">
                     <ListGroup variant="flush">
                         {this.state.players.map(player => (
-                            <ListGroup.Item key={player[0]} variant="dark" style={{display: "flex"}}>
-
-
-                                {player[0]} 
-                                {player[0] === this.state.myPlayer ?
-                                     "(" + this.state.charactername + ")" :
-                                    ""
-                                }
-                                {player[1] === "False" ? "         \uD83D\uDD34" : "         \uD83D\uDFE2"}
-                                {player[0] === this.state.myPlayer ?
-                                    (<Button style={{marginLeft: "auto"}} onClick={this.handleClick}>
-
-                                        Ready Up
-                                    </Button>) :
-                                    ""
-                                }
-
-                            
+                            <ListGroup.Item key={player[0]} variant="dark" >
+                                {player[0] === this.state.myPlayer ? <span className="myPlayer">*</span> : ""}
+                                {player[0]}
+                                <Button onClick={this.handleClick}
+                                    className={player[1] ? "readyButton" : "notReadyButton"} >
+                                </Button>
                             </ListGroup.Item>))}
                     </ListGroup>
                 </Card >
                 <Link to="/game" style={{ textDecoration: 'none' }} >
-                    <Button variant="success" disabled={!this.state.gameCanStart} className="lobbyStartButton">
-                        <p className="lobbyStartText">
-                            Start Game
-                        </p>
-                    </Button>
+                    {this.state.gameCanStart ? startButton : waitingButton}
                 </Link>
                 <h2 id="playersReadyText">
                     {this.state.players.length}/{MAX_PLAYERS} Players Present

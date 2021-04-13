@@ -7,7 +7,6 @@ import RTTLogo from '../../Images/RTTLogo.png';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./LandingPage.css"
 import axios from 'axios';
-import { Route, useHistory } from 'react-router';
 
 export class LandingPage extends React.Component {
 
@@ -21,6 +20,19 @@ export class LandingPage extends React.Component {
     }
 
     render() {
+
+        const playButton = (
+            <Button variant="success" className="startButton justify-content-center">
+                <p className="startText">Play</p>
+            </Button>
+        );
+
+        const loadingButton = (
+            <Button variant="success" className="loadingButton justify-content-center">
+                <p className="startText">Loading...</p>
+            </Button>
+        );
+
         return (
             <center>
                 <div id="landingPageContainer" className="container">
@@ -40,12 +52,8 @@ export class LandingPage extends React.Component {
                                     playername: this.state.playername,
                                     charactername: this.state.charactername
                                 }
-                            }} style={{ textDecoration: 'none' }} params={{
-                                key: "test"
-                            }} >
-                                <Button variant="success" className="startButton justify-content-center">
-                                    <p className="startText">Play</p>
-                                </Button>
+                            }} style={{ textDecoration: 'none' }}>
+                                {this.state.sessionKey ? playButton : loadingButton}
                             </Link>
                         </div>
                     </div>
@@ -64,22 +72,19 @@ export class LandingPage extends React.Component {
     }
 
     async findLobby() {
-
         const response = await axios.get("http://localhost:5000/session");
-        console.log(response.data);
-        
+
         const playername = response.data["playername"];
         const sessionKey = response.data["sessionId"];
         const charactername = response.data["yourcharacter"];
 
-        console.log("player name: " + playername);
-        console.log("session key: " + sessionKey);
+        // console.log("session key: " + sessionKey);
         this.setState({
             sessionKey: sessionKey,
             playername: playername,
             charactername: charactername
         });
-        console.log("updated state: " + JSON.stringify(this.state));
+        // console.log("updated state: " + this.state);
 
     }
 

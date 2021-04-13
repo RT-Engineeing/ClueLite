@@ -5,6 +5,9 @@
     left: 20%;
     min-height: 416px;
     background-color: #777 !important;
+    -moz-box-shadow: 1px 2px 3px rgba(0,0,0,.5);
+    -webkit-box-shadow: 1px 2px 3px rgba(0,0,0,.5);
+    box-shadow: 1px 2px 3px rgba(0,0,0,.5);
 }
 
 .playerNameText {
@@ -21,6 +24,9 @@
     -webkit-text-stroke-color: black;
     font-size: 20px;
     color: white !important;
+    -moz-box-shadow: 1px 2px 3px rgba(0,0,0,.5);
+    -webkit-box-shadow: 1px 2px 3px rgba(0,0,0,.5);
+    box-shadow: 1px 2px 3px rgba(0,0,0,.5);
 }
 
 
@@ -36,6 +42,22 @@
     position: absolute;
     top: 25%
   } 
+
+  .lobbyWaitingButton {
+    width: 300px;
+    height: 60px;
+    border-color: white !important;
+    color: white;
+    border-width: 2px !important;
+    display: inline-flex;
+    align-items: center; 
+    padding: 10px !important;
+    left: 55%;
+    position: absolute;
+    top: 25%;
+    background-color: gray !important;
+    pointer-events: none;
+  }
 
   #playersReadyText {
     position: absolute;
@@ -56,5 +78,47 @@
     color: white !important;
     -webkit-text-stroke-width: 1px;
     -webkit-text-stroke-color: black;
+  }
 
+  .lobbyWaitingText {
+    font-size: 20px;
+    position: relative;
+    top: 26%;
+    left: 9px;
+    /* Text outline */ 
+    color: white !important;
+    -webkit-text-stroke-width: 0.5px;
+    -webkit-text-stroke-color: black;
+  }
+
+
+  .readyButton {
+    padding: .5rem .5rem !important;
+    position: absolute !important;
+    right: 5% !important;
+    bottom: 33% !important;
+    border-color: white !important;
+    border-radius: 15px !important;
+    border-width: 2px !important;
+    background-color: lime !important;
+  }
+
+  .notReadyButton {
+    padding: .5rem .5rem !important;
+    position: absolute !important;
+    right: 5% !important;
+    bottom: 33% !important;
+    border-color: white !important;
+    border-radius: 15px !important;
+    border-width: 2px !important;
+    background-color: red !important;
+  }
+
+  #lobbyContainer {
+    padding-top: 20px;
+  }
+
+  .myPlayer {
+    left: 38%;
+    position: absolute;
   }
