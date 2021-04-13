@@ -3,10 +3,11 @@ import Card from 'react-bootstrap/Card'
 import ListGroup from 'react-bootstrap/ListGroup'
 import "./Lobby.css";
 import {
-    Link,
+    Link, Redirect
 } from "react-router-dom";
 import axios from 'axios';
 import Button from 'react-bootstrap/Button';
+
 
 const MAX_PLAYERS = 6;
 
@@ -42,10 +43,10 @@ export class Lobby extends React.Component {
         const response = await axios.get("http://localhost:5000/getstate");
 
         const gamestate = response.data;
-        
+
         const gamerunning = gamestate["gamerunning"];
 
-        if(gamerunning) {
+        if (gamerunning) {
             /**
              * INSERT LINK TO FORCE ALL PLAYERS INTO GAMEBOARD HERE
              */
@@ -113,6 +114,8 @@ export class Lobby extends React.Component {
     }
 
     render() {
+        console.log(this.state);
+        console.log(this.props);
         const startButton = (
             <Button variant="success" disabled={!this.state.gameCanStart} className="lobbyStartButton">
                 <p className="lobbyStartText">
@@ -128,28 +131,34 @@ export class Lobby extends React.Component {
                 </p>
             </Button>
         )
-        return (
-            <React.Fragment key="lobbyContainer">
-                <Card className="playerNamesList" text="white">
-                    <ListGroup variant="flush">
-                        {this.state.players.map(player => (
-                            <ListGroup.Item key={player[0]} variant="dark" >
-                                {player[0] === this.state.myPlayer ? <span className="myPlayer">*</span> : ""}
-                                {player[0]}
-                                <Button onClick={this.handleClick}
-                                    className={player[1] ? "readyButton" : "notReadyButton"} >
-                                </Button>
-                            </ListGroup.Item>))}
-                    </ListGroup>
-                </Card >
-                <Link to="/game" style={{ textDecoration: 'none' }} >
-                    {this.state.gameCanStart ? startButton : waitingButton}
-                </Link>
-                <h2 id="playersReadyText">
-                    {this.state.players.length}/{MAX_PLAYERS} Players Present
+        if (this.state.pollingForGameState) {
+            return (
+                <Redirect to={{pathname: "/game"}}></Redirect>
+            )
+        } else {
+            return (
+                <React.Fragment key="lobbyContainer">
+                    <Card className="playerNamesList" text="white">
+                        <ListGroup variant="flush">
+                            {this.state.players.map(player => (
+                                <ListGroup.Item key={player[0]} variant="dark" >
+                                    {player[0] === this.state.myPlayer ? <span className="myPlayer">*</span> : ""}
+                                    {player[0]}
+                                    <Button onClick={this.handleClick}
+                                        className={player[1] ? "readyButton" : "notReadyButton"} >
+                                    </Button>
+                                </ListGroup.Item>))}
+                        </ListGroup>
+                    </Card >
+                    <Link to="/game" style={{ textDecoration: 'none' }} >
+                        {this.state.gameCanStart ? startButton : waitingButton}
+                    </Link>
+                    <h2 id="playersReadyText">
+                        {this.state.players.length}/{MAX_PLAYERS} Players Present
                 </h2>
-            </React.Fragment >
-        )
+                </React.Fragment >
+            )
+        }
     }
 }
 export default Lobby;
