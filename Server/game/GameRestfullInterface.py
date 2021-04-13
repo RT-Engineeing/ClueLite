@@ -2,6 +2,7 @@ from Session import Session
 from GameState import GameState
 from GameOperations import Players, Weapons, Weapdeck, Roomsdeck, Chardeck
 from flask import Flask, jsonify, request, render_template
+from flask_cors import CORS
 import random
 
 app = Flask(__name__)
@@ -95,6 +96,7 @@ tempvar = 0
 session = Session(random.randint(100000, 999999), gamestate)
 
 
+CORS(app)
 def adduser(uid):
     if len(playerarray) == 0:
         random.shuffle(rooms)
@@ -150,7 +152,7 @@ def adduser(uid):
         session.setGameState(newgamestate)
         session.setPlayernum(len(playerarray))
         sessionstring = jsonify(
-            sessionkey=str(session.getSessionid()),
+            sessionId=str(session.getSessionid()),
             playername=playername,
             totalPlayers=session.getPlayernum(),
             yourcharacter=player.getCharacter(),
@@ -213,6 +215,7 @@ def adduser(uid):
 def playersready():
     if request.method == 'POST':
         some_json = request.get_json()
+        print("fetched json " + str(some_json))
         playername = some_json["playername"]
         sessionId = some_json["sessionId"]
         playerready = some_json["playerready"]
@@ -331,8 +334,8 @@ def hello():
     return jsonify({'error': 'error'})
 
 
-@app.route('/Movement', methods=['POST'])
-def Move():
+@app.route('/movement', methods=['POST'])
+def move():
     if (request.method == 'POST'):
         some_json = request.get_json()
 
@@ -345,10 +348,12 @@ def Move():
         ycoordinate = some_json["y"]
         if (not isinstance(ycoordinate, int)):
             ycoordinate = int(ycoordinate)
+        print("Moving player " + character + " to " + str(xcoordinate) + ", " + str(ycoordinate))
         newLocation = [xcoordinate, ycoordinate]
         count = 1
         for x in playerarray:
-            if (x.getCharacter() == character):
+            print("Checking " + character + " against " + x.getName())
+            if (x.getName() == character):
                 oldLocation = x.getLocation()
                 board = gamestate.getGameBoard()
                 arr = board[oldLocation[0]][oldLocation[1]]
@@ -366,7 +371,7 @@ def Move():
     else:
         return jsonify({'result': 'Error'})
 
-@app.route('/SuggestionResponse', methods=['POST'])
+@app.route('/suggestionresponse', methods=['POST'])
 def suggresponse():
     some_json = request.get_json()
     playerchar = some_json["uid"]
@@ -383,8 +388,8 @@ def suggresponse():
     return jsonify({'result': 'success'})
 
 
-@app.route('/Suggestion', methods=['POST'])
-def Suggest():
+@app.route('/suggestion', methods=['POST'])
+def suggest():
     if (request.method == 'POST'):
         some_json = request.get_json()
         weapon = some_json["weapon"]
@@ -502,8 +507,8 @@ def accuse():
     )
 
 
-@app.route('/Endturn', methods=['POST'])
-def EndTurn():
+@app.route('/endturn', methods=['POST'])
+def endTurn():
     if request.method == 'POST':
         some_json = request.get_json()
         playernum = some_json["uid"]
