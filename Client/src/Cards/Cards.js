@@ -4,11 +4,19 @@ import exRightArm from '../Images/Characters/exRightArm.jpg'
 import exLeftLeg from '../Images/Characters/exLeftLeg.png'
 import exRightLeg from '../Images/Characters/exRightLeg.jpg'
 
-const weapons = ["Flamethrower", "Ray Gun", "Lightsaber", "Hydrogen Bomb", "Live Tarantula", "Poison", "Seduction", "Spoon", "Sticky Note"];
+const weapons = ["Lead Pipe", "Revolver", "Rope", "Wrench", "Candlestick", "Knife"];
 
-const characters = ["Elon Musk", "Yoda", "Joe Demasco", "Mark Zuckerbeg", "Brian's Future Wife", "Jordan DeBarth", "Samuel Nathanson", "Grant Admiral Thrawn"];
+const characters = ["Miss Scarlet", "Mrs. White", "Mrs. Peacock", "Professor Plum", "Mr. Green", "Colonel Mustard"];
 
-const rooms = ["Boeing HQ", "Ft. Meade", "Lockheed Martin HQ", "Philadelphia", "P.F. Chang's", "Compton", "Iraq", "High School Bathroom", "Ocean City, MD"];
+const rooms = ["Kitchen",
+    "Conservatory",
+    "Dining Room",
+    "Ballroom",
+    "Study",
+    "Hall",
+    "Lounge",
+    "Library",
+    "Billiard Room"];
 
 const cardImages = {
     "exodiaRightArm": exRightArm,

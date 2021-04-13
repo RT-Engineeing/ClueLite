@@ -21,6 +21,8 @@ export class Game extends React.Component {
             polling: false,
             showSuggestModal: false,
             showAccusationModal: false,
+            showGameWonModal: false,
+            showGameLostModal: false,
             showSecondarySuggestionModal: false,
             cards: ["1", "2", "3", "4", "5"],
             uuid: props.location.state.uuid,
@@ -109,6 +111,8 @@ export class Game extends React.Component {
             ],
             turnIndicator: " "
         }
+
+        this.makeAccusation = this.makeAccusation.bind(this);
     }
 
 
@@ -127,6 +131,10 @@ export class Game extends React.Component {
 
         const turnString = playerTurn + "'s " + (playerTurn === this.state.playerName ? " (You) " : "") + " Turn";
 
+        if (!response.data.gamerunning && !this.state.showGameWonModal) {
+            this.setState({ showGameLostModal: true });
+        }
+
         this.setState({
             cards: playerHand,
             currentGameBoard: newGameboard,
@@ -139,6 +147,21 @@ export class Game extends React.Component {
             {
                 uid: this.state.uuid
             });
+    }
+
+    async makeAccusation() {
+        const response = await axios.post("http://localhost:5000/accusation",
+            {
+                uid: this.state.uuid,
+                weapon: this.state.accusationSelected.weapon,
+                room: this.state.accusationSelected.room,
+                suspect: this.state.accusationSelected.suspect
+            });
+        if (response.data.gamewon) {
+            this.setState({ showGameWonModal: true });
+        } else {
+            this.setState({ showGameLostModal: true });
+        }
     }
 
     processGameState(gamestate) {
@@ -181,23 +204,12 @@ export class Game extends React.Component {
         const hideAccusationModal = () => {
             this.setState({ showAccusationModal: false });
         }
-
-        const makeAccusation = () => {
-            const response = await axios.post("http://localhost:5000/accusation",
-                {
-                    uid: this.state.uuid,
-                    weapon: this.state.accusationSelected.weapon,
-                    room: this.state.accusationSelected.room,
-                    suspect: this.state.accusationSelected.suspect
-                });
-
-            if (response.gamewon) {
-                console.log("Game Won!");
-            } else {
-                console.log("This player loses");
-            }
+        const hideGameLostModal = () => {
+            this.setState({ showGameLostModal: false });
         }
-
+        const hideGameWonModal = () => {
+            this.setState({ showGameWonModal: false });
+        }
         const handleAccusationSuspectSelect = (idx) => {
             this.setState({ accusationSelected: { ...this.state.accusationSelected, suspect: characters[idx] } })
         }
@@ -262,6 +274,42 @@ export class Game extends React.Component {
             </Modal >
         );
 
+        const gameWonModal = (
+            <Modal
+                show={this.state.showGameWonModal}
+                onHide={hideGameWonModal}
+                backdrop="static"
+                keyboard={false}
+                centered
+                size="lg"
+                contentClassName="gameWonModal"
+            ><Modal.Header className="modalHeader">
+                    <Modal.Title>
+                        <span className="finalText"> You Win!</span>
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                </Modal.Body>
+            </Modal >
+        );
+        const gameLostModal = (
+            <Modal
+                show={this.state.showGameLostModal}
+                onHide={hideGameLostModal}
+                backdrop="static"
+                keyboard={false}
+                centered
+                size="lg"
+                contentClassName="gameLostModal"
+            ><Modal.Header className="modalHeader">
+                    <Modal.Title>
+                        <span className="finalText"> You Lose</span></Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                </Modal.Body>
+            </Modal >
+        );
+
         const accusationModal = (
             <Modal
                 show={this.state.showAccusationModal}
@@ -305,7 +353,7 @@ export class Game extends React.Component {
                     <Button variant="secondary" onClick={hideAccusationModal}>
                         Cancel
                      </Button>
-                    <Button variant="primary" onClick={makeAccusation}>
+                    <Button variant="primary" onClick={this.makeAccusation}>
                         Accuse
                     </Button>
                 </Modal.Footer>
@@ -369,6 +417,8 @@ export class Game extends React.Component {
                     <div>
                         {suggestionModal}
                         {accusationModal}
+                        {gameWonModal}
+                        {gameLostModal}
                         {secondarySuggestionModal}
                     </div>
                     <div className="container">

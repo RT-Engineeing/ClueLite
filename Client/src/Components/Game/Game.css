@@ -118,3 +118,12 @@
     justify-content: center;
     padding-bottom: 15px;
 } 
+
+.gameWonModal, .gameLostModal {
+    background-color: goldenrod;
+    padding-top: 35px;
+}
+
+.finalText {
+    font-size: 60px
+}
