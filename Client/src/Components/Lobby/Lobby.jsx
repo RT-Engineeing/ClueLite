@@ -20,11 +20,9 @@ export class Lobby extends React.Component {
             uuid: nextProps.location.state.uuid,
             charactername: nextProps.location.state.charactername,
         });
-        console.log(this.state.myPlayer);
     }
 
     constructor(props) {
-        console.log(props);
         super();
         this.state = {
             players: [
@@ -147,8 +145,6 @@ export class Lobby extends React.Component {
                 }}></Redirect>
             )
         } else {
-            console.log(this.state.myPlayer);
-            console.log(this.state.players);
             return (
                 <React.Fragment key="lobbyContainer">
                     <Card className="playerNamesList" text="white">

@@ -118,6 +118,14 @@ export class Game extends React.Component {
 
     async pollGameState() {
 
+        function cvt_5x5_gameboard(gameBoard) {
+            gameBoard[1].splice(3, 1);
+            gameBoard[1].splice(1, 1);
+            gameBoard[3].splice(3, 1);
+            gameBoard[3].splice(1, 1);
+            return gameBoard
+        }
+
         const response = await axios.post("http://localhost:5000/getstate",
             {
                 uid: this.state.uuid
@@ -135,11 +143,17 @@ export class Game extends React.Component {
             this.setState({ showGameLostModal: true });
         }
 
+        console.log(newGameboard);
         this.setState({
             cards: playerHand,
-            currentGameBoard: newGameboard,
+            currentGameBoard: cvt_5x5_gameboard(newGameboard),
             turnIndicator: turnString
         });
+
+        const myTurn = playerTurn === this.state.playerName;
+        if (myTurn && this.state.showGameLostModal) {
+            this.endTurn();
+        }
     }
 
     async endTurn() {
@@ -162,6 +176,7 @@ export class Game extends React.Component {
         } else {
             this.setState({ showGameLostModal: true });
         }
+        this.setState({ showAccusationModal: false })
     }
 
     processGameState(gamestate) {
