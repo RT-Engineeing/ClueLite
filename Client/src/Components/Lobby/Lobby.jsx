@@ -13,25 +13,35 @@ const MAX_PLAYERS = 6;
 
 export class Lobby extends React.Component {
 
+    componentWillReceiveProps(nextProps) {
+        this.setState({
+            myPlayer: nextProps.location.state.playername,
+            sessionKey: nextProps.location.state.sessionKey,
+            uuid: nextProps.location.state.uuid,
+            charactername: nextProps.location.state.charactername,
+        });
+        console.log(this.state.myPlayer);
+    }
+
     constructor(props) {
+        console.log(props);
         super();
         this.state = {
             players: [
             ],
-            myPlayer: props.location.state.playername,
             myCurrentReadiness: false,
-            sessionKey: props.location.state.sessionKey,
-            charactername: props.location.state.charactername,
             gameCanStart: false,
             pollingForGameState: false,
-            uuid: props.location.state.uuid
+            myPlayer: props.location.state.playername,
+            sessionKey: props.location.state.sessionKey,
+            uuid: props.location.state.uuid,
+            charactername: props.location.state.charactername
         }
     }
 
 
     async pollForGameState() {
 
-        console.log('in poller');
         const response = await axios.post("http://localhost:5000/getstate", {
             uid: this.state.uuid
         });
@@ -53,8 +63,6 @@ export class Lobby extends React.Component {
 
         const responseData = response.data;
 
-        console.log("Response data: " + JSON.stringify(responseData));
-
         const readyPlayers = responseData["playersready"];
         const playersList = responseData["lobbyPlayers"];
 
@@ -67,16 +75,12 @@ export class Lobby extends React.Component {
             lobbyData.push([player, readyStatus]);
         });
 
-        console.log("ready status: " + JSON.stringify(lobbyData));
-
         this.setState({
             gameCanStart: responseData["status"] !== "false",
             players: lobbyData
         });
 
-        console.log("gamecanstart: " + this.state.gameCanStart + ", polling? " + this.state.pollingForGameState);
         if (this.state.gameCanStart && !this.state.pollingForGameState) {
-            console.log("setting interval for game state polling");
             this.gameStateInterval = setInterval(() => this.pollForGameState(), 1000);
             this.setState({
                 pollingForGameState: true
@@ -115,8 +119,6 @@ export class Lobby extends React.Component {
     }
 
     render() {
-        console.log(this.state);
-        console.log(this.props);
         const startButton = (
             <Button variant="success" disabled={!this.state.gameCanStart} className="lobbyStartButton">
                 <p className="lobbyStartText">
@@ -134,15 +136,19 @@ export class Lobby extends React.Component {
         )
         if (this.state.pollingForGameState) {
             return (
-                <Redirect to={{pathname: "/game",
-                                state: {
-                                    playerName: this.state.myPlayer,
-                                    charactername: this.state.charactername,
-                                    uuid: this.state.uuid,
-                                    sessionkey: this.state.sessionKey
-                                }}}></Redirect>
+                <Redirect to={{
+                    pathname: "/game",
+                    state: {
+                        playerName: this.state.myPlayer,
+                        charactername: this.state.charactername,
+                        uuid: this.state.uuid,
+                        sessionkey: this.state.sessionKey
+                    }
+                }}></Redirect>
             )
         } else {
+            console.log(this.state.myPlayer);
+            console.log(this.state.players);
             return (
                 <React.Fragment key="lobbyContainer">
                     <Card className="playerNamesList" text="white">

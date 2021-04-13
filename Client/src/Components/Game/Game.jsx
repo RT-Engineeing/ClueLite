@@ -27,6 +27,11 @@ export class Game extends React.Component {
             playerName: props.location.state.playerName,
             charactername: props.location.state.charactername,
             sessionkey: props.location.state.sessionkey,
+            accusationSelected: {
+                suspect: characters[0],
+                weapon: weapons[0],
+                room: rooms[0]
+            },
             currentGameBoard: [
                 [
                     [
@@ -108,11 +113,11 @@ export class Game extends React.Component {
 
 
     async pollGameState() {
-        
+
         const response = await axios.post("http://localhost:5000/getstate",
-        {
-            uid: this.state.uuid
-        });
+            {
+                uid: this.state.uuid
+            });
 
         const gamestate = response.data;
         const playerdata = gamestate[this.state.playerName];
@@ -122,16 +127,18 @@ export class Game extends React.Component {
 
         const turnString = playerTurn + "'s " + (playerTurn === this.state.playerName ? " (You) " : "") + " Turn";
 
-        this.setState({ cards: playerHand,
+        this.setState({
+            cards: playerHand,
             currentGameBoard: newGameboard,
-            turnIndicator: turnString});
+            turnIndicator: turnString
+        });
     }
 
     async endTurn() {
         const response = await axios.post("http://localhost:5000/endturn",
-        {
-            uid: this.state.uuid
-        });
+            {
+                uid: this.state.uuid
+            });
     }
 
     processGameState(gamestate) {
@@ -173,6 +180,32 @@ export class Game extends React.Component {
         }
         const hideAccusationModal = () => {
             this.setState({ showAccusationModal: false });
+        }
+
+        const makeAccusation = () => {
+            const response = await axios.post("http://localhost:5000/accusation",
+                {
+                    uid: this.state.uuid,
+                    weapon: this.state.accusationSelected.weapon,
+                    room: this.state.accusationSelected.room,
+                    suspect: this.state.accusationSelected.suspect
+                });
+
+            if (response.gamewon) {
+                console.log("Game Won!");
+            } else {
+                console.log("This player loses");
+            }
+        }
+
+        const handleAccusationSuspectSelect = (idx) => {
+            this.setState({ accusationSelected: { ...this.state.accusationSelected, suspect: characters[idx] } })
+        }
+        const handleAccusationWeaponSelect = (idx) => {
+            this.setState({ accusationSelected: { ...this.state.accusationSelected, weapon: weapons[idx] } })
+        }
+        const handleAccusationRoomSelect = (idx) => {
+            this.setState({ accusationSelected: { ...this.state.accusationSelected, room: rooms[idx] } })
         }
 
         const endTurn = () => {
@@ -243,7 +276,7 @@ export class Game extends React.Component {
                     <Modal.Title>Make an Accusation</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <Carousel interval={null} indicators={false}>
+                    <Carousel interval={null} indicators={false} onSelect={handleAccusationSuspectSelect}>
                         {characters.map((character, idx) =>
                         (
                             <Carousel.Item className="carouselItem" id={idx}>
@@ -251,18 +284,18 @@ export class Game extends React.Component {
                             </Carousel.Item>
                         ))}
                     </Carousel>
-                    <Carousel interval={null} indicators={false}>
+                    <Carousel interval={null} indicators={false} onSelect={handleAccusationWeaponSelect}>
                         {weapons.map((weapon, idx) =>
                         (
-                            <Carousel.Item className="carouselItem" id={idx}>
+                            <Carousel.Item className="carouselItem" id={idx} >
                                 {weapon}
                             </Carousel.Item>
                         ))}
                     </Carousel>
-                    <Carousel interval={null} indicators={false}>
+                    <Carousel interval={null} indicators={false} onSelect={handleAccusationRoomSelect}>
                         {rooms.map((room, idx) =>
                         (
-                            <Carousel.Item className="carouselItem" id={idx}>
+                            <Carousel.Item className="carouselItem" id={idx} >
                                 {room}
                             </Carousel.Item>
                         ))}
@@ -272,7 +305,7 @@ export class Game extends React.Component {
                     <Button variant="secondary" onClick={hideAccusationModal}>
                         Cancel
                      </Button>
-                    <Button variant="primary" onClick={hideAccusationModal}>
+                    <Button variant="primary" onClick={makeAccusation}>
                         Accuse
                     </Button>
                 </Modal.Footer>
@@ -316,7 +349,7 @@ export class Game extends React.Component {
 
         const gameBoard = (
             <Card id="game">
-                { <GameBoard gameState={this.getGameState} charactername={this.state.charactername} playerName={this.state.playerName}/>}
+                { <GameBoard gameState={this.getGameState} charactername={this.state.charactername} playerName={this.state.playerName} />}
             </Card >
         )
 
@@ -339,7 +372,7 @@ export class Game extends React.Component {
                         {secondarySuggestionModal}
                     </div>
                     <div className="container">
-                        <h3 id="cardsHeader"> Your Hand ({this.state.charactername}):</h3> 
+                        <h3 id="cardsHeader"> Your Hand ({this.state.charactername}):</h3>
                         <div className="cardRow row">
                             <div className="cardCol col" align="right">
                                 <Card className="playerCard" align="center">
@@ -406,7 +439,7 @@ export class Game extends React.Component {
                 <div id="gamePageContainer">
                     <div className="row">
                         <div className="col-md-5" >
-                        <h3 id="turnIndicator"> {this.state.turnIndicator} </h3>
+                            <h3 id="turnIndicator"> {this.state.turnIndicator} </h3>
                             {gameBoard}
                         </div>
                         <div className="col-md-5" >

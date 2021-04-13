@@ -23,6 +23,10 @@ export class LandingPage extends React.Component {
 
     render() {
 
+        if (!this.state) {
+            return;
+        }
+
         const playButton = (
             <Button variant="success" className="startButton justify-content-center">
                 <p className="startText">Play</p>
