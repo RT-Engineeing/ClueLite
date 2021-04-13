@@ -7,7 +7,6 @@ import {
 } from "react-router-dom";
 import axios from 'axios';
 import Button from 'react-bootstrap/Button';
-import getUserUUID from '../../UUID/UUID';
 
 const MAX_PLAYERS = 6;
 
@@ -17,12 +16,6 @@ export class Lobby extends React.Component {
         super();
         this.state = {
             players: [
-                ["Player1", false],
-                ["Player2", false],
-                ["Player3", false],
-                ["Player4", false],
-                ["Player5", false],
-                ["Player6", false],
             ],
             myPlayer: props.location.state.playername, // These props come from the Router/Switch
             sessionKey: props.location.state.sessionKey,
