@@ -17,12 +17,6 @@ export class Lobby extends React.Component {
         super();
         this.state = {
             players: [
-                ["Player1", "False"],
-                ["Player2", "False"],
-                ["Player3", "False"],
-                ["Player4", "False"],
-                ["Player5", "False"],
-                ["Player6", "False"],
             ],
             myPlayer: props.location.state.playername,
             myCurrentReadiness: false,
@@ -59,18 +53,25 @@ export class Lobby extends React.Component {
 
         const responseData = response.data;
 
+        console.log("Response data: " + JSON.stringify(responseData));
+
         const readyPlayers = responseData["playersready"];
+        const playersList = responseData["lobbyPlayers"];
 
 
-        let playersCopy = [...this.state.players];
 
-        playersCopy.forEach(player => {
-            player[1] = readyPlayers.includes(player[0]) ? true : false;
+        let lobbyData = [];
+
+        playersList.forEach(player => {
+            let readyStatus = readyPlayers.includes(player) ? true : false;
+            lobbyData.push([player, readyStatus]);
         });
+
+        console.log("ready status: " + JSON.stringify(lobbyData));
 
         this.setState({
             gameCanStart: responseData["status"] !== "false",
-            players: playersCopy
+            players: lobbyData
         });
 
         console.log("gamecanstart: " + this.state.gameCanStart + ", polling? " + this.state.pollingForGameState);
