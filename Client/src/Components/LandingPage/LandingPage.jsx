@@ -16,7 +16,8 @@ export class LandingPage extends React.Component {
         this.state = {
             sessionKey: " ",
             playername: " ",
-            charactername: " "
+            charactername: " ",
+            uuid: null
         }
     }
 
@@ -51,7 +52,8 @@ export class LandingPage extends React.Component {
                                 state: {
                                     sessionKey: this.state.sessionKey,
                                     playername: this.state.playername,
-                                    charactername: this.state.charactername
+                                    charactername: this.state.charactername,
+                                    uuid: this.state.uuid
                                 }
                             }} style={{ textDecoration: 'none' }}>
                                 {this.state.sessionKey ? playButton : loadingButton}
@@ -86,7 +88,8 @@ export class LandingPage extends React.Component {
         this.setState({
             sessionKey: sessionKey,
             playername: playername,
-            charactername: charactername
+            charactername: charactername,
+            uuid: (this.state.uuid ? this.state.uuid : uuid)
         });
         // console.log("updated state: " + this.state);
 

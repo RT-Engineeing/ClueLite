@@ -23,6 +23,10 @@ export class Game extends React.Component {
             showAccusationModal: false,
             showSecondarySuggestionModal: false,
             cards: ["1", "2", "3", "4", "5"],
+            uuid: props.location.state.uuid,
+            playerName: props.location.state.playerName,
+            charactername: props.location.state.charactername,
+            sessionkey: props.location.state.sessionkey,
             currentGameBoard: [
                 [
                     [
@@ -97,25 +101,37 @@ export class Game extends React.Component {
                         21
                     ]
                 ]
-            ]
+            ],
+            turnIndicator: " "
         }
     }
 
 
     async pollGameState() {
         
-        const response = await axios.get("http://localhost:5000/getstate");
+        const response = await axios.post("http://localhost:5000/getstate",
+        {
+            uid: this.state.uuid
+        });
 
         const gamestate = response.data;
-        const player1 = gamestate["Player1"];
-        const playerHand = player1["hand"][0];
-        const oldboard = this.state.currentGameBoard;
-        this.setState({ cards: playerHand });
-        this.setState({ currentGameBoard: gamestate["gameboard"] });
+        const playerdata = gamestate[this.state.playerName];
+        const playerHand = playerdata["hand"];
+        const newGameboard = gamestate["gameboard"];
+        const playerTurn = "Player" + (gamestate["playerturn"] + 1);
 
-        if (oldboard !== this.state.currentGameBoard) {
-            this.render();
-        }
+        const turnString = playerTurn + "'s " + (playerTurn === this.state.playerName ? " (You) " : "") + " Turn";
+
+        this.setState({ cards: playerHand,
+            currentGameBoard: newGameboard,
+            turnIndicator: turnString});
+    }
+
+    async endTurn() {
+        const response = await axios.post("http://localhost:5000/endturn",
+        {
+            uid: this.state.uuid
+        });
     }
 
     processGameState(gamestate) {
@@ -124,7 +140,7 @@ export class Game extends React.Component {
 
 
     componentDidMount() {
-        this.interval = setInterval(() => this.pollGameState(), 5000);
+        this.interval = setInterval(() => this.pollGameState(), 1000);
     }
 
     componentWillUnmount() {
@@ -157,6 +173,10 @@ export class Game extends React.Component {
         }
         const hideAccusationModal = () => {
             this.setState({ showAccusationModal: false });
+        }
+
+        const endTurn = () => {
+            this.endTurn();
         }
 
         const suggestionModal = (
@@ -296,7 +316,7 @@ export class Game extends React.Component {
 
         const gameBoard = (
             <Card id="game">
-                { <GameBoard gameState={this.getGameState} />}
+                { <GameBoard gameState={this.getGameState} charactername={this.state.charactername} playerName={this.state.playerName}/>}
             </Card >
         )
 
@@ -319,6 +339,7 @@ export class Game extends React.Component {
                         {secondarySuggestionModal}
                     </div>
                     <div className="container">
+                        <h3 id="cardsHeader"> Your Hand ({this.state.charactername}):</h3> 
                         <div className="cardRow row">
                             <div className="cardCol col" align="right">
                                 <Card className="playerCard" align="center">
@@ -372,7 +393,7 @@ export class Game extends React.Component {
 
                 <div id="endTurnButton" className="col d-flex justify-content-center">
                     <Button className="actionButton"
-                    //    onClick={window.endTurn()}
+                        onClick={endTurn}
                     >
                         End Turn
                     </Button>
@@ -385,6 +406,7 @@ export class Game extends React.Component {
                 <div id="gamePageContainer">
                     <div className="row">
                         <div className="col-md-5" >
+                        <h3 id="turnIndicator"> {this.state.turnIndicator} </h3>
                             {gameBoard}
                         </div>
                         <div className="col-md-5" >

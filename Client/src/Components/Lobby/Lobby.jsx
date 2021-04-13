@@ -23,18 +23,18 @@ export class Lobby extends React.Component {
             sessionKey: props.location.state.sessionKey,
             charactername: props.location.state.charactername,
             gameCanStart: false,
-            pollingForGameState: false
+            pollingForGameState: false,
+            uuid: props.location.state.uuid
         }
     }
 
-    toggleReadiness() {
-        this.state.ready = !this.state.ready;
-    }
 
     async pollForGameState() {
 
         console.log('in poller');
-        const response = await axios.get("http://localhost:5000/getstate");
+        const response = await axios.post("http://localhost:5000/getstate", {
+            uid: this.state.uuid
+        });
 
         const gamestate = response.data;
 
@@ -134,7 +134,13 @@ export class Lobby extends React.Component {
         )
         if (this.state.pollingForGameState) {
             return (
-                <Redirect to={{pathname: "/game"}}></Redirect>
+                <Redirect to={{pathname: "/game",
+                                state: {
+                                    playerName: this.state.myPlayer,
+                                    charactername: this.state.charactername,
+                                    uuid: this.state.uuid,
+                                    sessionkey: this.state.sessionKey
+                                }}}></Redirect>
             )
         } else {
             return (

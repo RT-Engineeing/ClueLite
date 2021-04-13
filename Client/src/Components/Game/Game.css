@@ -18,6 +18,20 @@
     background-color: #777;
 }
 
+#cardsHeader {
+    color: white;
+    -webkit-text-stroke-width: 0.5px;
+    -webkit-text-stroke-color: black;
+    font-size: 25px;
+}
+
+#turnIndicator {
+    color: white;
+    -webkit-text-stroke-width: 0.5px;
+    -webkit-text-stroke-color: black;
+    font-size: 35px;
+}
+
 .actionButton {
     width: 100%;
     background-color: #777;
@@ -46,6 +60,8 @@
     background-size: 120px 160px;
 
 }
+
+
 
 #gamePageContainer {
     margin: 3%;
