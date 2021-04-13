@@ -16,6 +16,12 @@ export class Lobby extends React.Component {
         super();
         this.state = {
             players: [
+                ["Player1", "False"],
+                ["Player2", "False"],
+                ["Player3", "False"],
+                ["Player4", "False"],
+                ["Player5", "False"],
+                ["Player6", "False"],
             ],
             myPlayer: props.location.state.playername,
             myCurrentReadiness: false,
@@ -35,6 +41,8 @@ export class Lobby extends React.Component {
         const responseData = response.data;
 
         const readyPlayers = responseData["playersready"];
+        
+
         let playersCopy = [...this.state.players];
 
         playersCopy.forEach(player => {
@@ -56,13 +64,15 @@ export class Lobby extends React.Component {
             sessionId: this.state.sessionKey,
             playerready: readinessTransmit
         });
+
+        this.setState( {
+            myCurrentReadiness: newReadiness
+        });
     }
 
     async componentDidMount() {
 
-        console.log("props: " + JSON.stringify(this.props));
-        console.log("state: " + JSON.stringify(this.state));
-        await this.pollForReadinessStatuses();
+        this.interval = setInterval(() => this.pollForReadinessStatuses(), 1000);
     }
 
     componentWillUnmount() {
