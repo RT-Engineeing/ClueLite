@@ -1,0 +1,42 @@
+  #landingPageContainer {
+    top: 20%;
+    max-width: 100%;
+    position: absolute;
+  }
+  
+  .startButton {
+    width: 400px;
+    height: 80px;
+    border-color: lime !important;
+    border-width: 2px !important;
+    display: inline-flex;
+    margin: 20px;
+  }
+
+  .loadingButton {
+    width: 400px;
+    height: 80px;
+    border-color: white !important;
+    border-width: 2px !important;
+    background-color: gray;
+    display: inline-flex;
+    pointer-events: none;    
+    margin: 20px;
+  }
+  
+  .startText {
+    font-size: 40px;
+    color: white !important;
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: black;
+    position: relative;
+    top: 7px;
+  }
+  
+  .title {
+    font-size: 55px;
+    color: white;
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: black;
+  }
+  

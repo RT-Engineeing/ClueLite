@@ -2,6 +2,7 @@ from Session import Session
 from GameState import GameState
 from GameOperations import Players, Weapons, Weapdeck, Roomsdeck, Chardeck
 from flask import Flask, jsonify, request, render_template
+from flask_cors import CORS
 import random
 
 app = Flask(__name__)
@@ -70,7 +71,7 @@ isPlayerReady = False
 tempvar = 0
 session = Session(random.randint(100000, 999999), gamestate)
 
-
+CORS(app)
 def adduser():
     if len(playerarray) == 0:
         random.shuffle(rooms)
@@ -187,6 +188,7 @@ def adduser():
 def playersready():
     if request.method == 'POST':
         some_json = request.get_json()
+        print("fetched json " + str(some_json))
         playername = some_json["playername"]
         sessionId = some_json["sessionId"]
         playerready = some_json["playerready"]
@@ -308,10 +310,12 @@ def Move():
         ycoordinate = some_json["y"]
         if (not isinstance(ycoordinate, int)):
             ycoordinate = int(ycoordinate)
+        print("Moving player " + character + " to " + str(xcoordinate) + ", " + str(ycoordinate))
         newLocation = [xcoordinate, ycoordinate]
         count = 1
         for x in playerarray:
-            if (x.getCharacter() == character):
+            print("Checking " + character + " against " + x.getName())
+            if (x.getName() == character):
                 oldLocation = x.getLocation()
                 board = gamestate.getGameBoard()
                 arr = board[oldLocation[0]][oldLocation[1]]
