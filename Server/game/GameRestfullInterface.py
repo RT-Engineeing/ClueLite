@@ -538,6 +538,7 @@ def endTurn():
             gamestate.setPlayerturn = 1
         else:
             gamestate.setPlayerturn(gamestate.getPlayerturn + 1)
+        return jsonify(result="success")
 
 
 @app.route('/')
