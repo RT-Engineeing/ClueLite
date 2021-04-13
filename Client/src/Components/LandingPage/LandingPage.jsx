@@ -50,9 +50,7 @@ export class LandingPage extends React.Component {
                                     sessionKey: this.state.sessionKey,
                                     playername: this.state.playername
                                 }
-                            }} style={{ textDecoration: 'none' }} params={{
-                                key: "test"
-                            }} >
+                            }} style={{ textDecoration: 'none' }}>
                                 {this.state.sessionKey ? playButton : loadingButton}
                             </Link>
                         </div>
