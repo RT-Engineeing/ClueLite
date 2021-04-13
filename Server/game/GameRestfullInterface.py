@@ -65,7 +65,7 @@ roomcoordinates = [
 ]
 uids = []
 
-playerturn = 0
+playerturn = 1
 roomzdeck = Roomsdeck(rooms)
 characdeck = Chardeck(characters)
 weapondeck = Weapdeck(weapons)
@@ -84,7 +84,7 @@ casefile = []
 subturnqueue = []
 characselectdeck = []
 suggestionmessage = []
-gamestate = GameState(casefile, 0, 0, False, [[["Rope"], [], ["Lead Pipe"], [], ["Knife"]],
+gamestate = GameState(casefile, 0, 1, False, [[["Rope"], [], ["Lead Pipe"], [], ["Knife"]],
                                               [[], [], [], [], []],
                                               [["Wrench"], [], ["Candlestick"], [], ["Revolver"]],
                                               [[], [], [], [], []],
@@ -191,7 +191,7 @@ def adduser(uid):
         elif p == 6:
             newgamestate.setNumOfPlayers(p)
             # newgamestate.setGameRunning(True)
-            # newgamestate.setPlayerturn(1)
+            newgamestate.setPlayerturn(1)
         board = newgamestate.getGameBoard()
         arr = board[player.getLocation()[0]][player.getLocation()[1]]
         arr.append(player.getCharacter())
@@ -366,7 +366,6 @@ def move():
         newLocation = [xcoordinate, ycoordinate]
         count = 1
         for x in playerarray:
-            print("Checking " + character + " against " + x.getName())
             if x.getName() == character:
                 oldLocation = x.getLocation()
                 board = gamestate.getGameBoard()
@@ -537,7 +536,7 @@ def endTurn():
         if gamestate.getPlayerturn() == 6:
             gamestate.setPlayerturn = 1
         else:
-            gamestate.setPlayerturn(gamestate.getPlayerturn + 1)
+            gamestate.setPlayerturn(gamestate.getPlayerturn() + 1)
         return jsonify(result="success")
 
 
