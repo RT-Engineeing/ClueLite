@@ -13,6 +13,8 @@ const TMP_PLAYER_CARDS = [
     "exodiaRightArm", "exodiaBody", "exodiaLeftArm", "exodiaRightLeg", "exodiaLeftLeg"
 ];
 
+const tmpGameBoard = [[[1], [2], [3], [4], [5]], [[6], [7], [8],], [[9], [10], [11], [12], [13]], [[14], [15], [16],], [[17], [18], [19], [20], [21]]];
+
 export class Game extends React.Component {
 
     constructor(props) {
@@ -34,81 +36,7 @@ export class Game extends React.Component {
                 weapon: weapons[0],
                 room: rooms[0]
             },
-            currentGameBoard: [
-                [
-                    [
-                        1
-                    ],
-                    [
-                        2
-                    ],
-                    [
-                        3
-                    ],
-                    [
-                        4
-                    ],
-                    [
-                        5
-                    ]
-                ],
-                [
-                    [
-                        6
-                    ],
-                    [
-                        7
-                    ],
-                    [
-                        8
-                    ],
-                ],
-                [
-                    [
-                        9
-                    ],
-                    [
-                        10
-                    ],
-                    [
-                        11
-                    ],
-                    [
-                        12
-                    ],
-                    [
-                        13
-                    ]
-                ],
-                [
-                    [
-                        14
-                    ],
-                    [
-                        15
-                    ],
-                    [
-                        16
-                    ],
-                ],
-                [
-                    [
-                        17
-                    ],
-                    [
-                        18
-                    ],
-                    [
-                        19
-                    ],
-                    [
-                        20
-                    ],
-                    [
-                        21
-                    ]
-                ]
-            ],
+            currentGameBoard: tmpGameBoard,
             turnIndicator: " "
         }
 
@@ -117,8 +45,9 @@ export class Game extends React.Component {
 
 
     async pollGameState() {
-
+        // Converts the 5,5,5,5,5 gameboard returned by the server to a 5,3,5,3,5 game board.
         function cvt_5x5_gameboard(gameBoard) {
+            // Don't modify this function.
             gameBoard[1].splice(3, 1);
             gameBoard[1].splice(1, 1);
             gameBoard[3].splice(3, 1);
@@ -143,7 +72,6 @@ export class Game extends React.Component {
             this.setState({ showGameLostModal: true });
         }
 
-        console.log(newGameboard);
         this.setState({
             cards: playerHand,
             currentGameBoard: cvt_5x5_gameboard(newGameboard),
@@ -504,10 +432,10 @@ export class Game extends React.Component {
                 <div id="gamePageContainer">
                     <div className="row">
                         <div className="col-md-5" >
-                            <h3 id="turnIndicator"> {this.state.turnIndicator} </h3>
+                            <h3 className="turnIndicator"> {this.state.turnIndicator} </h3>
                             {gameBoard}
                         </div>
-                        <div className="col-md-5" >
+                        <div className="col-md-5" style={{ paddingTop: "50px" }}>
                             <div className="container">
                                 {updatesContainer}
                                 {cards}
@@ -516,7 +444,7 @@ export class Game extends React.Component {
                         </div >
                     </div >
                 </div >
-            </div>
+            </div >
         )
     }
 }
