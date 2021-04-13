@@ -103,7 +103,7 @@ export class Game extends React.Component {
 
 
     async pollGameState() {
-        console.log('in poller');
+        
         const response = await axios.get("http://localhost:5000/getstate");
 
         const gamestate = response.data;

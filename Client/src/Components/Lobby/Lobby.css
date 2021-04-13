@@ -114,10 +114,6 @@
     background-color: red !important;
   }
 
-  #lobbyContainer {
-    padding-top: 20px;
-  }
-
   .myPlayer {
     left: 38%;
     position: absolute;

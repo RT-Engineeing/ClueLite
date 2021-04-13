@@ -27,12 +27,30 @@ export class Lobby extends React.Component {
             myCurrentReadiness: false,
             sessionKey: props.location.state.sessionKey,
             charactername: props.location.state.charactername,
-            gameCanStart: false
+            gameCanStart: false,
+            pollingForGameState: false
         }
     }
 
     toggleReadiness() {
         this.state.ready = !this.state.ready;
+    }
+
+    async pollForGameState() {
+
+        console.log('in poller');
+        const response = await axios.get("http://localhost:5000/getstate");
+
+        const gamestate = response.data;
+        
+        const gamerunning = gamestate["gamerunning"];
+
+        if(gamerunning) {
+            /**
+             * INSERT LINK TO FORCE ALL PLAYERS INTO GAMEBOARD HERE
+             */
+        }
+
     }
 
     async pollForReadinessStatuses() {
@@ -41,7 +59,7 @@ export class Lobby extends React.Component {
         const responseData = response.data;
 
         const readyPlayers = responseData["playersready"];
-        
+
 
         let playersCopy = [...this.state.players];
 
@@ -53,6 +71,15 @@ export class Lobby extends React.Component {
             gameCanStart: responseData["status"] !== "false",
             players: playersCopy
         });
+
+        console.log("gamecanstart: " + this.state.gameCanStart + ", polling? " + this.state.pollingForGameState);
+        if (this.state.gameCanStart && !this.state.pollingForGameState) {
+            console.log("setting interval for game state polling");
+            this.gameStateInterval = setInterval(() => this.pollForGameState(), 1000);
+            this.setState({
+                pollingForGameState: true
+            })
+        }
     }
 
 
@@ -65,19 +92,20 @@ export class Lobby extends React.Component {
             playerready: readinessTransmit
         });
 
-        this.setState( {
+        this.setState({
             myCurrentReadiness: newReadiness
         });
     }
 
     async componentDidMount() {
-
         this.interval = setInterval(() => this.pollForReadinessStatuses(), 1000);
     }
 
     componentWillUnmount() {
         clearInterval(this.interval);
+        clearInterval(this.gameStateInterval);
     }
+
 
 
     handleClick = (event) => {
@@ -101,7 +129,7 @@ export class Lobby extends React.Component {
             </Button>
         )
         return (
-            <React.Fragment id="lobbyContainer">
+            <React.Fragment key="lobbyContainer">
                 <Card className="playerNamesList" text="white">
                     <ListGroup variant="flush">
                         {this.state.players.map(player => (
