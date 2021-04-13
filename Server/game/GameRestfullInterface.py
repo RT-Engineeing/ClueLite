@@ -16,6 +16,17 @@ rooms = [
     "Library",
     "Billiard Room"
 ]
+suggrooms = [
+    "Kitchen",
+    "Conservatory",
+    "Dining Room",
+    "Ballroom",
+    "Study",
+    "Hall",
+    "Lounge",
+    "Library",
+    "Billiard Room"
+]
 characters = [
     "Miss Scarlet",
     "Mrs. White",
@@ -40,6 +51,18 @@ weapons = [
     "Candlestick",  # 11
     "Revolver"  # 12
 ]
+roomcoordinates = [
+    [4, 4],
+    [4, 0],
+    [2, 4],
+    [4, 2],
+    [0, 0],
+    [0, 2],
+    [0, 4],
+    [2, 0],
+    [2, 2]
+]
+uids = []
 
 playerturn = 0
 roomzdeck = Roomsdeck(rooms)
@@ -52,6 +75,7 @@ wrench = Weapons(weapons[3], [2, 0], 10)
 candlestick = Weapons(weapons[4], [2, 2], 11)
 revolver = Weapons(weapons[5], [2, 4], 12)
 weaponsarray = [knife, rope, leadpipe, wrench, candlestick, revolver]
+messagequeue = [[],[],[],[],[],[]]
 totaldeck = []
 playerarray = []
 selectedChars = []
@@ -217,14 +241,23 @@ def sessions():
     return adduser()
 
 
-@app.route('/getstate', methods=['GET'])
+@app.route('/getstate', methods=['POST'])
 def hello():
+    some_json = request.get_json()
+    uid = some_json["uid"]
+    messages = []
+    count = 0
+    for x in uids:
+        if x == uid:
+            messages = messagequeue[count]
+            messagequeue[count].clear()
+        count += 1
     if (len(playerarray) == 1):
         return jsonify({'numberofplayers': gamestate.getNumOfPlayers(),
                         'Player1': {'name': playerarray[0].getName(), 'character': playerarray[0].getCharacter(),
                                     'location': playerarray[0].getLocation(), 'hand': playerarray[0].getHand()},
                         'playerturn': gamestate.getPlayerturn(), 'gamestatus': gamestate.getGameWon(),
-                        'gamerunning': gamestate.getGameRunning(),
+                        'gamerunning': gamestate.getGameRunning(), 'messages': messages, 'subturn': gamestate.getSubturn(),
                         'gameboard': gamestate.getGameBoard()})
     if (len(playerarray) == 2):
         return jsonify({'numberofplayers': gamestate.getNumOfPlayers(),
@@ -233,7 +266,7 @@ def hello():
                         'Player2': {'name': playerarray[1].getName(), 'character': playerarray[1].getCharacter(),
                                     'location': playerarray[1].getLocation(), 'hand': playerarray[1].getHand()},
                         'playerturn': gamestate.getPlayerturn(), 'gamestatus': gamestate.getGameWon(),
-                        'gamerunning': gamestate.getGameRunning(),
+                        'gamerunning': gamestate.getGameRunning(), 'messages': messages, 'subturn': gamestate.getSubturn(),
                         'gameboard': gamestate.getGameBoard()})
     if (len(playerarray) == 3):
         return jsonify({'numberofplayers': gamestate.getNumOfPlayers(),
@@ -244,7 +277,7 @@ def hello():
                         'Player3': {'name': playerarray[2].getName(), 'character': playerarray[2].getCharacter(),
                                     'location': playerarray[2].getLocation(), 'hand': playerarray[2].getHand()},
                         'playerturn': gamestate.getPlayerturn(), 'gamestatus': gamestate.getGameWon(),
-                        'gamerunning': gamestate.getGameRunning(),
+                        'gamerunning': gamestate.getGameRunning(), 'messages': messages, 'subturn': gamestate.getSubturn(),
                         'gameboard': gamestate.getGameBoard()})
     if (len(playerarray) == 4):
         return jsonify({'numberofplayers': gamestate.getNumOfPlayers(),
@@ -257,7 +290,7 @@ def hello():
                         'Player4': {'name': playerarray[3].getName(), 'character': playerarray[3].getCharacter(),
                                     'location': playerarray[3].getLocation(), 'hand': playerarray[3].getHand()},
                         'playerturn': gamestate.getPlayerturn(), 'gamestatus': gamestate.getGameWon(),
-                        'gamerunning': gamestate.getGameRunning(),
+                        'gamerunning': gamestate.getGameRunning(), 'messages': messages, 'subturn': gamestate.getSubturn(),
                         'gameboard': gamestate.getGameBoard()})
     if (len(playerarray) == 5):
         return jsonify({'numberofplayers': gamestate.getNumOfPlayers(),
@@ -272,7 +305,7 @@ def hello():
                         'Player5': {'name': playerarray[4].getName(), 'character': playerarray[4].getCharacter(),
                                     'location': playerarray[4].getLocation(), 'hand': playerarray[4].getHand()},
                         'playerturn': gamestate.getPlayerturn(), 'gamestatus': gamestate.getGameWon(),
-                        'gamerunning': gamestate.getGameRunning(),
+                        'gamerunning': gamestate.getGameRunning(), 'messages': messages, 'subturn': gamestate.getSubturn(),
                         'gameboard': gamestate.getGameBoard()})
     if (len(playerarray) == 6):
         return jsonify({'numberofplayers': gamestate.getNumOfPlayers(),
@@ -289,7 +322,7 @@ def hello():
                         'Player6': {'name': playerarray[5].getName(), 'character': playerarray[5].getCharacter(),
                                     'location': playerarray[5].getLocation(), 'hand': playerarray[5].getHand()},
                         'playerturn': gamestate.getPlayerturn(), 'gamestatus': gamestate.getGameWon(),
-                        'gamerunning': gamestate.getGameRunning(),
+                        'gamerunning': gamestate.getGameRunning(), 'messages': messages, 'subturn': gamestate.getSubturn(),
                         'gameboard': gamestate.getGameBoard()})
     return jsonify({'error': 'error'})
 
@@ -329,6 +362,22 @@ def Move():
     else:
         return jsonify({'result': 'Error'})
 
+@app.route('/SuggestionResponse', methods=['POST'])
+def suggresponse():
+    some_json = request.get_json()
+    playerchar = some_json["uid"]
+    suggestion = some_json["childSuggestion"]
+    if suggestion == "":
+        message = "There were no cards to display"
+        receiveplayer = gamestate.getPlayerturn()
+        messagequeue[receiveplayer - 1].append(message)
+    else:
+        message = suggestion
+        receiveplayer = gamestate.getPlayerturn()
+        messagequeue[receiveplayer - 1].append(message)
+    gamestate.setSubturn(0)
+    return jsonify({'result': 'success'})
+
 
 @app.route('/Suggestion', methods=['POST'])
 def Suggest():
@@ -337,13 +386,21 @@ def Suggest():
         weapon = some_json["weapon"]
         room = some_json["room"]
         character = some_json["character"]
-        playercharacter = some_json["playerchar"]
-        xcoordinate = some_json["x"]
-        ycoordinate = some_json["y"]
+        playercharacter = some_json["uid"]
+        playcounter = 0
+        for x in uids:
+            if x == playercharacter:
+                playercharacter = playerarray[playcounter].getCharacter()
+            playcounter += 1
+        xcoordinate = 0
+        ycoordinate = 0
+        for temp in suggrooms:
+            if temp == room:
+                xcoordinate = temp[0]
+                ycoordinate = temp[1]
 
         if (not isinstance(xcoordinate, int)):
             xcoordinate = int(xcoordinate)
-        ycoordinate = some_json["y"]
         if (not isinstance(ycoordinate, int)):
             ycoordinate = int(ycoordinate)
 
@@ -383,6 +440,9 @@ def Suggest():
                     character,
                     room,
                     weapon)
+                for i in range(6):
+                    messagequeue[i].append(message)
+
                 suggestionmessage.append(message)
             count += 1
         counter = 1
@@ -410,8 +470,12 @@ def accuse():
             suspect,
             room,
             weapon)
+        for i in range(6):
+            messagequeue[i].append(message)
         if set(accusation_set) == set(casefile):
             message = "{0} has won the game.".format(character)
+            for i in range(6):
+                messagequeue[i].append(message)
             gamestate.setGameWon(True)
             gamestate.setGameRunning(False)
             return jsonify(
@@ -421,11 +485,13 @@ def accuse():
                 message=message
             )
         message = "{0} has made a false accusation and can no longer win the game.".format(character)
+        for i in range(6):
+            messagequeue[i].append(message)
         return jsonify(
             result="success",
             message=message
         )
-    message="The {0} is not supported by this endpoint. Please try again.".format(str(request.method))
+    message = "The {0} is not supported by this endpoint. Please try again.".format(str(request.method))
     return jsonify(
         result="error",
         message=message
@@ -436,31 +502,12 @@ def accuse():
 def EndTurn():
     if request.method == 'POST':
         some_json = request.get_json()
-        playernum = some_json["playernum"]
+        playernum = some_json["uid"]
         # will need to add validation for the playernum
         if gamestate.getPlayerturn() == 6:
             gamestate.setPlayerturn = 1
         else:
             gamestate.setPlayerturn(gamestate.getPlayerturn + 1)
-
-
-@app.route('/Subturn', methods=['POST'])
-def SubTurn():
-    if request.method == 'POST':
-        some_json = request.get_json()
-        # needed for validation later
-        character = some_json["character"]
-        card = some_json["card"]
-        subturnqueue.append(card)
-
-
-@app.route('/SubTurnRequest', methods=['GET'])
-def SubTurnReq():
-    card = subturnqueue[0]
-    del subturnqueue[0]
-    gamestate.setSubturn(0)
-    return jsonify({'card': card})
-
 
 @app.route('/')
 def index():
