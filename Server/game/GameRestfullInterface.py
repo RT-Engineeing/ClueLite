@@ -493,8 +493,13 @@ def accuse():
         some_json = request.get_json()
         weapon = some_json["weapon"]
         suspect = some_json["suspect"]
-        character = some_json["character"]
+        uid = some_json["uid"]
         room = some_json["room"]
+        playcounter = 0
+        for x in uids:
+            if x == uid:
+                character = playerarray[playcounter].getCharacter()
+            playcounter += 1
         accusation_set = [room, suspect, weapon]
         message = "{0} has made the accusation that the murder was committed by {1} in the {2} with a {3}".format(
             character,
