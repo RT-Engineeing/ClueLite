@@ -424,10 +424,12 @@ def suggest():
             playcounter += 1
         xcoordinate = 0
         ycoordinate = 0
+        tempcounter = 0
         for temp in suggrooms:
             if temp == room:
-                xcoordinate = temp[0]
-                ycoordinate = temp[1]
+                xcoordinate = roomcoordinates[tempcounter][0]
+                ycoordinate = roomcoordinates[tempcounter][1]
+            tempcounter += 1
 
         if not isinstance(xcoordinate, int):
             xcoordinate = int(xcoordinate)
