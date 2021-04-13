@@ -118,7 +118,7 @@ export class Game extends React.Component {
         const playerdata = gamestate[this.state.playerName];
         const playerHand = playerdata["hand"];
         const newGameboard = gamestate["gameboard"];
-        const playerTurn = "Player" + (gamestate["playerturn"] + 1);
+        const playerTurn = "Player" + (gamestate["playerturn"]);
 
         const turnString = playerTurn + "'s " + (playerTurn === this.state.playerName ? " (You) " : "") + " Turn";
 
