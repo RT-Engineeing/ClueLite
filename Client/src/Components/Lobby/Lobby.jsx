@@ -26,6 +26,7 @@ export class Lobby extends React.Component {
             myPlayer: props.location.state.playername,
             myCurrentReadiness: false,
             sessionKey: props.location.state.sessionKey,
+            charactername: props.location.state.charactername,
             gameCanStart: false
         }
     }
@@ -137,6 +138,10 @@ export class Lobby extends React.Component {
 
 
                                 {player[0]} 
+                                {player[0] === this.state.myPlayer ?
+                                     "(" + this.state.charactername + ")" :
+                                    ""
+                                }
                                 {player[1] === "False" ? "         \uD83D\uDD34" : "         \uD83D\uDFE2"}
                                 {player[0] === this.state.myPlayer ?
                                     (<Button style={{marginLeft: "auto"}} onClick={this.handleClick}>

@@ -15,7 +15,8 @@ export class LandingPage extends React.Component {
         super(props);
         this.state = {
             sessionKey: " ",
-            playername: " "
+            playername: " ",
+            charactername: " "
         }
     }
 
@@ -36,7 +37,8 @@ export class LandingPage extends React.Component {
                                 pathname: '/lobby',
                                 state: {
                                     sessionKey: this.state.sessionKey,
-                                    playername: this.state.playername
+                                    playername: this.state.playername,
+                                    charactername: this.state.charactername
                                 }
                             }} style={{ textDecoration: 'none' }} params={{
                                 key: "test"
@@ -68,12 +70,14 @@ export class LandingPage extends React.Component {
         
         const playername = response.data["playername"];
         const sessionKey = response.data["sessionId"];
+        const charactername = response.data["yourcharacter"];
 
         console.log("player name: " + playername);
         console.log("session key: " + sessionKey);
         this.setState({
             sessionKey: sessionKey,
-            playername: playername
+            playername: playername,
+            charactername: charactername
         });
         console.log("updated state: " + JSON.stringify(this.state));
 
