@@ -95,7 +95,7 @@ tempvar = 0
 session = Session(random.randint(100000, 999999), gamestate)
 
 
-def adduser():
+def adduser(uid):
     if len(playerarray) == 0:
         random.shuffle(rooms)
         casefile.append(rooms[0])
@@ -156,6 +156,7 @@ def adduser():
             yourcharacter=player.getCharacter(),
             result=playername + " has been added to the session.",
         )
+        uids.append(uid)
         return sessionstring
     else:
         newgamestate = session.getGameState()
@@ -204,6 +205,7 @@ def adduser():
             yourcharacter=player.getCharacter(),
             result=playername + " has been added to the session.",
         )
+        uids.append(uid)
         return sessionstring
 
 
@@ -236,9 +238,11 @@ def playersready():
         )
 
 
-@app.route('/session')
+@app.route('/session', methods=['POST'])
 def sessions():
-    return adduser()
+    some_json = request.get_json()
+    uid = some_json["uid"]
+    return adduser(uid)
 
 
 @app.route('/getstate', methods=['POST'])
