@@ -551,9 +551,13 @@ def suggest():
                     character,
                     room,
                     weapon)
-                for i in range(6):
-                    if i != playercounter:
-                        messagequeue[i].append(message)
+                temp = 0
+                temp2 = 0
+                for y in playerarray:
+                    if x.getCharacter() == character:
+                        temp2 = temp
+                    temp += 1
+                messagequeue[temp2].append(message)
                 suggestionmessage.append(message)
             count += 1
         counter = 1
