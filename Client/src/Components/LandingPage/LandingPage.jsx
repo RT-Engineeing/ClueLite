@@ -23,6 +23,10 @@ export class LandingPage extends React.Component {
 
     render() {
 
+        if (!this.state) {
+            return;
+        }
+
         const playButton = (
             <Button variant="success" className="startButton justify-content-center">
                 <p className="startText">Play</p>
@@ -84,14 +88,12 @@ export class LandingPage extends React.Component {
         const sessionKey = response.data["sessionId"];
         const charactername = response.data["yourcharacter"];
 
-        // console.log("session key: " + sessionKey);
         this.setState({
             sessionKey: sessionKey,
             playername: playername,
             charactername: charactername,
             uuid: (this.state.uuid ? this.state.uuid : uuid)
         });
-        // console.log("updated state: " + this.state);
 
     }
 

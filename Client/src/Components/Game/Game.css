@@ -8,7 +8,7 @@
 }
 
 #updatesContainer {
-    min-height: 260px;
+    min-height: 221px;
     width: 100%;
     align-items: center;
     color: white;
@@ -25,7 +25,7 @@
     font-size: 25px;
 }
 
-#turnIndicator {
+.turnIndicator {
     color: white;
     -webkit-text-stroke-width: 0.5px;
     -webkit-text-stroke-color: black;
@@ -45,7 +45,7 @@
 
 #cards {
     /* Make sure (height + margin-top) == 400 is true! */
-    height: 375px; 
+    height: 415px; 
     margin-top: 25px !important;
 }
 
@@ -118,3 +118,12 @@
     justify-content: center;
     padding-bottom: 15px;
 } 
+
+.gameWonModal, .gameLostModal {
+    background-color: goldenrod;
+    padding-top: 35px;
+}
+
+.finalText {
+    font-size: 60px
+}

@@ -21,7 +21,7 @@ function App() {
         <Route path="/lobby" component={Lobby}>
         </Route>
         <Route path="/game" component={Game}>
-         
+
         </Route>
       </Switch>
     </Router >

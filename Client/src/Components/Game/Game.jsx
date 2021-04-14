@@ -13,6 +13,8 @@ const TMP_PLAYER_CARDS = [
     "exodiaRightArm", "exodiaBody", "exodiaLeftArm", "exodiaRightLeg", "exodiaLeftLeg"
 ];
 
+const tmpGameBoard = [[[1], [2], [3], [4], [5]], [[6], [7], [8],], [[9], [10], [11], [12], [13]], [[14], [15], [16],], [[17], [18], [19], [20], [21]]];
+
 export class Game extends React.Component {
 
     constructor(props) {
@@ -21,98 +23,42 @@ export class Game extends React.Component {
             polling: false,
             showSuggestModal: false,
             showAccusationModal: false,
+            showGameWonModal: false,
+            showGameLostModal: false,
             showSecondarySuggestionModal: false,
             cards: ["1", "2", "3", "4", "5"],
             uuid: props.location.state.uuid,
             playerName: props.location.state.playerName,
             charactername: props.location.state.charactername,
             sessionkey: props.location.state.sessionkey,
-            currentGameBoard: [
-                [
-                    [
-                        1
-                    ],
-                    [
-                        2
-                    ],
-                    [
-                        3
-                    ],
-                    [
-                        4
-                    ],
-                    [
-                        5
-                    ]
-                ],
-                [
-                    [
-                        6
-                    ],
-                    [
-                        7
-                    ],
-                    [
-                        8
-                    ],
-                ],
-                [
-                    [
-                        9
-                    ],
-                    [
-                        10
-                    ],
-                    [
-                        11
-                    ],
-                    [
-                        12
-                    ],
-                    [
-                        13
-                    ]
-                ],
-                [
-                    [
-                        14
-                    ],
-                    [
-                        15
-                    ],
-                    [
-                        16
-                    ],
-                ],
-                [
-                    [
-                        17
-                    ],
-                    [
-                        18
-                    ],
-                    [
-                        19
-                    ],
-                    [
-                        20
-                    ],
-                    [
-                        21
-                    ]
-                ]
-            ],
+            accusationSelected: {
+                suspect: characters[0],
+                weapon: weapons[0],
+                room: rooms[0]
+            },
+            currentGameBoard: tmpGameBoard,
             turnIndicator: " "
         }
+
+        this.makeAccusation = this.makeAccusation.bind(this);
     }
 
 
     async pollGameState() {
-        
+        // Converts the 5,5,5,5,5 gameboard returned by the server to a 5,3,5,3,5 game board.
+        function cvt_5x5_gameboard(gameBoard) {
+            // Don't modify this function.
+            gameBoard[1].splice(3, 1);
+            gameBoard[1].splice(1, 1);
+            gameBoard[3].splice(3, 1);
+            gameBoard[3].splice(1, 1);
+            return gameBoard
+        }
+
         const response = await axios.post("http://localhost:5000/getstate",
-        {
-            uid: this.state.uuid
-        });
+            {
+                uid: this.state.uuid
+            });
 
         const gamestate = response.data;
         const playerdata = gamestate[this.state.playerName];
@@ -122,16 +68,43 @@ export class Game extends React.Component {
 
         const turnString = playerTurn + "'s " + (playerTurn === this.state.playerName ? " (You) " : "") + " Turn";
 
-        this.setState({ cards: playerHand,
-            currentGameBoard: newGameboard,
-            turnIndicator: turnString});
+        if (!response.data.gamerunning && !this.state.showGameWonModal) {
+            this.setState({ showGameLostModal: true });
+        }
+
+        this.setState({
+            cards: playerHand,
+            currentGameBoard: cvt_5x5_gameboard(newGameboard),
+            turnIndicator: turnString
+        });
+
+        const myTurn = playerTurn === this.state.playerName;
+        if (myTurn && this.state.showGameLostModal) {
+            this.endTurn();
+        }
     }
 
     async endTurn() {
         const response = await axios.post("http://localhost:5000/endturn",
-        {
-            uid: this.state.uuid
-        });
+            {
+                uid: this.state.uuid
+            });
+    }
+
+    async makeAccusation() {
+        const response = await axios.post("http://localhost:5000/accusation",
+            {
+                uid: this.state.uuid,
+                weapon: this.state.accusationSelected.weapon,
+                room: this.state.accusationSelected.room,
+                suspect: this.state.accusationSelected.suspect
+            });
+        if (response.data.gamewon) {
+            this.setState({ showGameWonModal: true });
+        } else {
+            this.setState({ showGameLostModal: true });
+        }
+        this.setState({ showAccusationModal: false })
     }
 
     processGameState(gamestate) {
@@ -173,6 +146,21 @@ export class Game extends React.Component {
         }
         const hideAccusationModal = () => {
             this.setState({ showAccusationModal: false });
+        }
+        const hideGameLostModal = () => {
+            this.setState({ showGameLostModal: false });
+        }
+        const hideGameWonModal = () => {
+            this.setState({ showGameWonModal: false });
+        }
+        const handleAccusationSuspectSelect = (idx) => {
+            this.setState({ accusationSelected: { ...this.state.accusationSelected, suspect: characters[idx] } })
+        }
+        const handleAccusationWeaponSelect = (idx) => {
+            this.setState({ accusationSelected: { ...this.state.accusationSelected, weapon: weapons[idx] } })
+        }
+        const handleAccusationRoomSelect = (idx) => {
+            this.setState({ accusationSelected: { ...this.state.accusationSelected, room: rooms[idx] } })
         }
 
         const endTurn = () => {
@@ -229,6 +217,42 @@ export class Game extends React.Component {
             </Modal >
         );
 
+        const gameWonModal = (
+            <Modal
+                show={this.state.showGameWonModal}
+                onHide={hideGameWonModal}
+                backdrop="static"
+                keyboard={false}
+                centered
+                size="lg"
+                contentClassName="gameWonModal"
+            ><Modal.Header className="modalHeader">
+                    <Modal.Title>
+                        <span className="finalText"> You Win!</span>
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                </Modal.Body>
+            </Modal >
+        );
+        const gameLostModal = (
+            <Modal
+                show={this.state.showGameLostModal}
+                onHide={hideGameLostModal}
+                backdrop="static"
+                keyboard={false}
+                centered
+                size="lg"
+                contentClassName="gameLostModal"
+            ><Modal.Header className="modalHeader">
+                    <Modal.Title>
+                        <span className="finalText"> You Lose</span></Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                </Modal.Body>
+            </Modal >
+        );
+
         const accusationModal = (
             <Modal
                 show={this.state.showAccusationModal}
@@ -243,7 +267,7 @@ export class Game extends React.Component {
                     <Modal.Title>Make an Accusation</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <Carousel interval={null} indicators={false}>
+                    <Carousel interval={null} indicators={false} onSelect={handleAccusationSuspectSelect}>
                         {characters.map((character, idx) =>
                         (
                             <Carousel.Item className="carouselItem" id={idx}>
@@ -251,18 +275,18 @@ export class Game extends React.Component {
                             </Carousel.Item>
                         ))}
                     </Carousel>
-                    <Carousel interval={null} indicators={false}>
+                    <Carousel interval={null} indicators={false} onSelect={handleAccusationWeaponSelect}>
                         {weapons.map((weapon, idx) =>
                         (
-                            <Carousel.Item className="carouselItem" id={idx}>
+                            <Carousel.Item className="carouselItem" id={idx} >
                                 {weapon}
                             </Carousel.Item>
                         ))}
                     </Carousel>
-                    <Carousel interval={null} indicators={false}>
+                    <Carousel interval={null} indicators={false} onSelect={handleAccusationRoomSelect}>
                         {rooms.map((room, idx) =>
                         (
-                            <Carousel.Item className="carouselItem" id={idx}>
+                            <Carousel.Item className="carouselItem" id={idx} >
                                 {room}
                             </Carousel.Item>
                         ))}
@@ -272,7 +296,7 @@ export class Game extends React.Component {
                     <Button variant="secondary" onClick={hideAccusationModal}>
                         Cancel
                      </Button>
-                    <Button variant="primary" onClick={hideAccusationModal}>
+                    <Button variant="primary" onClick={this.makeAccusation}>
                         Accuse
                     </Button>
                 </Modal.Footer>
@@ -316,7 +340,7 @@ export class Game extends React.Component {
 
         const gameBoard = (
             <Card id="game">
-                { <GameBoard gameState={this.getGameState} charactername={this.state.charactername} playerName={this.state.playerName}/>}
+                { <GameBoard gameState={this.getGameState} charactername={this.state.charactername} playerName={this.state.playerName} />}
             </Card >
         )
 
@@ -336,10 +360,12 @@ export class Game extends React.Component {
                     <div>
                         {suggestionModal}
                         {accusationModal}
+                        {gameWonModal}
+                        {gameLostModal}
                         {secondarySuggestionModal}
                     </div>
                     <div className="container">
-                        <h3 id="cardsHeader"> Your Hand ({this.state.charactername}):</h3> 
+                        <h3 id="cardsHeader"> Your Hand ({this.state.charactername}):</h3>
                         <div className="cardRow row">
                             <div className="cardCol col" align="right">
                                 <Card className="playerCard" align="center">
@@ -406,10 +432,10 @@ export class Game extends React.Component {
                 <div id="gamePageContainer">
                     <div className="row">
                         <div className="col-md-5" >
-                        <h3 id="turnIndicator"> {this.state.turnIndicator} </h3>
+                            <h3 className="turnIndicator"> {this.state.turnIndicator} </h3>
                             {gameBoard}
                         </div>
-                        <div className="col-md-5" >
+                        <div className="col-md-5" style={{ paddingTop: "50px" }}>
                             <div className="container">
                                 {updatesContainer}
                                 {cards}
@@ -418,7 +444,7 @@ export class Game extends React.Component {
                         </div >
                     </div >
                 </div >
-            </div>
+            </div >
         )
     }
 }
