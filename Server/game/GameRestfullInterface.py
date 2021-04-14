@@ -549,8 +549,8 @@ def suggest():
                     room,
                     weapon)
                 for i in range(6):
-                    messagequeue[i].append(message)
-
+                    if i != playcounter:
+                        messagequeue[i].append(message)
                 suggestionmessage.append(message)
             count += 1
         counter = 1

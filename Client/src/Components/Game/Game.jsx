@@ -106,17 +106,19 @@ export class Game extends React.Component {
             //     lobbyData.push([player, readyStatus]);
             // });
 
+
+
             messages.forEach(message => {
-                console.log("fetched message: " + message);
-                if (message.includes("[SUGGESTION]")) {
+                console.log("fetched message: " + JSON.stringify(message));
+                if (JSON.stringify(message).includes("[SUGGESTION]")) {
                     //suggestion message
                     this.showSecondarySuggestionModal();
-                } else if (message.includes("[ACCUSATION]")) {
+                } else if (JSON.stringify(message).includes("[ACCUSATION]")) {
                     //accusation message
 
                 } else {
                     //card message
-                    alert("You received the card: " + message + " to disprove your suggestion.");
+                    alert("You received the card: " + JSON.stringify(message) + " to disprove your suggestion.");
                 }
             });
         }
@@ -124,9 +126,11 @@ export class Game extends React.Component {
 
     async submitCardToSuggestion() {
         //for disproving
+
+        console.log("submitting disproof " + this.state.suggestionDisproof);
         const response = await axios.post("http://localhost:5000/suggestionresponse",
             {
-                childSuggestion: this.state.suggestionDisproof
+                childSuggestion: this.state.suggestionDisproofSelected
             });
 
         console.log("response to disproof: " + response.data);
@@ -179,7 +183,7 @@ export class Game extends React.Component {
 
 
     componentDidMount() {
-        this.interval = setInterval(() => this.pollGameState(), 5000);
+        this.interval = setInterval(() => this.pollGameState(), 1000);
     }
 
     componentWillUnmount() {
@@ -241,7 +245,7 @@ export class Game extends React.Component {
         }
 
         const handleSuggestionDisproofSelect = (idx) => {
-            this.setState({ suggestDisproofSelected: cards[idx] })
+            this.setState({ suggestDisproofSelected: this.state.cards[idx] })
         }
 
         const endTurn = () => {
