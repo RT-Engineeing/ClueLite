@@ -554,7 +554,7 @@ def suggest():
                 temp = 0
                 temp2 = 0
                 for y in playerarray:
-                    if x.getCharacter() == character:
+                    if y.getCharacter() == character:
                         temp2 = temp
                     temp += 1
                 messagequeue[temp2].append(message)
