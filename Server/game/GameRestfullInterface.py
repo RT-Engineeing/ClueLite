@@ -422,6 +422,7 @@ def hello():
                         'gamerunning': gamestate.getGameRunning(), 'messages': messages,
                         'subturn': gamestate.getSubturn(),
                         'gameboard': gamestate.getGameBoard()})
+    messagequeue[count].clear()
     return jsonify(
         result="error"
     )
@@ -549,7 +550,7 @@ def suggest():
                     room,
                     weapon)
                 for i in range(6):
-                    if i != playcounter:
+                    if i != (playcounter - 1):
                         messagequeue[i].append(message)
                 suggestionmessage.append(message)
             count += 1
