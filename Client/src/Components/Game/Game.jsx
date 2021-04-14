@@ -34,6 +34,14 @@ export class Game extends React.Component {
                 weapon: weapons[0],
                 room: rooms[0]
             },
+            suggestionSelected: {
+                suspect: characters[0],
+                weapon: weapons[0],
+                room: rooms[0]
+            },
+            suggestionDisproofSelected: {
+                card: characters[0]
+            },
             currentGameBoard: [
                 [
                     [
@@ -113,6 +121,8 @@ export class Game extends React.Component {
         }
 
         this.makeAccusation = this.makeAccusation.bind(this);
+        this.makeSuggestion = this.makeSuggestion.bind(this);
+        this.submitCardToSuggestion = this.submitCardToSuggestion.bind(this);
     }
 
 
@@ -140,7 +150,46 @@ export class Game extends React.Component {
             currentGameBoard: newGameboard,
             turnIndicator: turnString
         });
+
+        const messages = gamestate["message"];
+        if(messages.length > 0){
+            console.log("message: " + messages[0]);
+            //
+            if(messages[0].includes("suggest")){
+                this.showSecondarySuggestionModal();
+            }
+
+            // playersList.forEach(player => {
+            //     let readyStatus = readyPlayers.includes(player) ? true : false;
+            //     lobbyData.push([player, readyStatus]);
+            // });
+
+            messages.forEach(message => {
+                console.log("fetched message: " + message);
+                if(message.includes("[SUGGESTION]")){
+                    //suggestion message
+                    this.showSecondarySuggestionModal();
+                } else if(message.includes("[ACCUSATION]")){
+                    //accusation message
+
+                } else {
+                    //card message
+                    alert("You received the card: " + message + " to disprove your suggestion.") ;
+                }
+            });
+        }
     }
+
+    async submitCardToSuggestion() {
+        //for disproving
+        const response = await axios.post("http://localhost:5000/suggestionresponse", 
+        {
+            childSuggestion: this.state.suggestionDisproof
+        });
+
+        console.log("response to disproof: " + response.data);
+    }
+    
 
     async endTurn() {
         const response = await axios.post("http://localhost:5000/endturn",
@@ -149,10 +198,26 @@ export class Game extends React.Component {
             });
     }
 
+
+
+
+    async makeSuggestion() {
+        const response = await axios.post("http://localhost:5000/suggestion",
+            {
+                uid: this.state.uuid,
+                character: this.state.charactername,
+                weapon: this.state.suggestionSelected.weapon,
+                room: this.state.suggestionSelected.room,
+                suspect: this.state.suggestionSelected.suspect
+            });
+        console.log(response.data);
+    }
+
     async makeAccusation() {
         const response = await axios.post("http://localhost:5000/accusation",
             {
                 uid: this.state.uuid,
+                character: this.state.charactername,
                 weapon: this.state.accusationSelected.weapon,
                 room: this.state.accusationSelected.room,
                 suspect: this.state.accusationSelected.suspect
@@ -170,7 +235,7 @@ export class Game extends React.Component {
 
 
     componentDidMount() {
-        this.interval = setInterval(() => this.pollGameState(), 1000);
+        this.interval = setInterval(() => this.pollGameState(), 5000);
     }
 
     componentWillUnmount() {
@@ -185,15 +250,16 @@ export class Game extends React.Component {
         }
     }
 
+    showSecondarySuggestionModal = () => {
+        this.setState({ showSecondarySuggestionModal: true });
+    }
+
     render() {
         const showSuggestionModal = () => {
             this.setState({ showSuggestModal: true });
         }
         const hideSuggestionModal = () => {
             this.setState({ showSuggestModal: false });
-        }
-        const showSecondarySuggestionModal = () => {
-            this.setState({ showSecondarySuggestionModal: true });
         }
         const hideSecondarySuggestionModal = () => {
             this.setState({ showSecondarySuggestionModal: false });
@@ -220,6 +286,20 @@ export class Game extends React.Component {
             this.setState({ accusationSelected: { ...this.state.accusationSelected, room: rooms[idx] } })
         }
 
+        const handleSuggestionSuspectSelect = (idx) => {
+            this.setState({suggestionSelected: {...this.state.suggestionSelected, suspect: characters[idx]}})
+        }
+        const handleSuggestionWeaponSelect = (idx) => {
+            this.setState({suggestionSelected: {...this.state.suggestionSelected, weapon: weapons[idx]}})
+        }
+        const handleSuggestionRoomSelect = (idx) => {
+            this.setState({suggestionSelected: {...this.state.suggestionSelected, room: rooms[idx]}})
+        }
+
+        const handleSuggestionDisproofSelect = (idx) =>  {
+            this.setState({suggestDisproofSelected: cards[idx]})
+        }
+
         const endTurn = () => {
             this.endTurn();
         }
@@ -238,26 +318,26 @@ export class Game extends React.Component {
                     <Modal.Title>Make a Suggestion</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <Carousel interval={null} indicators={false}>
+                    <Carousel interval={null} indicators={false} onSelect={handleSuggestionSuspectSelect}>
                         {characters.map((character, idx) =>
                         (
-                            <Carousel.Item className="carouselItem" id={idx}>
+                            <Carousel.Item className="carouselItem" id={idx} >
                                 {character}
                             </Carousel.Item>
                         ))}
                     </Carousel>
-                    <Carousel interval={null} indicators={false}>
+                    <Carousel interval={null} indicators={false} onSelect={handleSuggestionWeaponSelect}>
                         {weapons.map((weapon, idx) =>
                         (
-                            <Carousel.Item className="carouselItem" id={idx}>
+                            <Carousel.Item className="carouselItem" id={idx} >
                                 {weapon}
                             </Carousel.Item>
                         ))}
                     </Carousel>
-                    <Carousel interval={null} indicators={false}>
+                    <Carousel interval={null} indicators={false} onSelect={handleSuggestionRoomSelect}>
                         {rooms.map((room, idx) =>
                         (
-                            <Carousel.Item className="carouselItem" id={idx}>
+                            <Carousel.Item className="carouselItem" id={idx} >
                                 {room}
                             </Carousel.Item>
                         ))}
@@ -267,7 +347,7 @@ export class Game extends React.Component {
                     <Button variant="secondary" onClick={hideSuggestionModal}>
                         Cancel
                      </Button>
-                    <Button variant="primary" onClick={hideSuggestionModal}>
+                    <Button variant="primary" onClick={this.makeSuggestion}>
                         Suggest
                     </Button>
                 </Modal.Footer>
@@ -375,8 +455,8 @@ export class Game extends React.Component {
                 </Modal.Header>
                 <Modal.Body>
 
-                    <Carousel interval={null} indicators={false}>
-                        {TMP_PLAYER_CARDS.map((card, idx) =>
+                    <Carousel interval={null} indicators={false} onSelect={handleSuggestionDisproofSelect}>
+                        {this.state.cards.map((card, idx) =>
                         (
                             <Carousel.Item className="carouselItem" id={idx}>
                                 {card}
@@ -388,7 +468,7 @@ export class Game extends React.Component {
                     </div>
                 </Modal.Body>
                 <Modal.Footer className="modalFooterButtons">
-                    <Button variant="primary" onClick={hideSecondarySuggestionModal}>
+                    <Button variant="primary" onClick={this.submitCardToSuggestion}>
                         Show Card
                     </Button>
                 </Modal.Footer>
@@ -468,10 +548,10 @@ export class Game extends React.Component {
                         onClick={showAccusationModal}>Accuse</Button>
                 </div>
 
-                <div id="suggestButton2" className="col d-flex justify-content-center">
+                {/* <div id="suggestButton2" className="col d-flex justify-content-center">
                     <Button className="actionButton"
                         onClick={showSecondarySuggestionModal}>Suggestion (2)</Button>
-                </div>
+                </div> */}
 
 
                 <div id="endTurnButton" className="col d-flex justify-content-center">
