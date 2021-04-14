@@ -44,81 +44,6 @@ export class Game extends React.Component {
             suggestionDisproofSelected: {
                 card: characters[0]
             },
-            currentGameBoard: [
-                [
-                    [
-                        1
-                    ],
-                    [
-                        2
-                    ],
-                    [
-                        3
-                    ],
-                    [
-                        4
-                    ],
-                    [
-                        5
-                    ]
-                ],
-                [
-                    [
-                        6
-                    ],
-                    [
-                        7
-                    ],
-                    [
-                        8
-                    ],
-                ],
-                [
-                    [
-                        9
-                    ],
-                    [
-                        10
-                    ],
-                    [
-                        11
-                    ],
-                    [
-                        12
-                    ],
-                    [
-                        13
-                    ]
-                ],
-                [
-                    [
-                        14
-                    ],
-                    [
-                        15
-                    ],
-                    [
-                        16
-                    ],
-                ],
-                [
-                    [
-                        17
-                    ],
-                    [
-                        18
-                    ],
-                    [
-                        19
-                    ],
-                    [
-                        20
-                    ],
-                    [
-                        21
-                    ]
-                ]
-            ],
             currentGameBoard: tmpGameBoard,
             turnIndicator: " "
         }
@@ -158,6 +83,7 @@ export class Game extends React.Component {
         const turnString = playerTurn + "'s " + (playerTurn === this.state.playerName ? " (You) " : "") + " Turn";
 
         if (!response.data.gamerunning && !this.state.showGameWonModal) {
+            this.setState({ caseFile: response.data.casefile });
             this.setState({ showGameLostModal: true });
         }
 
@@ -167,11 +93,11 @@ export class Game extends React.Component {
             turnIndicator: turnString
         });
 
-        const messages = gamestate["message"];
-        if(messages.length > 0){
+        const messages = gamestate["messages"];
+        if (messages.length > 0) {
             console.log("message: " + messages[0]);
             //
-            if(messages[0].includes("suggest")){
+            if (messages[0].includes("suggest")) {
                 this.showSecondarySuggestionModal();
             }
 
@@ -182,15 +108,15 @@ export class Game extends React.Component {
 
             messages.forEach(message => {
                 console.log("fetched message: " + message);
-                if(message.includes("[SUGGESTION]")){
+                if (message.includes("[SUGGESTION]")) {
                     //suggestion message
                     this.showSecondarySuggestionModal();
-                } else if(message.includes("[ACCUSATION]")){
+                } else if (message.includes("[ACCUSATION]")) {
                     //accusation message
 
                 } else {
                     //card message
-                    alert("You received the card: " + message + " to disprove your suggestion.") ;
+                    alert("You received the card: " + message + " to disprove your suggestion.");
                 }
             });
         }
@@ -198,15 +124,15 @@ export class Game extends React.Component {
 
     async submitCardToSuggestion() {
         //for disproving
-        const response = await axios.post("http://localhost:5000/suggestionresponse", 
-        {
-            childSuggestion: this.state.suggestionDisproof
-        });
+        const response = await axios.post("http://localhost:5000/suggestionresponse",
+            {
+                childSuggestion: this.state.suggestionDisproof
+            });
 
         console.log("response to disproof: " + response.data);
-     
+
     }
-    
+
 
     async endTurn() {
         const response = await axios.post("http://localhost:5000/endturn",
@@ -305,17 +231,17 @@ export class Game extends React.Component {
         }
 
         const handleSuggestionSuspectSelect = (idx) => {
-            this.setState({suggestionSelected: {...this.state.suggestionSelected, suspect: characters[idx]}})
+            this.setState({ suggestionSelected: { ...this.state.suggestionSelected, suspect: characters[idx] } })
         }
         const handleSuggestionWeaponSelect = (idx) => {
-            this.setState({suggestionSelected: {...this.state.suggestionSelected, weapon: weapons[idx]}})
+            this.setState({ suggestionSelected: { ...this.state.suggestionSelected, weapon: weapons[idx] } })
         }
         const handleSuggestionRoomSelect = (idx) => {
-            this.setState({suggestionSelected: {...this.state.suggestionSelected, room: rooms[idx]}})
+            this.setState({ suggestionSelected: { ...this.state.suggestionSelected, room: rooms[idx] } })
         }
 
-        const handleSuggestionDisproofSelect = (idx) =>  {
-            this.setState({suggestDisproofSelected: cards[idx]})
+        const handleSuggestionDisproofSelect = (idx) => {
+            this.setState({ suggestDisproofSelected: cards[idx] })
         }
 
         const endTurn = () => {
@@ -403,7 +329,11 @@ export class Game extends React.Component {
                     <Modal.Title>
                         <span className="finalText"> You Lose</span></Modal.Title>
                 </Modal.Header>
-                <Modal.Body>
+                <Modal.Body className="caseFile">
+                    <span >
+                        {this.state.caseFile ?
+                            `The murder was committed by ${this.state.caseFile[1]} with the ${this.state.caseFile[2]} in the ${this.state.caseFile[0]}` : ""}
+                    </span>
                 </Modal.Body>
             </Modal >
         );
