@@ -494,10 +494,12 @@ def suggest():
         character = some_json["character"]
         uid = some_json["uid"]
         playcounter = 0
+        playercounter = 0
         playercharacter=""
         for x in uids:
             if x == uid:
                 playercharacter = playerarray[playcounter].getCharacter()
+                playercounter = playcounter
             playcounter += 1
         xcoordinate = 0
         ycoordinate = 0
@@ -550,7 +552,7 @@ def suggest():
                     room,
                     weapon)
                 for i in range(6):
-                    if i != (playcounter - 1):
+                    if i != playercounter:
                         messagequeue[i].append(message)
                 suggestionmessage.append(message)
             count += 1
