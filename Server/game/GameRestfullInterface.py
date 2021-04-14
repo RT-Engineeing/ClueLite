@@ -265,7 +265,7 @@ def hello():
     for x in uids:
         if x == uid:
             messages = messagequeue[count]
-            messagequeue[count].clear()
+            #messagequeue[count].clear()
         count += 1
     if len(playerarray) == 1:
         return jsonify({'numberofplayers': gamestate.getNumOfPlayers(),
@@ -466,7 +466,7 @@ def suggest():
                     if x.getName() == weapon:
                         x.setLocation([newLocation[0], newLocation[1]])
                 gamestate.setGameBoard(board)
-                message = "{0} suggest that the murder was committed by {1} in the {2} with a {3}".format(
+                message = "[SUGGESTION] {0} suggest that the murder was committed by {1} in the {2} with a {3}".format(
                     playercharacter,
                     character,
                     room,
@@ -501,7 +501,7 @@ def accuse():
                 character = playerarray[playcounter].getCharacter()
             playcounter += 1
         accusation_set = [room, suspect, weapon]
-        message = "{0} has made the accusation that the murder was committed by {1} in the {2} with a {3}".format(
+        message = "[ACCUSATION] {0} has made the accusation that the murder was committed by {1} in the {2} with a {3}".format(
             character,
             suspect,
             room,
@@ -509,7 +509,7 @@ def accuse():
         for i in range(6):
             messagequeue[i].append(message)
         if set(accusation_set) == set(casefile):
-            message = "{0} has won the game.".format(character)
+            message = "[ACCUSATION] {0} has won the game.".format(character)
             for i in range(6):
                 messagequeue[i].append(message)
             gamestate.setGameWon(True)
@@ -520,7 +520,7 @@ def accuse():
                 gamerunning=str(gamestate.getGameRunning()),
                 message=message
             )
-        message = "{0} has made a false accusation and can no longer win the game.".format(character)
+        message = "[ACCUSATION] {0} has made a false accusation and can no longer win the game.".format(character)
         for i in range(6):
             messagequeue[i].append(message)
         return jsonify(
