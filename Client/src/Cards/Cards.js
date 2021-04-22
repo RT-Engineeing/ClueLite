@@ -16,7 +16,8 @@ const rooms = ["Kitchen",
     "Hall",
     "Lounge",
     "Library",
-    "Billiard Room"];
+    "Billiard Room"
+];
 
 const cardImages = {
     "exodiaRightArm": exRightArm,

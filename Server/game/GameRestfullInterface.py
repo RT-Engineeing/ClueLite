@@ -109,6 +109,7 @@ def adduser(uid):
         casefile.append(weapons[0])
         del weapons[0]
         global totaldeck
+        print("case file:  " + str(casefile))
         totaldeck.extend(rooms)
         totaldeck.extend(weapons)
         totaldeck.extend(characters)
@@ -136,6 +137,7 @@ def adduser(uid):
         elif character == 'Colonel Mustard':
             location = [1, 4]
         player = Players(playername, character, hand, location)
+        print("setting hand for " + character + ": " + str(hand))
         playerarray.append(player)
         p = len(playerarray)
         if 1 >= p <= 5:
@@ -491,7 +493,7 @@ def suggest():
         some_json = request.get_json()
         weapon = some_json["weapon"]
         room = some_json["room"]
-        character = some_json["character"]
+        character = some_json["suspect"]
         uid = some_json["uid"]
         playcounter = 0
         playercounter = 0
@@ -515,7 +517,7 @@ def suggest():
         if not isinstance(ycoordinate, int):
             ycoordinate = int(ycoordinate)
 
-        newLocation = [xcoordinate, ycoordinate]
+        newLocation = [4 - xcoordinate, 4 - ycoordinate]
         weaponloc = []
         weaponname = ""
         for x in weaponsarray:
@@ -528,19 +530,23 @@ def suggest():
                 oldLocation = x.getLocation()
                 board = gamestate.getGameBoard()
                 arr = board[oldLocation[0]][oldLocation[1]]
-                for character in range(len(arr)):
-                    if arr[character] == x.getCharacter():
-                        arr.pop(character)
+                for character2 in range(len(arr)):
+                    if arr[character2] == x.getCharacter():
+                        arr.pop(character2)
                 board[oldLocation[0]][oldLocation[1]] = arr
                 arr2 = board[weaponloc[0]][weaponloc[1]]
-                for weapon in range(len(arr2)):
-                    if arr2[weapon] == weaponname:
-                        arr2.pop(weapon)
+                for weapon2 in range(len(arr2)):
+                    if arr2[weapon2] == weaponname:
+                        arr2.pop(weapon2)
                 board[weaponloc[0]][weaponloc[1]] = arr2
                 arr3 = board[newLocation[0]][newLocation[1]]
+                print(arr3)
                 arr3.append(weapon)
+                print(arr3)
                 arr3.append(character)
+                print(arr3)
                 board[newLocation[0]][newLocation[1]] = arr3
+                print(board[newLocation[0]][newLocation[1]])
                 x.setLocation(newLocation)
                 for x in weaponsarray:
                     if x.getName() == weapon:

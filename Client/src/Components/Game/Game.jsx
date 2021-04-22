@@ -45,7 +45,8 @@ export class Game extends React.Component {
                 card: characters[0]
             },
             currentGameBoard: tmpGameBoard,
-            turnIndicator: " "
+            turnIndicator: " ",
+            pendingDisproof: true
         }
 
         this.makeAccusation = this.makeAccusation.bind(this);
@@ -97,10 +98,6 @@ export class Game extends React.Component {
         if (messages.length > 0) {
             console.log("message: " + messages[0]);
             //
-            if (messages[0].includes("suggest")) {
-                this.showSecondarySuggestionModal();
-            }
-
             // playersList.forEach(player => {
             //     let readyStatus = readyPlayers.includes(player) ? true : false;
             //     lobbyData.push([player, readyStatus]);
@@ -118,7 +115,10 @@ export class Game extends React.Component {
 
                 } else {
                     //card message
-                    alert("You received the card: " + JSON.stringify(message) + " to disprove your suggestion.");
+                    if(this.state.pendingDisproof) {
+                        alert("You received the card: " + JSON.stringify(message) + " to disprove your suggestion.");
+                        this.state.pendingDisproof = false;
+                    }
                 }
             });
         }
@@ -132,7 +132,7 @@ export class Game extends React.Component {
             {
                 childSuggestion: this.state.suggestionDisproofSelected
             });
-
+        this.hideSecondarySuggestionModal()
         console.log("response to disproof: " + response.data);
 
     }
@@ -157,6 +157,7 @@ export class Game extends React.Component {
                 room: this.state.suggestionSelected.room,
                 suspect: this.state.suggestionSelected.suspect
             });
+        this.state.pendingDisproof = true;
         console.log(response.data);
     }
 
@@ -200,6 +201,10 @@ export class Game extends React.Component {
 
     showSecondarySuggestionModal = () => {
         this.setState({ showSecondarySuggestionModal: true });
+    }
+
+    hideSecondarySuggestionModal = () => {
+        this.setState({ showSecondarySuggestionModal: false });
     }
 
     render() {
@@ -416,7 +421,7 @@ export class Game extends React.Component {
                         ))}
                     </Carousel>
                     <div className="secondarySuggestionInstructions" >
-                        Choose a card to disprove the suggesiton
+                        Choose a card to disprove the suggestion
                     </div>
                 </Modal.Body>
                 <Modal.Footer className="modalFooterButtons">
