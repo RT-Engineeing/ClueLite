@@ -8,7 +8,6 @@ import {
 import axios from 'axios';
 import Button from 'react-bootstrap/Button';
 
-
 const MAX_PLAYERS = 6;
 
 export class Lobby extends React.Component {
@@ -19,6 +18,7 @@ export class Lobby extends React.Component {
             sessionKey: nextProps.location.state.sessionKey,
             uuid: nextProps.location.state.uuid,
             charactername: nextProps.location.state.charactername,
+            cards: undefined
         });
     }
 
@@ -35,6 +35,8 @@ export class Lobby extends React.Component {
             uuid: props.location.state.uuid,
             charactername: props.location.state.charactername
         }
+        // Gets card info
+        this.getCards();
     }
 
 
@@ -85,6 +87,17 @@ export class Lobby extends React.Component {
             })
         }
     }
+
+    getCards = async () => {
+        const response = await axios.get("http://localhost:5000/cards",
+            {
+                params: {
+                    uid: this.state.uuid
+                }
+            });
+        this.state.cards = JSON.parse(response.data);
+    }
+
 
 
     async changeReadiness() {
@@ -140,7 +153,10 @@ export class Lobby extends React.Component {
                         playerName: this.state.myPlayer,
                         charactername: this.state.charactername,
                         uuid: this.state.uuid,
-                        sessionkey: this.state.sessionKey
+                        sessionkey: this.state.sessionKey,
+                        characters: this.state.cards.characters,
+                        weapons: this.state.cards.weapons,
+                        rooms: this.state.cards.rooms
                     }
                 }}></Redirect>
             )

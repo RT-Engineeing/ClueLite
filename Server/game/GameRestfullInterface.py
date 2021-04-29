@@ -5,53 +5,15 @@ from flask import Flask, jsonify, request, render_template
 from flask_cors import CORS
 import random
 import json
+import Cards
+import copy
 app = Flask(__name__)
-rooms = [
-    "Kitchen",
-    "Conservatory",
-    "Dining Room",
-    "Ballroom",
-    "Study",
-    "Hall",
-    "Lounge",
-    "Library",
-    "Billiard Room"
-]
-suggrooms = [
-    "Kitchen",
-    "Conservatory",
-    "Dining Room",
-    "Ballroom",
-    "Study",
-    "Hall",
-    "Lounge",
-    "Library",
-    "Billiard Room"
-]
-characters = [
-    "Miss Scarlet",
-    "Mrs. White",
-    "Mrs. Peacock",
-    "Professor Plum",
-    "Mr.Green",
-    "Colonel Mustard"
-]
-charactersind = [
-    "Miss Scarlet",
-    "Mrs. White",
-    "Mrs. Peacock",
-    "Professor Plum",
-    "Mr.Green",
-    "Colonel Mustard"
-]
-weapons = [
-    "Rope",  # 7
-    "Lead Pipe",  # 8
-    "Knife",  # 9
-    "Wrench",  # 10
-    "Candlestick",  # 11
-    "Revolver"  # 12
-]
+rooms = copy.deepcopy(Cards.ROOMS)
+suggrooms = copy.deepcopy(Cards.ROOMS)
+characters = copy.deepcopy(Cards.CHARACTERS)
+charactersind = copy.deepcopy(Cards.CHARACTERS)
+weapons = copy.deepcopy(Cards.WEAPONS)
+
 roomcoordinates = [
     [4, 4],
     [4, 0],
@@ -86,7 +48,8 @@ characselectdeck = []
 suggestionmessage = []
 gamestate = GameState(casefile, 0, 1, False, [[["Rope"], [], ["Lead Pipe"], [], ["Knife"]],
                                               [[], [], [], [], []],
-                                              [["Wrench"], [], ["Candlestick"], [], ["Revolver"]],
+                                              [["Wrench"], [], ["Candlestick"],
+                                                  [], ["Revolver"]],
                                               [[], [], [], [], []],
                                               [[], [], [], [], []]],
                       False, 0)
@@ -96,6 +59,7 @@ tempvar = 0
 session = Session(random.randint(100000, 999999), gamestate)
 
 CORS(app)
+
 
 def adduser(uid):
     if len(playerarray) == 0:
@@ -247,7 +211,8 @@ def playersready():
     else:
         return jsonify(
             result="error",
-            message="The {0} }method is not supported.".format(str(request.method))
+            message="The {0} }method is not supported.".format(
+                str(request.method))
         )
 
 
@@ -442,7 +407,8 @@ def move():
             xcoordinate = int(xcoordinate)
         if not isinstance(ycoordinate, int):
             ycoordinate = int(ycoordinate)
-        print("Moving player " + character + " to " + str(xcoordinate) + ", " + str(ycoordinate))
+        print("Moving player " + character + " to " +
+              str(xcoordinate) + ", " + str(ycoordinate))
         newLocation = [xcoordinate, ycoordinate]
         count = 1
         for x in playerarray:
@@ -497,7 +463,7 @@ def suggest():
         uid = some_json["uid"]
         playcounter = 0
         playercounter = 0
-        playercharacter=""
+        playercharacter = ""
         for x in uids:
             if x == uid:
                 playercharacter = playerarray[playcounter].getCharacter()
@@ -610,14 +576,16 @@ def accuse():
                 gamerunning=str(gamestate.getGameRunning()),
                 message=message
             )
-        message = "[ACCUSATION] {0} has made a false accusation and can no longer win the game.".format(character)
+        message = "[ACCUSATION] {0} has made a false accusation and can no longer win the game.".format(
+            character)
         for i in range(6):
             messagequeue[i].append(message)
         return jsonify(
             result="success",
             message=message
         )
-    message = "The {0} is not supported by this endpoint. Please try again.".format(str(request.method))
+    message = "The {0} is not supported by this endpoint. Please try again.".format(
+        str(request.method))
     return jsonify(
         result="error",
         message=message
@@ -637,7 +605,18 @@ def endTurn():
         return jsonify(result="success")
 
 
-@app.route('/')
+@app.route('/cards', methods=['GET'])
+def cards():
+    requestJSON = None
+
+    if request.method == 'GET':
+        weapons = Cards.WEAPONS
+        characters = Cards.CHARACTERS
+        rooms = Cards.ROOMS
+        return jsonify(json.dumps({'weapons': weapons, 'rooms': rooms, 'characters': characters}))
+
+
+@ app.route('/')
 def index():
     return f"Welcome to ClueLite.\n Click Play to start the game."
 

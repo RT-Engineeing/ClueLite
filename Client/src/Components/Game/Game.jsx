@@ -7,18 +7,20 @@ import Modal from 'react-bootstrap/Modal'
 import Carousel from 'react-bootstrap/Carousel'
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { characters, weapons, rooms, cardImages } from '../../Cards/Cards';
-
-const TMP_PLAYER_CARDS = [
-    "exodiaRightArm", "exodiaBody", "exodiaLeftArm", "exodiaRightLeg", "exodiaLeftLeg"
-];
 
 const tmpGameBoard = [[[1], [2], [3], [4], [5]], [[6], [7], [8],], [[9], [10], [11], [12], [13]], [[14], [15], [16],], [[17], [18], [19], [20], [21]]];
+let characters = [];
+let weapons = [];
+let rooms = [];
 
 export class Game extends React.Component {
 
     constructor(props) {
         super(props);
+        characters = props.location.state.characters;
+        rooms = props.location.state.rooms;
+        weapons = props.location.state.weapons;
+
         this.state = {
             polling: false,
             showSuggestModal: false,
@@ -115,7 +117,7 @@ export class Game extends React.Component {
 
                 } else {
                     //card message
-                    if(this.state.pendingDisproof) {
+                    if (this.state.pendingDisproof) {
                         alert("You received the card: " + JSON.stringify(message) + " to disprove your suggestion.");
                         this.state.pendingDisproof = false;
                     }
@@ -434,7 +436,7 @@ export class Game extends React.Component {
 
         const gameBoard = (
             <Card id="game">
-                { <GameBoard gameState={this.getGameState} charactername={this.state.charactername} playerName={this.state.playerName} />}
+                { <GameBoard rooms={rooms} gameState={this.getGameState} charactername={this.state.charactername} playerName={this.state.playerName} />}
             </Card >
         )
 
