@@ -1,5 +1,5 @@
 ROOMS = [
-    "Luc",
+    "Kitchen",
     "Conservatory",
     "Dining Room",
     "Ballroom",
