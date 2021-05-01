@@ -1,10 +1,18 @@
-from Session import Session
+from GameSession import Session
 from GameState import GameState
+from GameExceptions import (
+    InvalidPlayerException,
+    InvalidPlayerTurnException,
+    InvalidPlayerSuspectException,
+    InvalidPlayerIsSuspectException,
+    InvalidSuggestionRoomException,
+    InvalidRoomException,
+)
 from GameOperations import Players, Weapons, Weapdeck, Roomsdeck, Chardeck
-from flask import Flask, jsonify, request, render_template
+from flask import Flask, jsonify, request
 from flask_cors import CORS
 import random
-import json
+
 app = Flask(__name__)
 rooms = [
     "Kitchen",
@@ -17,6 +25,30 @@ rooms = [
     "Library",
     "Billiard Room"
 ]
+roomcoordinates = [
+    [4, 4],  # Kitchen
+    [4, 0],  # Conservatory
+    [2, 4],  # Dinning Room
+    [4, 2],  # Ballroom
+    [0, 0],  # Study
+    [0, 2],  # Hall
+    [0, 4],  # Lounge
+    [2, 0],  # Library
+    [2, 2]  # Billiard Room
+]
+
+roomsLoc = {
+    rooms[0]: roomcoordinates[0],
+    rooms[1]: roomcoordinates[1],
+    rooms[2]: roomcoordinates[2],
+    rooms[3]: roomcoordinates[3],
+    rooms[4]: roomcoordinates[4],
+    rooms[5]: roomcoordinates[5],
+    rooms[6]: roomcoordinates[6],
+    rooms[7]: roomcoordinates[7],
+    rooms[8]: roomcoordinates[8],
+}
+
 suggrooms = [
     "Kitchen",
     "Conservatory",
@@ -52,29 +84,19 @@ weapons = [
     "Candlestick",  # 11
     "Revolver"  # 12
 ]
-roomcoordinates = [
-    [4, 4],
-    [4, 0],
-    [2, 4],
-    [4, 2],
-    [0, 0],
-    [0, 2],
-    [0, 4],
-    [2, 0],
-    [2, 2]
-]
+
 uids = []
 
 playerturn = 1
 roomzdeck = Roomsdeck(rooms)
 characdeck = Chardeck(characters)
 weapondeck = Weapdeck(weapons)
-rope = Weapons(weapons[0], [0, 0], 7)
-leadpipe = Weapons(weapons[1], [0, 2], 8)
-knife = Weapons(weapons[2], [0, 4], 9)
-wrench = Weapons(weapons[3], [2, 0], 10)
-candlestick = Weapons(weapons[4], [2, 2], 11)
-revolver = Weapons(weapons[5], [2, 4], 12)
+rope = Weapons(weapons[0], [0, 0])
+leadpipe = Weapons(weapons[1], [0, 2])
+knife = Weapons(weapons[2], [0, 4])
+wrench = Weapons(weapons[3], [2, 0])
+candlestick = Weapons(weapons[4], [2, 2])
+revolver = Weapons(weapons[5], [2, 4])
 weaponsarray = [knife, rope, leadpipe, wrench, candlestick, revolver]
 messagequeue = [[], [], [], [], [], []]
 totaldeck = []
@@ -96,6 +118,45 @@ tempvar = 0
 session = Session(random.randint(100000, 999999), gamestate)
 
 CORS(app)
+
+
+def validatePlayer(uid):
+    for p in playerarray:
+        if uid != p.getUid():
+            raise InvalidPlayerException
+
+
+def validatePlayerTurn(turn):
+    if turn != gamestate.getPlayerturn():
+        raise InvalidPlayerTurnException
+
+
+def validatePlayerSuspect(suspect):
+    if suspect not in charactersind:
+        raise InvalidPlayerSuspectException
+
+
+def validatePlayerIsSuspect(uid, suspect):
+    for p in playerarray:
+        if uid == p.getUid():
+            if suspect != p.getCharacter():
+                raise InvalidPlayerIsSuspectException
+
+
+def validateRoom(room):
+    for r in room:
+        if room != r:
+            raise InvalidRoomException
+
+#def validateRoomIsEmpty(room):
+    #TO_DO
+def validateSuggestionRoom(uid, room):
+    rLoc = roomsLoc[room]
+    for p in playerarray:
+        if uid == p.getUid():
+            if p.getLocation() != rLoc:
+                raise InvalidSuggestionRoomException
+
 
 def adduser(uid):
     if len(playerarray) == 0:
@@ -136,7 +197,7 @@ def adduser(uid):
             location = [4, 1]
         elif character == 'Colonel Mustard':
             location = [1, 4]
-        player = Players(playername, character, hand, location)
+        player = Players(playername, uid, character, hand, location)
         print("setting hand for " + character + ": " + str(hand))
         playerarray.append(player)
         p = len(playerarray)
@@ -156,6 +217,7 @@ def adduser(uid):
         sessionstring = jsonify(
             sessionId=str(session.getSessionid()),
             playername=playername,
+            uid=uid,
             totalPlayers=session.getPlayernum(),
             yourcharacter=player.getCharacter(),
             result=playername + " has been added to the session.",
@@ -185,7 +247,7 @@ def adduser(uid):
             location = [4, 1]
         elif character == 'Colonel Mustard':
             location = [1, 4]
-        player = Players(playername, character, hand, location)
+        player = Players(playername, uid, character, hand, location)
         playerarray.append(player)
         p = len(playerarray)
         if 1 <= p <= 5:
@@ -205,6 +267,7 @@ def adduser(uid):
         sessionstring = jsonify(
             sessionId=str(session.getSessionid()),
             playername=playername,
+            uid=uid,
             totalPlayers=session.getPlayernum(),
             yourcharacter=player.getCharacter(),
             result=playername + " has been added to the session.",
@@ -497,7 +560,7 @@ def suggest():
         uid = some_json["uid"]
         playcounter = 0
         playercounter = 0
-        playercharacter=""
+        playercharacter = ""
         for x in uids:
             if x == uid:
                 playercharacter = playerarray[playcounter].getCharacter()
@@ -585,6 +648,7 @@ def accuse():
         suspect = some_json["suspect"]
         uid = some_json["uid"]
         room = some_json["room"]
+        validatePlayer(uid)
         playcounter = 0
         for x in uids:
             if x == uid:

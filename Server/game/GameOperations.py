@@ -1,14 +1,18 @@
 from random import randint
 
 class Players:
-    def __init__(self, name, character, hand, location):
+    def __init__(self, name, uid, character, hand, location):
         self.name = name
+        self.uid = uid
         self.character = character
         self.hand = hand
         self.location = location
 
     def getName(self):
         return self.name
+
+    def getUid(self):
+        return self.uid
 
     def getCharacter(self):
         return self.character
@@ -22,6 +26,9 @@ class Players:
     def setName(self, name):
         self.name = name
 
+    def setUid(self, uid):
+        self.name = uid
+
     def setCharacter(self, character):
         self.character = character
 
@@ -32,22 +39,15 @@ class Players:
         self.location = location
 
 class Weapons:
-    def __init__(self, name, location, weapnum):
+    def __init__(self, name, location):
         self.name = name
         self.location = location
-        self.weapnum = weapnum
-
-    def getWeapon(self):
-        return self.weapnum
 
     def getName(self):
         return self.name
 
     def getLocation(self):
         return self.location
-
-    def setWeapnum(self, weapnum):
-        self.weapnum = weapnum
 
     def setName(self, name):
         self.name = name
