@@ -331,6 +331,8 @@ def hello():
         if x == uid:
             messages = messagequeue[count]
         count += 1
+    # for Q in messagequeue:
+    #     Q.clear()
     if len(playerarray) == 1:
         if gamestate.getGameWon():
             return jsonify({'numberofplayers': gamestate.getNumOfPlayers(),
@@ -679,6 +681,8 @@ def accuse():
             messagequeue[i].append(message)
         return jsonify(
             result="success",
+            gamewon=str(gamestate.getGameWon()),
+            gamerunning=str(gamestate.getGameRunning()),
             message=message
         )
     message = "The {0} is not supported by this endpoint. Please try again.".format(str(request.method))
