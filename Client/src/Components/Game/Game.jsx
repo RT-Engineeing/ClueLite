@@ -48,7 +48,10 @@ export class Game extends React.Component {
             },
             currentGameBoard: tmpGameBoard,
             turnIndicator: " ",
-            pendingDisproof: true
+            pendingDisproof: true,
+
+            alertBuffer: ["", "", "", "", ""],
+            alertNum: 0
         }
 
         this.makeAccusation = this.makeAccusation.bind(this);
@@ -74,6 +77,7 @@ export class Game extends React.Component {
             });
 
         const gamestate = response.data;
+        this.processAlerts(gamestate)
         const playerdata = gamestate[this.state.playerName];
         const playerHand = playerdata["hand"];
         const newGameboard = gamestate["gameboard"];
@@ -180,8 +184,16 @@ export class Game extends React.Component {
         this.setState({ showAccusationModal: false })
     }
 
-    processGameState(gamestate) {
-        console.log(gamestate);
+    processAlerts(gamestate){
+        const alerts = gamestate["alerts"];
+        if(alerts.length !== 0){
+            console.log("found new alerts " + JSON.stringify(alerts));
+            var i;
+            for(i = 0; i < alerts.length; i++){
+                this.state.alertBuffer[this.state.alertNum] = alerts[i];
+                this.state.alertNum = (this.state.alertNum == 4 ? 0 : this.state.alertNum + 1);
+            }
+        }
     }
 
 
@@ -445,6 +457,15 @@ export class Game extends React.Component {
                 < div className="col d-flex justify-content-center" >
                     <Card id="updatesContainer">
                         <Card.Header className="justify-content-center d-flex" style={{ width: "100%" }}>Game Updates</Card.Header>
+                        <span>
+                        {
+                            this.state.alertBuffer.map((alert, idx) => (
+                            <div key={idx}>
+                                [{alert}]
+                            </div>
+                            ))
+                    }
+                </span>
                     </Card >
                 </div >
             </div >
