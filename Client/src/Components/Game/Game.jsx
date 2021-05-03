@@ -467,18 +467,20 @@ export class Game extends React.Component {
                         <div className="cardRow row">
                             <div className="col" align="right">
                                 <Card className="playerCard" align="center">
-                                    <img src={imageURLs ? imageURLs[this.state.cards[0]] : ''}></img>
                                     {this.state.cards[0]}
+                                    <img className="cardImage" src={imageURLs ? imageURLs[this.state.cards[0]] : ''}></img>
                                 </Card>
                             </div>
                             <div className="col" align="center">
                                 <Card className="playerCard" align="center">
                                     {this.state.cards[1]}
+                                    <img className="cardImage" src={imageURLs ? imageURLs[this.state.cards[1]] : ''}></img>
                                 </Card>
                             </div>
                             <div className="col" align="left">
                                 <Card className="playerCard" align="center">
                                     {this.state.cards[2]}
+                                    <img className="cardImage" src={imageURLs ? imageURLs[this.state.cards[2]] : ''}></img>
                                 </Card>
                             </div>
                         </div>
@@ -486,11 +488,13 @@ export class Game extends React.Component {
                             <div className="col" align="right">
                                 <Card className="playerCard" align="center">
                                     {this.state.cards[3]}
+                                    <img className="cardImage" src={imageURLs ? imageURLs[this.state.cards[3]] : ''}></img>
                                 </Card>
                             </div>
                             <div className="col" align="left">
                                 <Card className="playerCard" align="center">
                                     {this.state.cards[4]}
+                                    <img className="cardImage" src={imageURLs ? imageURLs[this.state.cards[4]] : ''}></img>
                                 </Card>
                             </div>
                         </div>

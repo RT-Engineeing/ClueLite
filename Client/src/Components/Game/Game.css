@@ -61,7 +61,15 @@
 
 }
 
-
+.cardImage {
+    border-style: none;
+    height: 100px;
+    width: 100px;
+    margin: 0 auto;
+    position: absolute;
+    bottom: 10px;
+    left: 8%;
+}
 
 #gamePageContainer {
     margin: 3%;
