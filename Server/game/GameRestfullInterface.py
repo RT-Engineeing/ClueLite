@@ -7,7 +7,8 @@ import random
 import json
 import Cards
 import copy
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='/static')
+
 rooms = copy.deepcopy(Cards.ROOMS)
 suggrooms = copy.deepcopy(Cards.ROOMS)
 characters = copy.deepcopy(Cards.CHARACTERS)
@@ -613,7 +614,8 @@ def cards():
         weapons = Cards.WEAPONS
         characters = Cards.CHARACTERS
         rooms = Cards.ROOMS
-        return jsonify(json.dumps({'weapons': weapons, 'rooms': rooms, 'characters': characters}))
+        imageURLs = Cards.IMAGE_URLS
+        return jsonify(json.dumps({'weapons': weapons, 'rooms': rooms, 'characters': characters, 'imageURLs': imageURLs}))
 
 
 @ app.route('/')

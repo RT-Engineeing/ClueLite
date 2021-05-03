@@ -156,7 +156,8 @@ export class Lobby extends React.Component {
                         sessionkey: this.state.sessionKey,
                         characters: this.state.cards.characters,
                         weapons: this.state.cards.weapons,
-                        rooms: this.state.cards.rooms
+                        rooms: this.state.cards.rooms,
+                        imageURLs: this.state.cards.imageURLs,
                     }
                 }}></Redirect>
             )

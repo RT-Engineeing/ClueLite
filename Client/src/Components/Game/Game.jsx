@@ -12,6 +12,7 @@ const tmpGameBoard = [[[1], [2], [3], [4], [5]], [[6], [7], [8],], [[9], [10], [
 let characters = [];
 let weapons = [];
 let rooms = [];
+let imageURLs = {};
 
 export class Game extends React.Component {
 
@@ -20,6 +21,7 @@ export class Game extends React.Component {
         characters = props.location.state.characters;
         rooms = props.location.state.rooms;
         weapons = props.location.state.weapons;
+        imageURLs = props.location.state.imageURLs;
 
         this.state = {
             polling: false,
@@ -463,29 +465,30 @@ export class Game extends React.Component {
                     <div className="container">
                         <h3 id="cardsHeader"> Your Hand ({this.state.charactername}):</h3>
                         <div className="cardRow row">
-                            <div className="cardCol col" align="right">
+                            <div className="col" align="right">
                                 <Card className="playerCard" align="center">
+                                    <img src={imageURLs ? imageURLs[this.state.cards[0]] : ''}></img>
                                     {this.state.cards[0]}
                                 </Card>
                             </div>
-                            <div className="cardCol col" align="center">
+                            <div className="col" align="center">
                                 <Card className="playerCard" align="center">
                                     {this.state.cards[1]}
                                 </Card>
                             </div>
-                            <div className="cardCol col" align="left">
+                            <div className="col" align="left">
                                 <Card className="playerCard" align="center">
                                     {this.state.cards[2]}
                                 </Card>
                             </div>
                         </div>
                         <div className="cardRow row">
-                            <div className="cardCol col" align="right">
+                            <div className="col" align="right">
                                 <Card className="playerCard" align="center">
                                     {this.state.cards[3]}
                                 </Card>
                             </div>
-                            <div className="cardCol col" align="left">
+                            <div className="col" align="left">
                                 <Card className="playerCard" align="center">
                                     {this.state.cards[4]}
                                 </Card>
@@ -493,7 +496,7 @@ export class Game extends React.Component {
                         </div>
                     </div>
                 </div>
-            </div>
+            </div >
         );
 
         const accuseSuggestEndTurn = (
