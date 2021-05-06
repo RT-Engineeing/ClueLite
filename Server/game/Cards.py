@@ -27,3 +27,4 @@ WEAPONS = [
     "Candlestick",  # 11
     "Revolver"  # 12
 ]
+
