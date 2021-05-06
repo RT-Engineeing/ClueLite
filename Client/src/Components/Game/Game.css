@@ -131,3 +131,25 @@
 .caseFile {
     align-self: center;
 }
+
+.alertItem {
+    float: left;
+    width: 100%;
+}
+
+.chatField {
+    
+    width: 100%;
+}
+
+.chatBox {
+    width: 375%;
+    float: left;
+    bottom: 0px;
+}
+
+.chatButton {
+    width: 10%;
+    float: right;
+    bottom: 0px;
+}

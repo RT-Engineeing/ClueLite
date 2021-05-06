@@ -51,14 +51,31 @@ export class Game extends React.Component {
             pendingDisproof: true,
 
             alertBuffer: ["", "", "", "", ""],
-            alertNum: 0
+            alertNum: 4,
+            chatMessage: ""
         }
 
         this.makeAccusation = this.makeAccusation.bind(this);
         this.makeSuggestion = this.makeSuggestion.bind(this);
         this.submitCardToSuggestion = this.submitCardToSuggestion.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
     }
 
+
+    handleSubmit(event) {
+        this.sendChat()
+        event.preventDefault();
+    }
+
+    async sendChat() {
+        console.log("sending chat")
+        const response = await axios.post("http://localhost:5000/chat",
+        {
+            character: this.state.charactername,
+            message: this.state.chatMessage
+        });
+        console.log(response);
+    }
 
     async pollGameState() {
         // Converts the 5,5,5,5,5 gameboard returned by the server to a 5,3,5,3,5 game board.
@@ -189,10 +206,23 @@ export class Game extends React.Component {
         if(alerts.length !== 0){
             console.log("found new alerts " + JSON.stringify(alerts));
             var i;
+
             for(i = 0; i < alerts.length; i++){
-                this.state.alertBuffer[this.state.alertNum] = alerts[i];
-                this.state.alertNum = (this.state.alertNum == 4 ? 0 : this.state.alertNum + 1);
+                this.siftAlertsUp();
+                let alert = alerts[i];
+                if(alert.startsWith("[")){
+                    alert = alert.substring(alert.indexOf("] ") + 2);
+                }
+                this.state.alertBuffer[this.state.alertNum] = alert;
             }
+        }
+    }
+
+    siftAlertsUp(){
+        var i;
+        for(i = 0; i < 4; i++){
+            let next = this.state.alertBuffer[i+1];
+            this.state.alertBuffer[i] = next;
         }
     }
 
@@ -204,7 +234,6 @@ export class Game extends React.Component {
     componentWillUnmount() {
         clearInterval(this.interval);
     }
-
 
     getGameState = () => {
         const currGameBoard = this.state.currentGameBoard;
@@ -263,12 +292,22 @@ export class Game extends React.Component {
             this.setState({ suggestionSelected: { ...this.state.suggestionSelected, room: rooms[idx] } })
         }
 
+        const updateChatMessage = (event) => {
+            this.setState({chatMessage: event.target.value});
+        }
+
         const handleSuggestionDisproofSelect = (idx) => {
             this.setState({ suggestDisproofSelected: this.state.cards[idx] })
         }
 
+        
+
         const endTurn = () => {
             this.endTurn();
+        }
+
+        const sendChat = () => {
+            this.sendChat();
         }
 
         const suggestionModal = (
@@ -457,18 +496,34 @@ export class Game extends React.Component {
                 < div className="col d-flex justify-content-center" >
                     <Card id="updatesContainer">
                         <Card.Header className="justify-content-center d-flex" style={{ width: "100%" }}>Game Updates</Card.Header>
-                        <span>
+                        <span class="alertItem">
                         {
                             this.state.alertBuffer.map((alert, idx) => (
                             <div key={idx}>
-                                [{alert}]
+                                {alert}
                             </div>
                             ))
                     }
                 </span>
+                
                     </Card >
                 </div >
+                
             </div >
+        )
+
+        const chatContainer = (
+            <div className="row">
+                <div className="col d-flex justify-content-center">
+                    
+                <form class="chatField" onSubmit={this.handleSubmit}>
+  <label>
+    <input  class="chatBox" type="text" name="Chat" onChange={updateChatMessage}/>
+  </label>
+  <input  class="chatButton" type="submit" value="Submit" />
+</form>    
+                </div>
+            </div>
         )
 
         const cards = (
@@ -555,6 +610,7 @@ export class Game extends React.Component {
                         <div className="col-md-5" style={{ paddingTop: "50px" }}>
                             <div className="container">
                                 {updatesContainer}
+                                {chatContainer}
                                 {cards}
                                 {accuseSuggestEndTurn}
                             </div >

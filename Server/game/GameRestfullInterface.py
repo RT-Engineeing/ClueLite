@@ -26,6 +26,19 @@ roomcoordinates = [
     [2, 0],
     [2, 2]
 ]
+
+roomnames = {
+    "00" : "Kitchen",
+    "02" : "Conservatory",
+    "04": "Dining Room",
+    "20": "Ballroom",
+    "22": "Study" ,
+    "24" : "Hall",
+    "40": "Lounge",
+    "42" : "Library",
+    "44": "Billiard Room",
+}
+
 uids = []
 
 
@@ -413,6 +426,18 @@ def hello():
         result="error"
     )
 
+@app.route('/chat', methods=['POST'])
+def chat():
+    if request.method == 'POST':
+        
+        some_json = request.get_json()
+        character = some_json["character"]
+        message = some_json["message"]
+        print("chat message " + message + " received")
+        messageManager.addMessage("(" + character + "): " + message)
+        return jsonify(
+            result="success"
+        )
 
 @app.route('/movement', methods=['POST'])
 def move():
@@ -428,7 +453,17 @@ def move():
             ycoordinate = int(ycoordinate)
         print("Moving player " + character + " to " +
               str(xcoordinate) + ", " + str(ycoordinate))
-        messageManager.addMessage("Player " + character + " moved to " + str(xcoordinate) + ", " + str(ycoordinate))
+        roomnamekey = str(xcoordinate) + str(ycoordinate)
+        roomname = roomnames.get(roomnamekey)
+        if roomname == None:
+            roomname = "a Hallway"
+        else:
+            roomname = "the " + roomname
+        
+        print("roomkey: " + roomnamekey + " room name: " + roomname)
+        for x in playerarray:
+            if x.getName() == character:
+                messageManager.addMessage(x.getCharacter() + " moved to " + roomname)
         newLocation = [xcoordinate, ycoordinate]
         count = 1
         for x in playerarray:
@@ -543,6 +578,7 @@ def suggest():
                     character,
                     room,
                     weapon)
+                messageManager.addMessage(message)
                 temp = 0
                 temp2 = 0
                 for y in playerarray:
@@ -583,11 +619,13 @@ def accuse():
             room,
             weapon)
         #for i in range(6):
+        messageManager.addMessage(message)
         for i in range(3):
             messagequeue[i].append(message)
         if set(accusation_set) == set(casefile):
             message = "[ACCUSATION] {0} has won the game.".format(character)
-            #for i in range(6):
+            #for i in range(6): 
+            messageManager.addMessage(message)
             for i in range(3):
                 messagequeue[i].append(message)
             gamestate.setGameWon(True)
@@ -601,6 +639,7 @@ def accuse():
         message = "[ACCUSATION] {0} has made a false accusation and can no longer win the game.".format(
             character)
         #for i in range(6):
+        messageManager.addMessage(message)
         for i in range(3):
             messagequeue[i].append(message)
         return jsonify(
