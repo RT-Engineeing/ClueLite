@@ -1,6 +1,8 @@
 import React from 'react';
 import Card from 'react-bootstrap/Card'
 import ListGroup from 'react-bootstrap/ListGroup'
+import InputGroup from 'react-bootstrap/InputGroup'
+import FormControl from 'react-bootstrap/FormControl'
 import "./Lobby.css";
 import {
     Link, Redirect
@@ -33,7 +35,9 @@ export class Lobby extends React.Component {
             myPlayer: props.location.state.playername,
             sessionKey: props.location.state.sessionKey,
             uuid: props.location.state.uuid,
-            charactername: props.location.state.charactername
+            charactername: props.location.state.charactername,
+            playerAlias: props.location.state.playername,
+            isEditingName: false
         }
         // Gets card info
         this.getCards();
@@ -106,7 +110,9 @@ export class Lobby extends React.Component {
         const response = await axios.post("http://localhost:5000/ready", {
             playername: this.state.myPlayer,
             sessionId: this.state.sessionKey,
-            playerready: readinessTransmit
+            playerready: readinessTransmit,
+            playerAlias: this.state.playerAlias,
+            uid: this.state.uuid
         });
 
         this.setState({
@@ -123,10 +129,20 @@ export class Lobby extends React.Component {
         clearInterval(this.gameStateInterval);
     }
 
-
+    toggleEditing = (event) => {
+        this.setState({ isEditingName: !this.state.isEditingName })
+    }
 
     handleClick = (event) => {
         this.changeReadiness();
+    }
+
+    onUpdateAlias = (event) => {
+        event.preventDefault();
+        this.setState({
+            playerAlias: document.getElementById('playerAliasInput').value,
+            isEditingName: false
+        }, () => { this.changeReadiness() });
     }
 
     render() {
@@ -162,14 +178,38 @@ export class Lobby extends React.Component {
                 }}></Redirect>
             )
         } else {
+
+            const myPlayer =
+                (<span className="myPlayer">
+                    <button className="editNameButton" onClick={this.toggleEditing}>
+                        <i class="fa fa-lg fa-edit editNameIcon" ></i >
+                    </button >
+                </span >);
+
+
             return (
                 <React.Fragment key="lobbyContainer">
                     <Card className="playerNamesList" text="white">
                         <ListGroup variant="flush">
                             {this.state.players.map(player => (
                                 <ListGroup.Item key={player[0]} variant="dark" >
-                                    {player[0] === this.state.myPlayer ? <span className="myPlayer">*</span> : ""}
-                                    {player[0]}
+                                    {player[0] === this.state.playerAlias ?
+                                        myPlayer
+                                        : ""}
+                                    {this.state.isEditingName && player[0] === this.state.playerAlias ?
+                                        <InputGroup className="mb-3">
+                                            <form onSubmit={this.onUpdateAlias}>
+                                                <FormControl
+                                                    placeholder={player[0]}
+                                                    aria-label="Player Alias"
+                                                    aria-describedby="basic-addon2"
+                                                    id="playerAliasInput"
+                                                />
+                                            </form>
+                                        </InputGroup>
+                                        :
+                                        player[0]
+                                    }
                                     <Button onClick={this.handleClick}
                                         className={player[1] ? "readyButton" : "notReadyButton"} >
                                     </Button>

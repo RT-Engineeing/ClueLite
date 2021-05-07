@@ -115,6 +115,22 @@
   }
 
   .myPlayer {
-    left: 38%;
+    left: 5%;
     position: absolute;
+  }
+
+  .editNameButton {
+    background-color: transparent;
+    border: none;
+    vertical-align: -18%;
+  }
+
+  .editNameIcon {
+    color: white
+  }
+
+  .aliasInput {
+    width: 60% !important;
+    left: 20%;
+    margin-bottom: 0px !important;
   }

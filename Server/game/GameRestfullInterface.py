@@ -2,19 +2,27 @@ from Session import Session
 from GameState import GameState
 from GameOperations import Players, Weapons, Weapdeck, Roomsdeck, Chardeck
 from flask import Flask, jsonify, request, render_template
+from LinkedList import Node, SLinkedList
 from flask_cors import CORS
 import random
 import json
 import Cards
 import copy
-app = Flask(__name__, static_url_path='/static')
 
+app = Flask(__name__)
 rooms = copy.deepcopy(Cards.ROOMS)
 suggrooms = copy.deepcopy(Cards.ROOMS)
 characters = copy.deepcopy(Cards.CHARACTERS)
 charactersind = copy.deepcopy(Cards.CHARACTERS)
 weapons = copy.deepcopy(Cards.WEAPONS)
 
+playerturnlist = SLinkedList()
+currentNode = Node(99)
+node1 = Node(99)
+node2 = Node(99)
+node3 = Node(99)
+node4 = Node(99)
+node5 = Node(99)
 roomcoordinates = [
     [4, 4],
     [4, 0],
@@ -27,7 +35,12 @@ roomcoordinates = [
     [2, 2]
 ]
 uids = []
-
+characteruseddict = {True: [], False: ["Miss Scarlet",
+                                       "Mrs. White",
+                                       "Mrs. Peacock",
+                                       "Professor Plum",
+                                       "Mr.Green",
+                                       "Colonel Mustard"]}
 playerturn = 1
 roomzdeck = Roomsdeck(rooms)
 characdeck = Chardeck(characters)
@@ -50,7 +63,7 @@ suggestionmessage = []
 gamestate = GameState(casefile, 0, 1, False, [[["Rope"], [], ["Lead Pipe"], [], ["Knife"]],
                                               [[], [], [], [], []],
                                               [["Wrench"], [], ["Candlestick"],
-                                                  [], ["Revolver"]],
+                                               [], ["Revolver"]],
                                               [[], [], [], [], []],
                                               [[], [], [], [], []]],
                       False, 0)
@@ -63,143 +76,262 @@ CORS(app)
 
 
 def adduser(uid):
-    if len(playerarray) == 0:
-        random.shuffle(rooms)
-        casefile.append(rooms[0])
-        del rooms[0]
-        random.shuffle(characters)
-        casefile.append(characters[0])
-        del characters[0]
-        random.shuffle(weapons)
-        casefile.append(weapons[0])
-        del weapons[0]
-        global totaldeck
-        print("case file:  " + str(casefile))
-        totaldeck.extend(rooms)
-        totaldeck.extend(weapons)
-        totaldeck.extend(characters)
-        newgamestate = gamestate
-        newgamestate.setCasefile(casefile)
-        playername = "Player" + str(len(playerarray) + 1)
-        character = charactersind[len(playerarray)]
-        characselectdeck.append(character)
-        hand = []
-        location = []
-        for i in range(3):
-            random.shuffle(totaldeck)
-            hand.append(totaldeck[0])
-            del totaldeck[0]
-        if character == 'Miss Scarlet':
-            location = [0, 3]
-        elif character == 'Mrs. White':
-            location = [4, 3]
-        elif character == 'Mrs. Peacock':
-            location = [3, 0]
-        elif character == 'Professor Plum':
-            location = [1, 0]
-        elif character == 'Mr.Green':
-            location = [4, 1]
-        elif character == 'Colonel Mustard':
-            location = [1, 4]
-        player = Players(playername, character, hand, location)
-        print("setting hand for " + character + ": " + str(hand))
-        playerarray.append(player)
-        p = len(playerarray)
-        if 1 >= p <= 5:
-            newgamestate.setNumOfPlayers(p)
-        elif p == 6:
-            newgamestate.setNumOfPlayers(p)
-            newgamestate.setGameRunning(True)
-            newgamestate.setPlayerturn(1)
-        board = newgamestate.getGameBoard()
-        arr = board[player.getLocation()[0]][player.getLocation()[1]]
-        arr.append(player.getCharacter())
-        board[player.getLocation()[0]][player.getLocation()[1]] = arr
-        newgamestate.setGameBoard(board)
-        session.setGameState(newgamestate)
-        session.setPlayernum(len(playerarray))
+    if playerturnlist.listlength() >= 6:
         sessionstring = jsonify(
             sessionId=str(session.getSessionid()),
-            playername=playername,
-            totalPlayers=session.getPlayernum(),
-            yourcharacter=player.getCharacter(),
-            result=playername + " has been added to the session.",
+            result=" Session is full",
         )
-        uids.append(uid)
         return sessionstring
-    else:
-        newgamestate = session.getGameState()
-        playername = "Player" + str(session.getPlayernum() + 1)
-        character = charactersind[session.getPlayernum()]
-        characselectdeck.append(character)
-        hand = []
-        location = []
-        for i in range(3):
-            random.shuffle(totaldeck)
-            hand.append(totaldeck[0])
-            del totaldeck[0]
-        if character == 'Miss Scarlet':
-            location = [0, 3]
-        elif character == 'Mrs. White':
-            location = [4, 3]
-        elif character == 'Mrs. Peacock':
-            location = [3, 0]
-        elif character == 'Professor Plum':
-            location = [1, 0]
-        elif character == 'Mr.Green':
-            location = [4, 1]
-        elif character == 'Colonel Mustard':
-            location = [1, 4]
-        player = Players(playername, character, hand, location)
-        playerarray.append(player)
-        p = len(playerarray)
-        if 1 <= p <= 5:
-            newgamestate.setNumOfPlayers(p)
-        elif p == 6:
-            newgamestate.setNumOfPlayers(p)
-            # newgamestate.setGameRunning(True)
-            newgamestate.setPlayerturn(1)
-        board = newgamestate.getGameBoard()
-        arr = board[player.getLocation()[0]][player.getLocation()[1]]
-        arr.append(player.getCharacter())
-        board[player.getLocation()[0]][player.getLocation()[1]] = arr
-        newgamestate.setGameBoard(board)
-        session.setGameState(newgamestate)
-        session.setPlayernum(len(playerarray))
-        # session.addPlayer(player)
-        sessionstring = jsonify(
-            sessionId=str(session.getSessionid()),
-            playername=playername,
-            totalPlayers=session.getPlayernum(),
-            yourcharacter=player.getCharacter(),
-            result=playername + " has been added to the session.",
-        )
-        uids.append(uid)
-        return sessionstring
+    if playerturnlist.listlength() == 0:
+        initgame()
+    newgamestate = gamestate
+    newgamestate.setCasefile(casefile)
+    playername = "Player" + str(playerturnlist.listlength() + 1)
+    character = charactersind.pop(random.randrange(len(charactersind)))
+    hand = []
+    location = []
+    if character == 'Miss Scarlet':
+        location = [0, 3]
+        templist = characteruseddict.get(False)
+        templist.remove('Miss Scarlet')
+        templist2 = characteruseddict.get(True)
+        templist2.append('Miss Scarlet')
+        updict = {True: templist2}
+        updict2 = {False: templist}
+        characteruseddict.update(updict)
+        characteruseddict.update(updict2)
+    elif character == 'Mrs. White':
+        location = [4, 3]
+        templist = characteruseddict.get(False)
+        templist.remove('Mrs. White')
+        templist2 = characteruseddict.get(True)
+        templist2.append('Mrs. White')
+        updict = {True: templist2}
+        updict2 = {False: templist}
+        characteruseddict.update(updict)
+        characteruseddict.update(updict2)
+    elif character == 'Mrs. Peacock':
+        location = [3, 0]
+        templist = characteruseddict.get(False)
+        templist.remove('Mrs. Peacock')
+        templist2 = characteruseddict.get(True)
+        templist2.append('Mrs. Peacock')
+        updict = {True: templist2}
+        updict2 = {False: templist}
+        characteruseddict.update(updict)
+        characteruseddict.update(updict2)
+    elif character == 'Professor Plum':
+        location = [1, 0]
+        templist = characteruseddict.get(False)
+        templist.remove('Professor Plum')
+        templist2 = characteruseddict.get(True)
+        templist2.append('Professor Plum')
+        updict = {True: templist2}
+        updict2 = {False: templist}
+        characteruseddict.update(updict)
+        characteruseddict.update(updict2)
+    elif character == 'Mr.Green':
+        location = [4, 1]
+        templist = characteruseddict.get(False)
+        templist.remove('Mr.Green')
+        templist2 = characteruseddict.get(True)
+        templist2.append('Mr.Green')
+        updict = {True: templist2}
+        updict2 = {False: templist}
+        characteruseddict.update(updict)
+        characteruseddict.update(updict2)
+    elif character == 'Colonel Mustard':
+        location = [1, 4]
+        templist = characteruseddict.get(False)
+        templist.remove('Colonel Mustard')
+        templist2 = characteruseddict.get(True)
+        templist2.append('Colonel Mustard')
+        updict = {True: templist2}
+        updict2 = {False: templist}
+        characteruseddict.update(updict)
+        characteruseddict.update(updict2)
+    player = Players(playername, character, hand, location)
+    print("setting hand for " + character + ": " + str(hand))
+    if playerturnlist.listlength() == 0:
+        playerturnlist.headval = Node(1, uid, player)
+        global currentNode
+        currentNode = playerturnlist.headval
+    elif playerturnlist.listlength() == 1:
+        global node1
+        node1 = Node(playerturnlist.listlength() + 1, uid, player)
+        currentNode.nextval = node1
+    elif playerturnlist.listlength() == 2:
+        global node2
+        node2 = Node(playerturnlist.listlength() + 1, uid, player)
+        node1.nextval = node2
+    elif playerturnlist.listlength() == 3:
+        global node3
+        node3 = Node(playerturnlist.listlength() + 1, uid, player)
+        node2.nextval = node3
+    elif playerturnlist.listlength() == 4:
+        global node4
+        node4 = Node(playerturnlist.listlength() + 1, uid, player)
+        node3.nextval = node4
+    elif playerturnlist.listlength() == 5:
+        global node5
+        node5 = Node(playerturnlist.listlength() + 1, uid, player)
+        node4.nextval = node5
+    newgamestate.setNumOfPlayers(playerturnlist.listlength())
+    board = newgamestate.getGameBoard()
+    arr = board[player.getLocation()[0]][player.getLocation()[1]]
+    arr.append(player.getCharacter())
+    board[player.getLocation()[0]][player.getLocation()[1]] = arr
+    newgamestate.setGameBoard(board)
+    session.setGameState(newgamestate)
+    session.setPlayernum(playerturnlist.listlength())
+    sessionstring = jsonify(
+        sessionId=str(session.getSessionid()),
+        playername=playername,
+        totalPlayers=session.getPlayernum(),
+        yourcharacter=player.getCharacter(),
+        result=playername + " has been added to the session.",
+    )
+    uids.append(uid)
+    return sessionstring
+
+
+def initgame():
+    random.shuffle(rooms)
+    casefile.append(rooms[0])
+    del rooms[0]
+    random.shuffle(characters)
+    casefile.append(characters[0])
+    del characters[0]
+    random.shuffle(weapons)
+    casefile.append(weapons[0])
+    del weapons[0]
+    global totaldeck
+    print("case file:  " + str(casefile))
+    totaldeck.extend(rooms)
+    totaldeck.extend(weapons)
+    totaldeck.extend(characters)
 
 
 @app.route('/ready', methods=['POST', 'GET'])
 def playersready():
     if request.method == 'POST':
         some_json = request.get_json()
-        playername = some_json["playername"]
+        playername = some_json["playerAlias"]
         sessionId = some_json["sessionId"]
         playerready = some_json["playerready"]
+        playeruid = some_json["uid"]
+        global currentNode
         if playerready == "True":
             isReady = True
             session.addPlayer(playername)
-            if session.getPlayernum() == 6:
+            if currentNode.uid == playeruid:
+                tempplayer = currentNode.getplayer()
+                tempplayer.setName(playername)
+                currentNode.setready(isReady)
+                currentNode.setplayer(tempplayer)
+            else:
+                currentNode = playerturnlist.headval
+                while currentNode is not None:
+                    if currentNode.getuid() == playeruid:
+                        tempplayer = currentNode.getplayer()
+                        tempplayer.setName(playername)
+                        currentNode.setready(isReady)
+                        currentNode.setplayer(tempplayer)
+                    currentNode = currentNode.nextval
+                currentNode = playerturnlist.headval
+            if (playerturnlist.checkready()) and (playerturnlist.listlength() >= 2):
                 gamestate.setGameRunning(True)
+                gamestate.setNumOfPlayers(playerturnlist.listlength())
+                gamestate.setPlayerturn(1)
+                currentNode = playerturnlist.headval
+                if playerturnlist.listlength() == 4:
+                    extracounter = 0
+                    while currentNode is not None:
+                        playerobj = currentNode.getplayer()
+                        temphand = playerobj.getHand()
+                        for i in range(4):
+                            random.shuffle(totaldeck)
+                            temphand.append(totaldeck[0])
+                            del totaldeck[0]
+                        if extracounter == 0 or extracounter == 1:
+                            random.shuffle(totaldeck)
+                            temphand.append(totaldeck[0])
+                            del totaldeck[0]
+                        playerobj.setHand(temphand)
+                        currentNode.setplayer(playerobj)
+                        currentNode = currentNode.nextval
+                        extracounter += 1
+                if playerturnlist.listlength() == 5:
+                    extracounter = 0
+                    while currentNode is not None:
+                        playerobj = currentNode.getplayer()
+                        temphand = playerobj.getHand()
+                        for i in range(3):
+                            random.shuffle(totaldeck)
+                            temphand.append(totaldeck[0])
+                            del totaldeck[0]
+                        if extracounter == 0 or extracounter == 1 or extracounter == 2:
+                            random.shuffle(totaldeck)
+                            temphand.append(totaldeck[0])
+                            del totaldeck[0]
+                        playerobj.setHand(temphand)
+                        currentNode.setplayer(playerobj)
+                        currentNode = currentNode.nextval
+                        extracounter += 1
+                if playerturnlist.listlength() == 6:
+                    while currentNode is not None:
+                        playerobj = currentNode.getplayer()
+                        temphand = playerobj.getHand()
+                        for i in range(3):
+                            random.shuffle(totaldeck)
+                            temphand.append(totaldeck[0])
+                            del totaldeck[0]
+                        playerobj.setHand(temphand)
+                        currentNode.setplayer(playerobj)
+                        currentNode = currentNode.nextval
+                if playerturnlist.listlength() == 3:
+                    while currentNode is not None:
+                        playerobj = currentNode.getplayer()
+                        temphand = playerobj.getHand()
+                        for i in range(6):
+                            random.shuffle(totaldeck)
+                            temphand.append(totaldeck[0])
+                            del totaldeck[0]
+                        playerobj.setHand(temphand)
+                        currentNode.setplayer(playerobj)
+                        currentNode = currentNode.nextval
+                currentNode = playerturnlist.headval
             return session.setReady(sessionId, playername, isReady)
         else:
             session.removePlayer(playername)
             isReady = False
+            if currentNode.uid == playeruid:
+                tempplayer = currentNode.getplayer()
+                tempplayer.setName(playername)
+                currentNode.setready(isReady)
+                currentNode.setplayer(tempplayer)
+            else:
+                currentNode = playerturnlist.headval
+                while currentNode is not None:
+                    if currentNode.getuid() == playeruid:
+                        tempplayer = currentNode.getplayer()
+                        tempplayer.setName(playername)
+                        currentNode.setready(isReady)
+                        currentNode.setplayer(tempplayer)
+                    currentNode = currentNode.nextval
+                currentNode = playerturnlist.headval
             return session.setReady(sessionId, playername, isReady)
     elif request.method == 'GET':
         lobbyPlayers = []
-        for p in playerarray:
-            lobbyPlayers.append(p.getName())
-        if len(session.getReady()) == 6:
+        currentNode = playerturnlist.headval
+        holder = playerturnlist.listlength()
+        while currentNode is not None:
+            templayer = currentNode.getplayer()
+            playername = templayer.getName()
+            lobbyPlayers.append(playername)
+            currentNode = currentNode.nextval
+        currentNode = playerturnlist.headval
+        if playerturnlist.checkready() and gamestate.getGameRunning():
             return jsonify(status='true',
                            playersready=session.getReady(),
                            lobbyPlayers=lobbyPlayers
@@ -234,7 +366,7 @@ def hello():
         if x == uid:
             messages = messagequeue[count]
         count += 1
-    if len(playerarray) == 1:
+    if playerturnlist.listlength() == 1:
         if gamestate.getGameWon():
             return jsonify({'numberofplayers': gamestate.getNumOfPlayers(),
                             'Player1': {'name': playerarray[0].getName(), 'character': playerarray[0].getCharacter(),
@@ -250,7 +382,7 @@ def hello():
                         'gamerunning': gamestate.getGameRunning(), 'messages': messages,
                         'subturn': gamestate.getSubturn(),
                         'gameboard': gamestate.getGameBoard()})
-    if len(playerarray) == 2:
+    if playerturnlist.listlength() == 2:
         if gamestate.getGameWon():
             return jsonify({'numberofplayers': gamestate.getNumOfPlayers(),
                             'Player1': {'name': playerarray[0].getName(), 'character': playerarray[0].getCharacter(),
@@ -270,7 +402,7 @@ def hello():
                         'gamerunning': gamestate.getGameRunning(), 'messages': messages,
                         'subturn': gamestate.getSubturn(),
                         'gameboard': gamestate.getGameBoard()})
-    if len(playerarray) == 3:
+    if playerturnlist.listlength() == 3:
         if gamestate.getGameWon():
             return jsonify({'numberofplayers': gamestate.getNumOfPlayers(),
                             'Player1': {'name': playerarray[0].getName(), 'character': playerarray[0].getCharacter(),
@@ -294,7 +426,7 @@ def hello():
                         'gamerunning': gamestate.getGameRunning(), 'messages': messages,
                         'subturn': gamestate.getSubturn(),
                         'gameboard': gamestate.getGameBoard()})
-    if len(playerarray) == 4:
+    if playerturnlist.listlength() == 4:
         if gamestate.getGameWon():
             return jsonify({'numberofplayers': gamestate.getNumOfPlayers(),
                             'Player1': {'name': playerarray[0].getName(), 'character': playerarray[0].getCharacter(),
@@ -322,7 +454,7 @@ def hello():
                         'gamerunning': gamestate.getGameRunning(), 'messages': messages,
                         'subturn': gamestate.getSubturn(),
                         'gameboard': gamestate.getGameBoard()})
-    if len(playerarray) == 5:
+    if playerturnlist.listlength() == 5:
         if gamestate.getGameWon():
             return jsonify({'numberofplayers': gamestate.getNumOfPlayers(),
                             'Player1': {'name': playerarray[0].getName(), 'character': playerarray[0].getCharacter(),
@@ -354,7 +486,7 @@ def hello():
                         'gamerunning': gamestate.getGameRunning(), 'messages': messages,
                         'subturn': gamestate.getSubturn(),
                         'gameboard': gamestate.getGameBoard()})
-    if len(playerarray) == 6:
+    if playerturnlist.listlength() == 6:
         if gamestate.getGameWon():
             return jsonify({'numberofplayers': gamestate.getNumOfPlayers(),
                             'Player1': {'name': playerarray[0].getName(), 'character': playerarray[0].getCharacter(),
@@ -598,12 +730,15 @@ def endTurn():
     if request.method == 'POST':
         some_json = request.get_json()
         uid = some_json["uid"]
-        # will need to add validation for the playernum
-        if gamestate.getPlayerturn() == 6:
-            gamestate.setPlayerturn = 1
+        global currentNode
+        if currentNode.uid == uid:
+            currentNode = currentNode.nextval
+            if currentNode is None:
+                currentNode = playerturnlist.headval
+            gamestate.setPlayerturn = currentNode.dataval
+            return jsonify(result="success")
         else:
-            gamestate.setPlayerturn(gamestate.getPlayerturn() + 1)
-        return jsonify(result="success")
+            return jsonify(result="It is not currently your turn, you are not allowed to end the trun")
 
 
 @app.route('/cards', methods=['GET'])
@@ -618,7 +753,7 @@ def cards():
         return jsonify(json.dumps({'weapons': weapons, 'rooms': rooms, 'characters': characters, 'imageURLs': imageURLs}))
 
 
-@ app.route('/')
+@app.route('/')
 def index():
     return f"Welcome to ClueLite.\n Click Play to start the game."
 
