@@ -207,7 +207,7 @@ export class Lobby extends React.Component {
                                         myPlayer
                                         : ""}
                                     {this.state.isEditingName && player[0] === this.state.playerAlias ?
-                                        <InputGroup className="mb-3">
+                                        <InputGroup className="mb-3 aliasInput">
                                             <form onSubmit={this.onUpdateAlias}>
                                                 <FormControl
                                                     placeholder={player[0]}
