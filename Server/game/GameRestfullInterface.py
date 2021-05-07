@@ -223,7 +223,7 @@ def playersready():
         global currentNode
         if playerready == "True":
             isReady = True
-            session.addPlayer(playername)
+            #session.addPlayer(playername)
             if currentNode.uid == playeruid:
                 tempplayer = currentNode.getplayer()
                 tempplayer.setName(playername)
@@ -301,9 +301,13 @@ def playersready():
                         currentNode.setplayer(playerobj)
                         currentNode = currentNode.nextval
                 currentNode = playerturnlist.headval
-            return session.setReady(sessionId, playername, isReady)
+            return jsonify(
+                sessionId=sessionId,
+                playername=playername,
+                playerready=str(isReady),
+                result=playername + " is ready."
+            )
         else:
-            session.removePlayer(playername)
             isReady = False
             if currentNode.uid == playeruid:
                 tempplayer = currentNode.getplayer()
@@ -320,25 +324,33 @@ def playersready():
                         currentNode.setplayer(tempplayer)
                     currentNode = currentNode.nextval
                 currentNode = playerturnlist.headval
-            return session.setReady(sessionId, playername, isReady)
+            return jsonify(
+                sessionId=sessionId,
+                playername=playername,
+                playerready=str(isReady),
+                result=playername + " is not ready."
+            )
     elif request.method == 'GET':
         lobbyPlayers = []
+        readyPlayers = []
         currentNode = playerturnlist.headval
         holder = playerturnlist.listlength()
         while currentNode is not None:
             templayer = currentNode.getplayer()
             playername = templayer.getName()
+            if currentNode.getready():
+                readyPlayers.append(playername)
             lobbyPlayers.append(playername)
             currentNode = currentNode.nextval
         currentNode = playerturnlist.headval
         if playerturnlist.checkready() and gamestate.getGameRunning():
             return jsonify(status='true',
-                           playersready=session.getReady(),
+                           playersready=readyPlayers,
                            lobbyPlayers=lobbyPlayers
                            )
         else:
             return jsonify(status='false',
-                           playersready=session.getReady(),
+                           playersready=readyPlayers,
                            lobbyPlayers=lobbyPlayers
                            )
     else:
