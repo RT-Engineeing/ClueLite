@@ -122,11 +122,9 @@ def adduser(uid):
         print("setting hand for " + character + ": " + str(hand))
         playerarray.append(player)
         p = len(playerarray)
-        if 1 <= p <= 2:
-        #if 1 >= p <= 5:
+        if 1 >= p <= 5:
             newgamestate.setNumOfPlayers(p)
-        #elif p == 6:
-        elif p == 3:
+        elif p == 6:
             newgamestate.setNumOfPlayers(p)
             newgamestate.setGameRunning(True)
             newgamestate.setPlayerturn(1)
@@ -174,11 +172,9 @@ def adduser(uid):
         playerarray.append(player)
         p = len(playerarray)
         
-        #if 1 <= p <= 5:
-        if 1 <= p <= 2:
+        if 1 <= p <= 5:
             newgamestate.setNumOfPlayers(p)
-        #elif p == 6:
-        elif p == 3:
+        elif p == 6:
             newgamestate.setNumOfPlayers(p)
             # newgamestate.setGameRunning(True)
             newgamestate.setPlayerturn(1)
@@ -212,9 +208,7 @@ def playersready():
         if playerready == "True":
             isReady = True
             session.addPlayer(playername)
-         # if session.getPlayernum() == 6:
-                
-            if session.getPlayernum() == 3:
+            if session.getPlayernum() == 6:
                 gamestate.setGameRunning(True)
             return session.setReady(sessionId, playername, isReady)
         else:
@@ -225,8 +219,7 @@ def playersready():
         lobbyPlayers = []
         for p in playerarray:
             lobbyPlayers.append(p.getName())
-        #if len(session.getReady()) == 6:
-        if len(session.getReady()) == 3:
+        if len(session.getReady()) == 6:
             return jsonify(status='true',
                            playersready=session.getReady(),
                            lobbyPlayers=lobbyPlayers
@@ -618,15 +611,13 @@ def accuse():
             suspect,
             room,
             weapon)
-        #for i in range(6):
         messageManager.addMessage(message)
-        for i in range(3):
+        for i in range(6):
             messagequeue[i].append(message)
         if set(accusation_set) == set(casefile):
             message = "[ACCUSATION] {0} has won the game.".format(character)
-            #for i in range(6): 
             messageManager.addMessage(message)
-            for i in range(3):
+            for i in range(6):
                 messagequeue[i].append(message)
             gamestate.setGameWon(True)
             gamestate.setGameRunning(False)
@@ -638,9 +629,8 @@ def accuse():
             )
         message = "[ACCUSATION] {0} has made a false accusation and can no longer win the game.".format(
             character)
-        #for i in range(6):
         messageManager.addMessage(message)
-        for i in range(3):
+        for i in range(6):
             messagequeue[i].append(message)
         return jsonify(
             result="success",
@@ -660,8 +650,7 @@ def endTurn():
         some_json = request.get_json()
         uid = some_json["uid"]
         # will need to add validation for the playernum
-        #if gamestate.getPlayerturn() == 6:
-        if gamestate.getPlayerturn() == 3:
+        if gamestate.getPlayerturn() == 6:
             gamestate.setPlayerturn = 1
         else:
             gamestate.setPlayerturn(gamestate.getPlayerturn() + 1)
