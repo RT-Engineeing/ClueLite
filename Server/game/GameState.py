@@ -1,5 +1,5 @@
 class GameState:
-    def __init__(self, casefile, numofplayers, playerturn, gamewon, gameboard, gamerunning, subturn):
+    def __init__(self, casefile, numofplayers, playerturn, gamewon, gameboard, gamerunning, subturn, latestMessage):
         self.numofplayers = numofplayers
         self.playerturn = playerturn
         self.gamewon = gamewon
@@ -7,6 +7,10 @@ class GameState:
         self.gamerunning = gamerunning
         self.casefile = casefile
         self.subturn = subturn
+        self.latestMessage = latestMessage
+
+    def getLatestMessage(self):
+        return self.latestMessage
 
     def getSubturn(self):
         return self.subturn
@@ -49,3 +53,6 @@ class GameState:
 
     def setGameWon(self, gamewon):
         self.gamewon = gamewon
+
+    def setLatestMessage(self, latestMessage):
+        self.latestMessage = latestMessage

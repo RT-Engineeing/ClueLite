@@ -1,6 +1,7 @@
 from Session import Session
 from GameState import GameState
 from GameOperations import Players, Weapons, Weapdeck, Roomsdeck, Chardeck
+from MessageManager import MessageManager
 from flask import Flask, jsonify, request, render_template
 from LinkedList import Node, SLinkedList
 from flask_cors import CORS
@@ -34,6 +35,19 @@ roomcoordinates = [
     [2, 0],
     [2, 2]
 ]
+
+roomnames = {
+    "00": "Kitchen",
+    "02": "Conservatory",
+    "04": "Dining Room",
+    "20": "Ballroom",
+    "22": "Study",
+    "24": "Hall",
+    "40": "Lounge",
+    "42": "Library",
+    "44": "Billiard Room",
+}
+
 uids = []
 characteruseddict = {True: [], False: ["Miss Scarlet",
                                        "Mrs. White",
@@ -41,7 +55,10 @@ characteruseddict = {True: [], False: ["Miss Scarlet",
                                        "Professor Plum",
                                        "Mr.Green",
                                        "Colonel Mustard"]}
+
+
 playerturn = 1
+messageManager = MessageManager()
 roomzdeck = Roomsdeck(rooms)
 characdeck = Chardeck(characters)
 weapondeck = Weapdeck(weapons)
@@ -66,11 +83,13 @@ gamestate = GameState(casefile, 0, 1, False, [[["Rope"], [], ["Lead Pipe"], [], 
                                                [], ["Revolver"]],
                                               [[], [], [], [], []],
                                               [[], [], [], [], []]],
-                      False, 0)
+                      False, 0, "")
 maxSessionPlayer = 0
 isPlayerReady = False
 tempvar = 0
 session = Session(random.randint(100000, 999999), gamestate)
+messageToSend = ""
+
 
 CORS(app)
 
@@ -81,6 +100,8 @@ def adduser(uid):
             sessionId=str(session.getSessionid()),
             result=" Session is full",
         )
+        uids.append(uid)
+        messageManager.addUuid(uid)
         return sessionstring
     if playerturnlist.listlength() == 0:
         initgame()
@@ -223,7 +244,7 @@ def playersready():
         global currentNode
         if playerready == "True":
             isReady = True
-            #session.addPlayer(playername)
+            # session.addPlayer(playername)
             if currentNode.uid == playeruid:
                 tempplayer = currentNode.getplayer()
                 tempplayer.setName(playername)
@@ -373,6 +394,10 @@ def hello():
     some_json = request.get_json()
     uid = some_json["uid"]
     messages = []
+    serverAlerts = messageManager.getMessages(uid)
+
+    messageToSend = ""
+    localMessage = messageToSend
     count = 0
     for x in uids:
         if x == uid:
@@ -391,7 +416,7 @@ def hello():
                         'Player1': {'name': playerarray[0].getName(), 'character': playerarray[0].getCharacter(),
                                     'location': playerarray[0].getLocation(), 'hand': playerarray[0].getHand()},
                         'playerturn': gamestate.getPlayerturn(), 'gamestatus': gamestate.getGameWon(),
-                        'gamerunning': gamestate.getGameRunning(), 'messages': messages,
+                        'gamerunning': gamestate.getGameRunning(), 'messages': messages, 'alerts': serverAlerts,
                         'subturn': gamestate.getSubturn(),
                         'gameboard': gamestate.getGameBoard()})
     if playerturnlist.listlength() == 2:
@@ -411,7 +436,7 @@ def hello():
                         'Player2': {'name': playerarray[1].getName(), 'character': playerarray[1].getCharacter(),
                                     'location': playerarray[1].getLocation(), 'hand': playerarray[1].getHand()},
                         'playerturn': gamestate.getPlayerturn(), 'gamestatus': gamestate.getGameWon(),
-                        'gamerunning': gamestate.getGameRunning(), 'messages': messages,
+                        'gamerunning': gamestate.getGameRunning(), 'messages': messages, 'alerts': serverAlerts,
                         'subturn': gamestate.getSubturn(),
                         'gameboard': gamestate.getGameBoard()})
     if playerturnlist.listlength() == 3:
@@ -435,7 +460,7 @@ def hello():
                         'Player3': {'name': playerarray[2].getName(), 'character': playerarray[2].getCharacter(),
                                     'location': playerarray[2].getLocation(), 'hand': playerarray[2].getHand()},
                         'playerturn': gamestate.getPlayerturn(), 'gamestatus': gamestate.getGameWon(),
-                        'gamerunning': gamestate.getGameRunning(), 'messages': messages,
+                        'gamerunning': gamestate.getGameRunning(), 'messages': messages, 'alerts': serverAlerts,
                         'subturn': gamestate.getSubturn(),
                         'gameboard': gamestate.getGameBoard()})
     if playerturnlist.listlength() == 4:
@@ -463,7 +488,7 @@ def hello():
                         'Player4': {'name': playerarray[3].getName(), 'character': playerarray[3].getCharacter(),
                                     'location': playerarray[3].getLocation(), 'hand': playerarray[3].getHand()},
                         'playerturn': gamestate.getPlayerturn(), 'gamestatus': gamestate.getGameWon(),
-                        'gamerunning': gamestate.getGameRunning(), 'messages': messages,
+                        'gamerunning': gamestate.getGameRunning(), 'messages': messages, 'alerts': serverAlerts,
                         'subturn': gamestate.getSubturn(),
                         'gameboard': gamestate.getGameBoard()})
     if playerturnlist.listlength() == 5:
@@ -495,7 +520,7 @@ def hello():
                         'Player5': {'name': playerarray[4].getName(), 'character': playerarray[4].getCharacter(),
                                     'location': playerarray[4].getLocation(), 'hand': playerarray[4].getHand()},
                         'playerturn': gamestate.getPlayerturn(), 'gamestatus': gamestate.getGameWon(),
-                        'gamerunning': gamestate.getGameRunning(), 'messages': messages,
+                        'gamerunning': gamestate.getGameRunning(), 'messages': messages, 'alerts': serverAlerts,
                         'subturn': gamestate.getSubturn(),
                         'gameboard': gamestate.getGameBoard()})
     if playerturnlist.listlength() == 6:
@@ -531,13 +556,27 @@ def hello():
                         'Player6': {'name': playerarray[5].getName(), 'character': playerarray[5].getCharacter(),
                                     'location': playerarray[5].getLocation(), 'hand': playerarray[5].getHand()},
                         'playerturn': gamestate.getPlayerturn(), 'gamestatus': gamestate.getGameWon(),
-                        'gamerunning': gamestate.getGameRunning(), 'messages': messages,
+                        'gamerunning': gamestate.getGameRunning(), 'messages': messages, 'alerts': serverAlerts,
                         'subturn': gamestate.getSubturn(),
                         'gameboard': gamestate.getGameBoard()})
     messagequeue[count].clear()
     return jsonify(
         result="error"
     )
+
+
+@app.route('/chat', methods=['POST'])
+def chat():
+    if request.method == 'POST':
+
+        some_json = request.get_json()
+        character = some_json["character"]
+        message = some_json["message"]
+        print("chat message " + message + " received")
+        messageManager.addMessage("(" + character + "): " + message)
+        return jsonify(
+            result="success"
+        )
 
 
 @app.route('/movement', methods=['POST'])
@@ -554,6 +593,18 @@ def move():
             ycoordinate = int(ycoordinate)
         print("Moving player " + character + " to " +
               str(xcoordinate) + ", " + str(ycoordinate))
+        roomnamekey = str(xcoordinate) + str(ycoordinate)
+        roomname = roomnames.get(roomnamekey)
+        if roomname == None:
+            roomname = "a Hallway"
+        else:
+            roomname = "the " + roomname
+
+        print("roomkey: " + roomnamekey + " room name: " + roomname)
+        for x in playerarray:
+            if x.getName() == character:
+                messageManager.addMessage(
+                    x.getCharacter() + " moved to " + roomname)
         newLocation = [xcoordinate, ycoordinate]
         count = 1
         for x in playerarray:
@@ -668,6 +719,7 @@ def suggest():
                     character,
                     room,
                     weapon)
+                messageManager.addMessage(message)
                 temp = 0
                 temp2 = 0
                 for y in playerarray:
@@ -707,10 +759,12 @@ def accuse():
             suspect,
             room,
             weapon)
+        messageManager.addMessage(message)
         for i in range(6):
             messagequeue[i].append(message)
         if set(accusation_set) == set(casefile):
             message = "[ACCUSATION] {0} has won the game.".format(character)
+            messageManager.addMessage(message)
             for i in range(6):
                 messagequeue[i].append(message)
             gamestate.setGameWon(True)
@@ -723,6 +777,7 @@ def accuse():
             )
         message = "[ACCUSATION] {0} has made a false accusation and can no longer win the game.".format(
             character)
+        messageManager.addMessage(message)
         for i in range(6):
             messagequeue[i].append(message)
         return jsonify(
