@@ -8,7 +8,7 @@
 }
 
 #updatesContainer {
-    min-height: 260px;
+    min-height: 221px;
     width: 100%;
     align-items: center;
     color: white;
@@ -16,6 +16,20 @@
     -webkit-text-stroke-color: black;
     font-size: 20px;
     background-color: #777;
+}
+
+#cardsHeader {
+    color: white;
+    -webkit-text-stroke-width: 0.5px;
+    -webkit-text-stroke-color: black;
+    font-size: 25px;
+}
+
+.turnIndicator {
+    color: white;
+    -webkit-text-stroke-width: 0.5px;
+    -webkit-text-stroke-color: black;
+    font-size: 35px;
 }
 
 .actionButton {
@@ -31,7 +45,7 @@
 
 #cards {
     /* Make sure (height + margin-top) == 400 is true! */
-    height: 375px; 
+    height: 415px; 
     margin-top: 25px !important;
 }
 
@@ -45,6 +59,16 @@
     background-position: 66% 50%;
     background-size: 120px 160px;
 
+}
+
+.cardImage {
+    border-style: none;
+    height: 100px;
+    width: 100px;
+    margin: 0 auto;
+    position: absolute;
+    bottom: 10px;
+    left: 8%;
 }
 
 #gamePageContainer {
@@ -102,3 +126,38 @@
     justify-content: center;
     padding-bottom: 15px;
 } 
+
+.gameWonModal, .gameLostModal {
+    background-color: goldenrod;
+    padding-top: 35px;
+}
+
+.finalText {
+    font-size: 60px
+}
+
+.caseFile {
+    align-self: center;
+}
+
+.alertItem {
+    float: left;
+    width: 100%;
+}
+
+.chatField {
+    
+    width: 100%;
+}
+
+.chatBox {
+    width: 375%;
+    float: left;
+    bottom: 0px;
+}
+
+.chatButton {
+    width: 10%;
+    float: right;
+    bottom: 0px;
+}

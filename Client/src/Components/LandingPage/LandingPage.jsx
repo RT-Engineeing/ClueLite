@@ -7,18 +7,25 @@ import RTTLogo from '../../Images/RTTLogo.png';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./LandingPage.css"
 import axios from 'axios';
+import getUserUUID from '../../UUID/UUID'
 
 export class LandingPage extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            sessionKey: undefined,
-            playerName: undefined,
+            sessionKey: " ",
+            playername: " ",
+            charactername: " ",
+            uuid: null
         }
     }
 
     render() {
+
+        if (!this.state) {
+            return;
+        }
 
         const playButton = (
             <Button variant="success" className="startButton justify-content-center">
@@ -48,7 +55,9 @@ export class LandingPage extends React.Component {
                                 pathname: '/lobby',
                                 state: {
                                     sessionKey: this.state.sessionKey,
-                                    playername: this.state.playername
+                                    playername: this.state.playername,
+                                    charactername: this.state.charactername,
+                                    uuid: this.state.uuid
                                 }
                             }} style={{ textDecoration: 'none' }}>
                                 {this.state.sessionKey ? playButton : loadingButton}
@@ -70,17 +79,21 @@ export class LandingPage extends React.Component {
     }
 
     async findLobby() {
-        const response = await axios.get("http://localhost:5000/session");
+        const uuid = getUserUUID();
+        const response = await axios.post("http://localhost:5000/session", {
+            uid: uuid
+        });
 
         const playername = response.data["playername"];
         const sessionKey = response.data["sessionId"];
+        const charactername = response.data["yourcharacter"];
 
-        // console.log("session key: " + sessionKey);
         this.setState({
             sessionKey: sessionKey,
-            playername: playername
+            playername: playername,
+            charactername: charactername,
+            uuid: (this.state.uuid ? this.state.uuid : uuid)
         });
-        // console.log("updated state: " + this.state);
 
     }
 

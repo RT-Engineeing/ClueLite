@@ -3,6 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import "./Room.css";
 
 import axios from 'axios';
+import { Redirect } from 'react-router';
 
 export class Room extends React.Component {
 
@@ -11,7 +12,9 @@ export class Room extends React.Component {
         const pieces = this.props.gameState ?
             this.props.gameState.gameBoard[this.props.y][this.props.x] : [];
         this.state = {
-            pieces
+            pieces: pieces,
+            charactername: this.props.charactername,
+            playerName: this.props.playerName
         }
     }
 
@@ -38,27 +41,30 @@ export class Room extends React.Component {
     async sendMoveRequest() {
         let newX = this.props.x;
         let newY = this.props.y;
-        let movingPlayer = "Player1";
+        let movingPlayer = this.state.playerName;
 
-        const response = await axios.post("http://localhost:5000/Movement", {
-            x: newX,
-            y: newY,
+        const response = await axios.post("http://localhost:5000/movement", {
+            x: newY,
+            y: newX,
             character: movingPlayer
         });
 
     }
 
     render() {
+        
+        let pieces = this.props.gameState ?
+        this.props.gameState.gameBoard[this.props.y][this.props.x] : [];
         return (
             <div className="room" onClick={this.handleClick} onContextMenu={this.handleClick}>
                 <div className="roomName">
-                    {this.props.name}
+                    <p id="regularPiece">{this.props.name}</p>
                 </div>
                 <span className="gamePieceContainer">
                     {
-                        this.state.pieces.map((piece, idx) => (
-                            <span key={idx}>
-                                [{piece}]
+                        pieces.map((piece, idx) => (
+                            <span key={idx} >
+                                {piece === this.state.charactername ? <p id="playerPiece">[{piece}]</p> : <p id="regularPiece">[{piece}]</p>}
                             </span>
                         ))
                     }

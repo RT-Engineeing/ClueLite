@@ -114,11 +114,23 @@
     background-color: red !important;
   }
 
-  #lobbyContainer {
-    padding-top: 20px;
+  .myPlayer {
+    left: 5%;
+    position: absolute;
   }
 
-  .myPlayer {
-    left: 38%;
-    position: absolute;
+  .editNameButton {
+    background-color: transparent;
+    border: none;
+    vertical-align: -18%;
+  }
+
+  .editNameIcon {
+    color: white
+  }
+
+  .aliasInput {
+    width: 80% !important;
+    left: 20%;
+    margin-bottom: 0px !important;
   }

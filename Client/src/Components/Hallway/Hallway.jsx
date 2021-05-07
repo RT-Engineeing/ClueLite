@@ -1,15 +1,20 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./Hallway.css";
+import axios from 'axios';
 
 export class Hallway extends React.Component {
 
     constructor(props) {
         super(props);
+        console.log("this.props.gs.gb: " + JSON.stringify(this.props.gameState.gameBoard));
         const pieces = this.props.gameState ?
             this.props.gameState.gameBoard[this.props.y][this.props.x] : [];
         this.state = {
-            pieces
+            pieces: pieces,
+            charactername: this.props.charactername,
+            
+            playerName: this.props.playerName
         }
     }
 
@@ -22,26 +27,44 @@ export class Hallway extends React.Component {
                 this.setState({ pieces })
             }
         } else if (event.button === 0) {
-            let pieces = this.state.pieces;
-            if (pieces.length === 0) {
-                pieces.push(1);
-            } else {
-                pieces.push(this.state.pieces[this.state.pieces.length - 1] + 1);
-            }
-            this.setState({ pieces });
+            this.sendMoveRequest();
+            // let pieces = this.state.pieces;
+            // if (pieces.length === 0) {
+            //     pieces.push(1);
+            // } else {
+            //     pieces.push(this.state.pieces[this.state.pieces.length - 1] + 1);
+            // }
+            //       this.setState({ pieces });
         }
     }
 
+    
+    async sendMoveRequest() {
+        let newX = this.props.x;
+        let newY = this.props.y;
+        let movingPlayer = this.state.playerName;
+        console.log("new x: " + newX + " new y: " + newY);
+
+        const response = await axios.post("http://localhost:5000/movement", {
+            x: newY,
+            y: newX,
+            character: movingPlayer
+        });
+
+    }
+
     render() {
+        let pieces = this.props.gameState ?
+        this.props.gameState.gameBoard[this.props.y][this.props.x] : [];
         const classNames = `gamePieceContainer ${this.props.orientation === "vertical" ? "hallwayPieceVertical" : "hallwayPieceHorizontal"}`;
         return (
             <div className={this.props.orientation === "vertical" ? "hallway-vertical" : "hallway-horizontal"}
                 onClick={this.handleClick} onContextMenu={this.handleClick} >
                 <span className={classNames}>
                     {
-                        this.state.pieces.map((piece, idx) => (
+                        pieces.map((piece, idx) => (
                             <div key={idx}>
-                                [{piece}]
+                                {piece === this.state.charactername ? <p id="playerPiece">[{piece}]</p> : <p id="regularPiece">[{piece}]</p>}
                             </div>
                         ))
                     }

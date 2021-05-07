@@ -20,8 +20,8 @@ function App() {
         </Route>
         <Route path="/lobby" component={Lobby}>
         </Route>
-        <Route path="/game">
-          <Game />
+        <Route path="/game" component={Game}>
+
         </Route>
       </Switch>
     </Router >

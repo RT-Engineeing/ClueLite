@@ -12,7 +12,15 @@
 
 .gamePieceContainer {
     position: absolute;
-    bottom: 44%; 
+    top: 38%; 
     /* In a future iteration, this could be improved by centering elements vertically 
     rather than setting the "floor" at 44% */
+}
+
+#playerPiece {
+    text-shadow: 1px 1px 2px black, 0 0 5px #61ff7c,0 0 10px #61ff7c;
+}
+
+#regularPiece {
+    text-shadow: 1px 1px 2px black;
 }
