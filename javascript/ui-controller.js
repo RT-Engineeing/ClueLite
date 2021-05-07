@@ -11,7 +11,7 @@
 //If you're going to add a new action, add it to this array
 let actions = ["move", "accuse", "suggest"];
 
-let baseUrl = "http://localhost:5000";
+let baseUrl = "http://0.0.0.0:8080";
 
 //Add the required parameters for the actions to this array,
 //the selector/input fields will auto populate from this data

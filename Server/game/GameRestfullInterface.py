@@ -618,8 +618,8 @@ def cards():
 
 @ app.route('/')
 def index():
-    return f"Welcome to ClueLite.\n Click Play to start the game."
+    return "Welcome to ClueLite."
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=False, host='0.0.0.0', port=8080, use_reloader=False)
