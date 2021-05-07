@@ -120,6 +120,16 @@ export class Lobby extends React.Component {
         });
     }
 
+    async changePlayerAlias() {
+        const response = await axios.post("http://localhost:5000/ready", {
+            playername: this.state.myPlayer,
+            sessionId: this.state.sessionKey,
+            playerready: this.state.myCurrentReadiness ? "True" : "False",
+            playerAlias: this.state.playerAlias,
+            uid: this.state.uuid
+        });
+    }
+
     async componentDidMount() {
         this.interval = setInterval(() => this.pollForReadinessStatuses(), 1000);
     }
@@ -142,7 +152,7 @@ export class Lobby extends React.Component {
         this.setState({
             playerAlias: document.getElementById('playerAliasInput').value,
             isEditingName: false
-        }, () => { this.changeReadiness() });
+        }, () => { this.changePlayerAlias() });
     }
 
     render() {
