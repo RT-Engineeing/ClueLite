@@ -90,6 +90,18 @@ boardcoordinates = {
     rooms[8]: roomcoordinates[8],
 }
 
+roomnames = {
+    "00" : "Kitchen",
+    "02" : "Conservatory",
+    "04": "Dining Room",
+    "20": "Ballroom",
+    "22": "Study" ,
+    "24" : "Hall",
+    "40": "Lounge",
+    "42" : "Library",
+    "44": "Billiard Room",
+}
+
 uids = []
 characteruseddict = {True: [], False: ["Miss Scarlet",
                                        "Mrs. White",
@@ -1170,6 +1182,7 @@ def move():
                 message="The attempted operation is invalid. Player is out of turn."
             )
         if validateBoardMovement(loc, character) is False:
+            print("invalid board movement location")
             return jsonify(
                 result="error",
                 message="The attempted operation is invalid. Please try a valid movement."
