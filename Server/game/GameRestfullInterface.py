@@ -1392,19 +1392,20 @@ def accuse():
                     gamerunning=str(gamestate.getGameRunning()),
                     message=message
                 )
-            message = "[ACCUSATION] {0} has made a false accusation and can no longer win the game.".format(
-                character)
-            for i in range(6):
-                messagequeue[i].append(message)
-                currentNode.setready(False)
-            currentNode = currentNode.nextval
-            if currentNode is None:
-                currentNode = playerturnlist.headval
-            gamestate.setPlayerturn = currentNode.dataval
-            return jsonify(
-                result="success",
-                message=message
-            )
+            else:
+                message = "[ACCUSATION] {0} has made a false accusation and can no longer win the game.".format(
+                    character)
+                for i in range(6):
+                    messagequeue[i].append(message)
+                    currentNode.setready(False)
+                currentNode = currentNode.nextval
+                if currentNode is None:
+                    currentNode = playerturnlist.headval
+                gamestate.setPlayerturn = currentNode.dataval
+                return jsonify(
+                    result="success",
+                    message=message
+                )
     else:
         message = "The {0} is not supported by this endpoint. Please try again.".format(
             str(request.method))
