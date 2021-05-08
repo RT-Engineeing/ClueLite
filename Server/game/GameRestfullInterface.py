@@ -170,7 +170,7 @@ def adduser(uid):
         updict2 = {False: templist}
         characteruseddict.update(updict)
         characteruseddict.update(updict2)
-    player = Players(playername, character, hand, location)
+    player = Players(playername, uid, character, hand, location)
     playerarray.append(player)
     print("setting hand for " + character + ": " + str(hand))
     if playerturnlist.listlength() == 0:
@@ -417,7 +417,7 @@ def hello():
         return jsonify({'numberofplayers': gamestate.getNumOfPlayers(),
                         'Player1': {'name': playerarray[0].getName(), 'character': playerarray[0].getCharacter(),
                                     'location': playerarray[0].getLocation(), 'hand': playerarray[0].getHand()},
-                        'playerturn': gamestate.getPlayerturn(), 'gamestatus': gamestate.getGameWon(),
+                        'playerturn': getTurnName(), 'gamestatus': gamestate.getGameWon(),
                         'gamerunning': gamestate.getGameRunning(), 'messages': messages, 'alerts': serverAlerts,
                         'subturn': gamestate.getSubturn(),
                         'gameboard': gamestate.getGameBoard()})
@@ -428,7 +428,7 @@ def hello():
                                         'location': playerarray[0].getLocation(), 'hand': playerarray[0].getHand()},
                             'Player2': {'name': playerarray[1].getName(), 'character': playerarray[1].getCharacter(),
                                         'location': playerarray[1].getLocation(), 'hand': playerarray[1].getHand()},
-                            'playerturn': gamestate.getPlayerturn(), 'gamestatus': gamestate.getGameWon(),
+                            'playerturn': getTurnName(), 'gamestatus': gamestate.getGameWon(),
                             'gamerunning': gamestate.getGameRunning(), 'messages': messages,
                             'subturn': gamestate.getSubturn(),
                             'gameboard': gamestate.getGameBoard(), 'casefile': gamestate.getCasefile()})
@@ -437,7 +437,7 @@ def hello():
                                     'location': playerarray[0].getLocation(), 'hand': playerarray[0].getHand()},
                         'Player2': {'name': playerarray[1].getName(), 'character': playerarray[1].getCharacter(),
                                     'location': playerarray[1].getLocation(), 'hand': playerarray[1].getHand()},
-                        'playerturn': gamestate.getPlayerturn(), 'gamestatus': gamestate.getGameWon(),
+                        'playerturn': getTurnName(), 'gamestatus': gamestate.getGameWon(),
                         'gamerunning': gamestate.getGameRunning(), 'messages': messages, 'alerts': serverAlerts,
                         'subturn': gamestate.getSubturn(),
                         'gameboard': gamestate.getGameBoard()})
@@ -450,7 +450,7 @@ def hello():
                                         'location': playerarray[1].getLocation(), 'hand': playerarray[1].getHand()},
                             'Player3': {'name': playerarray[2].getName(), 'character': playerarray[2].getCharacter(),
                                         'location': playerarray[2].getLocation(), 'hand': playerarray[2].getHand()},
-                            'playerturn': gamestate.getPlayerturn(), 'gamestatus': gamestate.getGameWon(),
+                            'playerturn': getTurnName(), 'gamestatus': gamestate.getGameWon(),
                             'gamerunning': gamestate.getGameRunning(), 'messages': messages,
                             'subturn': gamestate.getSubturn(),
                             'gameboard': gamestate.getGameBoard(), 'casefile': gamestate.getCasefile()})
@@ -461,7 +461,7 @@ def hello():
                                     'location': playerarray[1].getLocation(), 'hand': playerarray[1].getHand()},
                         'Player3': {'name': playerarray[2].getName(), 'character': playerarray[2].getCharacter(),
                                     'location': playerarray[2].getLocation(), 'hand': playerarray[2].getHand()},
-                        'playerturn': gamestate.getPlayerturn(), 'gamestatus': gamestate.getGameWon(),
+                        'playerturn': getTurnName(), 'gamestatus': gamestate.getGameWon(),
                         'gamerunning': gamestate.getGameRunning(), 'messages': messages, 'alerts': serverAlerts,
                         'subturn': gamestate.getSubturn(),
                         'gameboard': gamestate.getGameBoard()})
@@ -476,7 +476,7 @@ def hello():
                                         'location': playerarray[2].getLocation(), 'hand': playerarray[2].getHand()},
                             'Player4': {'name': playerarray[3].getName(), 'character': playerarray[3].getCharacter(),
                                         'location': playerarray[3].getLocation(), 'hand': playerarray[3].getHand()},
-                            'playerturn': gamestate.getPlayerturn(), 'gamestatus': gamestate.getGameWon(),
+                            'playerturn': getTurnName(), 'gamestatus': gamestate.getGameWon(),
                             'gamerunning': gamestate.getGameRunning(), 'messages': messages,
                             'subturn': gamestate.getSubturn(),
                             'gameboard': gamestate.getGameBoard(), 'casefile': gamestate.getCasefile()})
@@ -489,7 +489,7 @@ def hello():
                                     'location': playerarray[2].getLocation(), 'hand': playerarray[2].getHand()},
                         'Player4': {'name': playerarray[3].getName(), 'character': playerarray[3].getCharacter(),
                                     'location': playerarray[3].getLocation(), 'hand': playerarray[3].getHand()},
-                        'playerturn': gamestate.getPlayerturn(), 'gamestatus': gamestate.getGameWon(),
+                        'playerturn': getTurnName(), 'gamestatus': gamestate.getGameWon(),
                         'gamerunning': gamestate.getGameRunning(), 'messages': messages, 'alerts': serverAlerts,
                         'subturn': gamestate.getSubturn(),
                         'gameboard': gamestate.getGameBoard()})
@@ -506,7 +506,7 @@ def hello():
                                         'location': playerarray[3].getLocation(), 'hand': playerarray[3].getHand()},
                             'Player5': {'name': playerarray[4].getName(), 'character': playerarray[4].getCharacter(),
                                         'location': playerarray[4].getLocation(), 'hand': playerarray[4].getHand()},
-                            'playerturn': gamestate.getPlayerturn(), 'gamestatus': gamestate.getGameWon(),
+                            'playerturn': getTurnName(), 'gamestatus': gamestate.getGameWon(),
                             'gamerunning': gamestate.getGameRunning(), 'messages': messages,
                             'subturn': gamestate.getSubturn(),
                             'gameboard': gamestate.getGameBoard(), 'casefile': gamestate.getCasefile()})
@@ -521,7 +521,7 @@ def hello():
                                     'location': playerarray[3].getLocation(), 'hand': playerarray[3].getHand()},
                         'Player5': {'name': playerarray[4].getName(), 'character': playerarray[4].getCharacter(),
                                     'location': playerarray[4].getLocation(), 'hand': playerarray[4].getHand()},
-                        'playerturn': gamestate.getPlayerturn(), 'gamestatus': gamestate.getGameWon(),
+                        'playerturn': getTurnName(), 'gamestatus': gamestate.getGameWon(),
                         'gamerunning': gamestate.getGameRunning(), 'messages': messages, 'alerts': serverAlerts,
                         'subturn': gamestate.getSubturn(),
                         'gameboard': gamestate.getGameBoard()})
@@ -540,7 +540,7 @@ def hello():
                                         'location': playerarray[4].getLocation(), 'hand': playerarray[4].getHand()},
                             'Player6': {'name': playerarray[5].getName(), 'character': playerarray[5].getCharacter(),
                                         'location': playerarray[5].getLocation(), 'hand': playerarray[5].getHand()},
-                            'playerturn': gamestate.getPlayerturn(), 'gamestatus': gamestate.getGameWon(),
+                            'playerturn': getTurnName(), 'gamestatus': gamestate.getGameWon(),
                             'gamerunning': gamestate.getGameRunning(), 'messages': messages,
                             'subturn': gamestate.getSubturn(),
                             'gameboard': gamestate.getGameBoard(), 'casefile': gamestate.getCasefile()})
@@ -557,7 +557,7 @@ def hello():
                                     'location': playerarray[4].getLocation(), 'hand': playerarray[4].getHand()},
                         'Player6': {'name': playerarray[5].getName(), 'character': playerarray[5].getCharacter(),
                                     'location': playerarray[5].getLocation(), 'hand': playerarray[5].getHand()},
-                        'playerturn': gamestate.getPlayerturn(), 'gamestatus': gamestate.getGameWon(),
+                        'playerturn': getTurnName(), 'gamestatus': gamestate.getGameWon(),
                         'gamerunning': gamestate.getGameRunning(), 'messages': messages, 'alerts': serverAlerts,
                         'subturn': gamestate.getSubturn(),
                         'gameboard': gamestate.getGameBoard()})
@@ -565,6 +565,14 @@ def hello():
     return jsonify(
         result="error"
     )
+
+def getTurnName():
+    global currentNode
+    turnUid = currentNode.uid
+    for x in playerarray:
+        if x.getUuid() == turnUid:
+            return x.getCharacter()
+
 
 
 @app.route('/chat', methods=['POST'])

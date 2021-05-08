@@ -1,11 +1,18 @@
 from random import randint
 
 class Players:
-    def __init__(self, name, character, hand, location):
+    def __init__(self, name, uuid, character, hand, location):
         self.name = name
         self.character = character
         self.hand = hand
         self.location = location
+        self.uuid = uuid
+
+    def getUuid(self):
+        return self.uuid
+    
+    def setUuid(self, uuid):
+        self.uuid = uuid
 
     def getName(self):
         return self.name

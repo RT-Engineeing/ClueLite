@@ -100,7 +100,7 @@ export class Game extends React.Component {
         const playerdata = gamestate[this.state.playerName];
         const playerHand = playerdata["hand"];
         const newGameboard = gamestate["gameboard"];
-        const playerTurn = "Player" + (gamestate["playerturn"]);
+        const playerTurn = gamestate["playerturn"];
 
         const myTurn = playerTurn === this.state.playerName;
         if (myTurn && this.state.showGameLostModal) {
