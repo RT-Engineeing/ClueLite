@@ -72,10 +72,10 @@ export class Game extends React.Component {
     async sendChat() {
         console.log("sending chat")
         const response = await axios.post("http://localhost:5000/chat",
-        {
-            character: this.state.charactername,
-            message: this.state.chatMessage
-        });
+            {
+                character: this.state.charactername,
+                message: this.state.chatMessage
+            });
         console.log(response);
     }
 
@@ -203,16 +203,16 @@ export class Game extends React.Component {
         this.setState({ showAccusationModal: false })
     }
 
-    processAlerts(gamestate){
-        const alerts = gamestate["alerts"];
-        if(alerts.length !== 0){
+    processAlerts(gamestate) {
+        const alerts = gamestate["alerts"] || [];
+        if (alerts.length !== 0) {
             console.log("found new alerts " + JSON.stringify(alerts));
             var i;
 
-            for(i = 0; i < alerts.length; i++){
+            for (i = 0; i < alerts.length; i++) {
                 this.siftAlertsUp();
                 let alert = alerts[i];
-                if(alert.startsWith("[")){
+                if (alert.startsWith("[")) {
                     alert = alert.substring(alert.indexOf("] ") + 2);
                 }
                 this.state.alertBuffer[this.state.alertNum] = alert;
@@ -220,10 +220,10 @@ export class Game extends React.Component {
         }
     }
 
-    siftAlertsUp(){
+    siftAlertsUp() {
         var i;
-        for(i = 0; i < 4; i++){
-            let next = this.state.alertBuffer[i+1];
+        for (i = 0; i < 4; i++) {
+            let next = this.state.alertBuffer[i + 1];
             this.state.alertBuffer[i] = next;
         }
     }
@@ -295,14 +295,14 @@ export class Game extends React.Component {
         }
 
         const updateChatMessage = (event) => {
-            this.setState({chatMessage: event.target.value});
+            this.setState({ chatMessage: event.target.value });
         }
 
         const handleSuggestionDisproofSelect = (idx) => {
             this.setState({ suggestDisproofSelected: this.state.cards[idx] })
         }
 
-        
+
 
         const endTurn = () => {
             this.endTurn();
@@ -499,31 +499,31 @@ export class Game extends React.Component {
                     <Card id="updatesContainer">
                         <Card.Header className="justify-content-center d-flex" style={{ width: "100%" }}>Game Updates</Card.Header>
                         <span class="alertItem">
-                        {
-                            this.state.alertBuffer.map((alert, idx) => (
-                            <div key={idx}>
-                                {alert}
-                            </div>
-                            ))
-                    }
-                </span>
-                
+                            {
+                                this.state.alertBuffer.map((alert, idx) => (
+                                    <div key={idx}>
+                                        {alert}
+                                    </div>
+                                ))
+                            }
+                        </span>
+
                     </Card >
                 </div >
-                
+
             </div >
         )
 
         const chatContainer = (
             <div className="row">
                 <div className="col d-flex justify-content-center">
-                    
-                <form class="chatField" onSubmit={this.handleSubmit}>
-  <label>
-    <input  class="chatBox" type="text" name="Chat" onChange={updateChatMessage}/>
-  </label>
-  <input  class="chatButton" type="submit" value="Submit" />
-</form>    
+
+                    <form class="chatField" onSubmit={this.handleSubmit}>
+                        <label>
+                            <input class="chatBox" type="text" name="Chat" onChange={updateChatMessage} />
+                        </label>
+                        <input class="chatButton" type="submit" value="Submit" />
+                    </form>
                 </div>
             </div>
         )
