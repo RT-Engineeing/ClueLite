@@ -1088,7 +1088,7 @@ def endTurn():
                 currentNode = currentNode.nextval
                 if currentNode is None:
                     currentNode = playerturnlist.headval
-            gamestate.setPlayerturn = currentNode.dataval
+            gamestate.setPlayerturn(currentNode.dataval)
             return jsonify(result="success")
         else:
             return jsonify(result="It is not currently your turn, you are not allowed to end the trun")
