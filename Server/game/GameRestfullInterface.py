@@ -1358,7 +1358,7 @@ def suggest():
                         messagequeue[i].append(message)
                     suggestionmessage.append(message)
                     subturnplayer = currentNode.getdataval() + 1
-                    if subturnplayer > gamestate.setNumOfPlayers():
+                    if subturnplayer > gamestate.getNumOfPlayers():
                         gamestate.setSubturn(1)
                     else:
                         gamestate.setSubturn(subturnplayer)
