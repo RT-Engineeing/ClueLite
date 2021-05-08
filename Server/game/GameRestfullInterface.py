@@ -1098,7 +1098,7 @@ def move():
               str(xcoordinate) + ", " + str(ycoordinate))
         newLocation = [xcoordinate, ycoordinate]
         x = currentNode.getplayer()
-        if x.getName() == character:
+        if x.getCharacter() == character:
             oldLocation = x.getLocation()
             board = gamestate.getGameBoard()
             arr = board[oldLocation[0]][oldLocation[1]]
