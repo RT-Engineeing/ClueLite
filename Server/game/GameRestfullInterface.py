@@ -941,6 +941,7 @@ def hello():
                                     'location': tempplayers[0].getLocation(), 'hand': tempplayers[0].getHand()},
                         'playerturn': gamestate.getPlayerturn(), 'gamestatus': gamestate.getGameWon(),
                         'gamerunning': gamestate.getGameRunning(), 'messages': messages,
+                        'alerts': serverAlerts,
                         'subturn': gamestate.getSubturn(),
                         'gameboard': gamestate.getGameBoard()})
     if playerturnlist.listlength() == 2:
@@ -957,6 +958,7 @@ def hello():
                                         'location': tempplayers[1].getLocation(), 'hand': tempplayers[1].getHand()},
                             'playerturn': gamestate.getPlayerturn(), 'gamestatus': gamestate.getGameWon(),
                             'gamerunning': gamestate.getGameRunning(), 'messages': messages,
+                            'alerts': serverAlerts,
                             'subturn': gamestate.getSubturn(),
                             'gameboard': gamestate.getGameBoard(), 'casefile': gamestate.getCasefile()})
         return jsonify({'numberofplayers': gamestate.getNumOfPlayers(),
@@ -966,6 +968,7 @@ def hello():
                                     'location': tempplayers[1].getLocation(), 'hand': tempplayers[1].getHand()},
                         'playerturn': gamestate.getPlayerturn(), 'gamestatus': gamestate.getGameWon(),
                         'gamerunning': gamestate.getGameRunning(), 'messages': messages,
+                        'alerts': serverAlerts,
                         'subturn': gamestate.getSubturn(),
                         'gameboard': gamestate.getGameBoard()})
     if playerturnlist.listlength() == 3:
@@ -984,6 +987,7 @@ def hello():
                                         'location': tempplayers[2].getLocation(), 'hand': tempplayers[2].getHand()},
                             'playerturn': gamestate.getPlayerturn(), 'gamestatus': gamestate.getGameWon(),
                             'gamerunning': gamestate.getGameRunning(), 'messages': messages,
+                            'alerts': serverAlerts,
                             'subturn': gamestate.getSubturn(),
                             'gameboard': gamestate.getGameBoard(), 'casefile': gamestate.getCasefile()})
         return jsonify({'numberofplayers': gamestate.getNumOfPlayers(),
@@ -995,6 +999,7 @@ def hello():
                                     'location': tempplayers[2].getLocation(), 'hand': tempplayers[2].getHand()},
                         'playerturn': gamestate.getPlayerturn(), 'gamestatus': gamestate.getGameWon(),
                         'gamerunning': gamestate.getGameRunning(), 'messages': messages,
+                        'alerts': serverAlerts,
                         'subturn': gamestate.getSubturn(),
                         'gameboard': gamestate.getGameBoard()})
     if playerturnlist.listlength() == 4:
@@ -1015,6 +1020,7 @@ def hello():
                                         'location': tempplayers[3].getLocation(), 'hand': tempplayers[3].getHand()},
                             'playerturn': gamestate.getPlayerturn(), 'gamestatus': gamestate.getGameWon(),
                             'gamerunning': gamestate.getGameRunning(), 'messages': messages,
+                            'alerts': serverAlerts,
                             'subturn': gamestate.getSubturn(),
                             'gameboard': gamestate.getGameBoard(), 'casefile': gamestate.getCasefile()})
         return jsonify({'numberofplayers': gamestate.getNumOfPlayers(),
@@ -1028,6 +1034,7 @@ def hello():
                                     'location': tempplayers[3].getLocation(), 'hand': tempplayers[3].getHand()},
                         'playerturn': gamestate.getPlayerturn(), 'gamestatus': gamestate.getGameWon(),
                         'gamerunning': gamestate.getGameRunning(), 'messages': messages,
+                        'alerts': serverAlerts,
                         'subturn': gamestate.getSubturn(),
                         'gameboard': gamestate.getGameBoard()})
     if playerturnlist.listlength() == 5:
@@ -1050,6 +1057,7 @@ def hello():
                                         'location': tempplayers[4].getLocation(), 'hand': tempplayers[4].getHand()},
                             'playerturn': gamestate.getPlayerturn(), 'gamestatus': gamestate.getGameWon(),
                             'gamerunning': gamestate.getGameRunning(), 'messages': messages,
+                            'alerts': serverAlerts,
                             'subturn': gamestate.getSubturn(),
                             'gameboard': gamestate.getGameBoard(), 'casefile': gamestate.getCasefile()})
         return jsonify({'numberofplayers': gamestate.getNumOfPlayers(),
@@ -1065,6 +1073,7 @@ def hello():
                                     'location': tempplayers[4].getLocation(), 'hand': tempplayers[4].getHand()},
                         'playerturn': gamestate.getPlayerturn(), 'gamestatus': gamestate.getGameWon(),
                         'gamerunning': gamestate.getGameRunning(), 'messages': messages,
+                        'alerts': serverAlerts,
                         'subturn': gamestate.getSubturn(),
                         'gameboard': gamestate.getGameBoard()})
     if playerturnlist.listlength() == 6:
@@ -1089,6 +1098,7 @@ def hello():
                                         'location': tempplayers[5].getLocation(), 'hand': tempplayers[5].getHand()},
                             'playerturn': gamestate.getPlayerturn(), 'gamestatus': gamestate.getGameWon(),
                             'gamerunning': gamestate.getGameRunning(), 'messages': messages,
+                            'alerts': serverAlerts,
                             'subturn': gamestate.getSubturn(),
                             'gameboard': gamestate.getGameBoard(), 'casefile': gamestate.getCasefile()})
         return jsonify({'numberofplayers': gamestate.getNumOfPlayers(),
@@ -1106,6 +1116,7 @@ def hello():
                                     'location': tempplayers[5].getLocation(), 'hand': tempplayers[5].getHand()},
                         'playerturn': gamestate.getPlayerturn(), 'gamestatus': gamestate.getGameWon(),
                         'gamerunning': gamestate.getGameRunning(), 'messages': messages,
+                        'alerts': serverAlerts,
                         'subturn': gamestate.getSubturn(),
                         'gameboard': gamestate.getGameBoard()})
     messagequeue[count].clear()
