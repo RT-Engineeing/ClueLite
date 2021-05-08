@@ -42,8 +42,9 @@ export class Room extends React.Component {
     async sendMoveRequest() {
         let newX = this.props.x;
         let newY = this.props.y;
-        let movingPlayer = this.state.playerName;
+        let movingPlayer = this.state.charactername;
         const uuid = getUserUUID();
+        console.log("moving to (" + newY + ", " + newX + ")");
         const response = await axios.post("http://localhost:5000/movement", {
             x: newY,
             y: newX,

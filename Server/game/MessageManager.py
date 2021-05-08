@@ -7,6 +7,7 @@ class MessageManager:
       self.messageMap[uuid] = []
 
    def addMessage(self, message):
+      print("adding message " + message + " to message map")
       for key in self.messageMap:
          self.messageMap[key].append(message)
 

@@ -44,7 +44,7 @@ export class Hallway extends React.Component {
     async sendMoveRequest() {
         let newX = this.props.x;
         let newY = this.props.y;
-        let movingPlayer = this.state.playerName;
+        let movingPlayer = this.state.charactername;
         console.log("new x: " + newX + " new y: " + newY);
         const uuid = getUserUUID();
         const response = await axios.post("http://localhost:5000/movement", {

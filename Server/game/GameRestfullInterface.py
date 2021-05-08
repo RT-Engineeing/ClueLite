@@ -28,16 +28,27 @@ node4 = Node(99)
 node5 = Node(99)
 playernamecache = []
 
+roomnames = {
+    "00" : "Kitchen",
+    "02" : "Conservatory",
+    "04": "Dining Room",
+    "20": "Ballroom",
+    "22": "Study" ,
+    "24" : "Hall",
+    "40": "Lounge",
+    "42" : "Library",
+    "44": "Billiard Room",
+}
 roomcoordinates = [
-    [4, 4],  # Kitchen
-    [4, 0],  # Conservatory
-    [2, 4],  # Dinning Room
-    [4, 2],  # Ballroom
-    [0, 0],  # Study
-    [0, 2],  # Hall
-    [0, 4],  # Lounge
-    [2, 0],  # library
-    [2, 2]  # Billiard Room
+    [0,0],  # Kitchen
+    [0,2],  # Conservatory
+    [0,4],  # Dinning Room
+    [2,0],  # Ballroom
+    [2,2],  # Study
+    [2,4],  # Hall
+    [4,0],  # Lounge
+    [4,2],  # library
+    [4,4]  # Billiard Room
 ]
 hallwaycoordinates = [
     [0, 1],  # Study_Hall
@@ -90,17 +101,7 @@ boardcoordinates = {
     rooms[8]: roomcoordinates[8],
 }
 
-roomnames = {
-    "00" : "Kitchen",
-    "02" : "Conservatory",
-    "04": "Dining Room",
-    "20": "Ballroom",
-    "22": "Study" ,
-    "24" : "Hall",
-    "40": "Lounge",
-    "42" : "Library",
-    "44": "Billiard Room",
-}
+
 
 uids = []
 characteruseddict = {True: [], False: ["Miss Scarlet",
@@ -174,13 +175,22 @@ def validatePlayerIsInRoom(uid, room):
     loc = boardcoordinates[room]
     if uid == currentNode.getuid():
         p = currentNode.getplayer()
-        if p.getLocation in roomcoordinates:
-            if p.getLocation() != loc:
-                return False
-            else:
-                return True
-        else: 
+        print("Checking location " + str(p.getLocation()) + " against " + str(loc))
+        pX = p.getLocation()[0]
+        pY = p.getLocation()[1]
+        rX = loc[0]
+        rY = loc[1]
+        if pX == rX and pY == rY:
+            return True
+        else:
             return False
+        # if p.getLocation in roomcoordinates:
+        #     if p.getLocation() != loc:
+        #         return False
+        #     else:
+        #         return True
+        # else: 
+        #     return False
 
 
 def validateBoardMovement(loc, character):
@@ -1171,6 +1181,11 @@ def move():
         uid = some_json["uid"]
         xcoordinate = some_json["x"]
         ycoordinate = some_json["y"]
+        print("Movement")
+        print("Character: " + character)
+        print("UID: " + uid)
+        print("X: " + xcoordinate)
+        print("Y: " + ycoordinate)
         if not isinstance(xcoordinate, int):
             xcoordinate = int(xcoordinate)
         if not isinstance(ycoordinate, int):
@@ -1216,6 +1231,7 @@ def move():
             board[oldLocation[0]][oldLocation[1]] = arr
             board[newLocation[0]][newLocation[1]] = arr2
             x.setLocation(newLocation)
+            print("new gameboard: " + str(board))
             gamestate.setGameBoard(board)
         return jsonify(
             result="success",
@@ -1264,6 +1280,7 @@ def suggest():
                 result="error",
                 message="The attempted operation is invalid. Player must be in the suggestion room."
             )
+        print("validation passed")
         playcounter = 0
         playercounter = 0
         playercharacter = ""
@@ -1328,6 +1345,14 @@ def suggest():
                         room,
                         weapon)
 
+                    suggMessage = "{0} suggest that the murder was committed by {1} in the {2} with a {3}".format(
+                        playercharacter,
+                        character,
+                        room,
+                        weapon)
+                    
+
+                    messageManager.addMessage(suggMessage)
                     for i in range(6):
                         messagequeue[i].append(message)
                     suggestionmessage.append(message)
