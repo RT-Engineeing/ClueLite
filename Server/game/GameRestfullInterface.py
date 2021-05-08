@@ -1286,6 +1286,7 @@ def suggest():
         playercharacter = ""
         global currentNode, message
         if currentNode.getuid() == uid:
+            print("uid's match")
             currplayer = currentNode.getplayer()
             playercharacter = currplayer.getCharacter()
             xcoordinate = 0
@@ -1362,6 +1363,7 @@ def suggest():
                     else:
                         gamestate.setSubturn(subturnplayer)
                 count += 1
+                value = value.getnextval()
             return jsonify(result='success', message=message)
     else:
         return jsonify(result='error')

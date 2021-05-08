@@ -24,6 +24,9 @@ class Node:
     def setdataval(self, temp):
         self.dataval = temp
 
+    def getnextval(self):
+        return self.nextval
+
     def setuid(self, temp):
         self.uid = temp
 
