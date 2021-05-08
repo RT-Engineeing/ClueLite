@@ -165,6 +165,10 @@ def validatePlayerIsInRoom(uid, room):
         if p.getLocation in roomcoordinates:
             if p.getLocation() != loc:
                 return False
+            else:
+                return True
+        else: 
+            return False
 
 
 def validateBoardMovement(loc, character):
