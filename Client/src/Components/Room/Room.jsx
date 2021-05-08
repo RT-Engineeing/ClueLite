@@ -43,12 +43,12 @@ export class Room extends React.Component {
         let newX = this.props.x;
         let newY = this.props.y;
         let movingPlayer = this.state.playerName;
-
+        const uuid = getUserUUID();
         const response = await axios.post("http://localhost:5000/movement", {
             x: newY,
             y: newX,
             character: movingPlayer,
-            uuid: getUserUUID()
+            uid: uuid
         });
 
     }
