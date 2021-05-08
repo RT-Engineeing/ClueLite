@@ -89,4 +89,14 @@ class SLinkedList:
             printval = printval.nextval
         return checkready
 
+    def getPlayersLoc(self):
+        pNode = self.headval
+        busyLocs=[]
+        while pNode is not None:
+            p = pNode.getplayer()
+            busyLocs.append(p.getLocation())
+            pNode=pNode.nextval
+        return busyLocs
+
+
 

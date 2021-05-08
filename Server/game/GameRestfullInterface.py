@@ -26,17 +26,69 @@ node3 = Node(99)
 node4 = Node(99)
 node5 = Node(99)
 playernamecache = []
+
 roomcoordinates = [
-    [4, 4],
-    [4, 0],
-    [2, 4],
-    [4, 2],
-    [0, 0],
-    [0, 2],
-    [0, 4],
-    [2, 0],
-    [2, 2]
+    [4, 4],  # Kitchen
+    [4, 0],  # Conservatory
+    [2, 4],  # Dinning Room
+    [4, 2],  # Ballroom
+    [0, 0],  # Study
+    [0, 2],  # Hall
+    [0, 4],  # Lounge
+    [2, 0],  # library
+    [2, 2]  # Billiard Room
 ]
+hallwaycoordinates = [
+    [0, 1],  # Study_Hall
+    [0, 3],  # Hall_Lounge
+    [1, 0],  # Library_Study
+    [1, 2],  # Billiard_Hall
+    [1, 4],  # Lounge_Dinning
+    [2, 1],  # Billiard_Library
+    [2, 3],  # Billiard_Dinning
+    [3, 0],  # Conservatory_Library
+    [3, 2],  # Billiard_Ball
+    [3, 4],  # Dinning_Kitchen
+    [4, 1],  # Ball_Conservatory
+    [4, 3]   # Kitchen_Ball
+]
+# Available hall paths when moving
+Study_Hall = [[0, 0], [0, 2]]
+Hall_Lounge = [[0, 2], [0, 4]]
+Lounge_Dinning = [[0, 4], [2, 4]]
+Dinning_Kitchen = [[2, 4], [4, 4]]
+Kitchen_Ball = [[4, 4], [4, 2]]
+Ball_Conservatory = [[4, 2], [4, 0]]
+Conservatory_Library = [[4, 0], [2, 0]]
+Library_Study = [[2, 0], [0, 0]]
+Billiard_Hall = [[2, 2], [0, 2]]
+Billiard_Library = [[2, 2], [2, 0]]
+Billiard_Dinning = [[2, 2], [2, 4]]
+Billiard_Ball = [[2, 2], [4, 2]]
+
+# Available room, hall, and secret passage paths when moving
+Study = [[4, 4], [0, 1], [1, 0]]
+Lounge = [[4, 0], [0, 3], [1, 4]]
+Hall = [[0, 1], [0, 3], [1, 2]]
+Kitchen = [[0, 0], [3, 4], [4, 3]]
+Conservatory = [[0, 4], [4, 1], [3, 0]]
+Dinning = [[1, 4], [3, 4], [2, 3]]
+Ball = [[4, 3], [4, 1], [3, 2]]
+Library = [[3, 0], [2, 1], [1, 0]]
+Billiard = [[1, 2], [2, 1], [3, 2], [2, 3]]
+
+boardcoordinates = {
+    rooms[0]: roomcoordinates[0],
+    rooms[1]: roomcoordinates[1],
+    rooms[2]: roomcoordinates[2],
+    rooms[3]: roomcoordinates[3],
+    rooms[4]: roomcoordinates[4],
+    rooms[5]: roomcoordinates[5],
+    rooms[6]: roomcoordinates[6],
+    rooms[7]: roomcoordinates[7],
+    rooms[8]: roomcoordinates[8],
+}
+
 uids = []
 characteruseddict = {True: [], False: ["Miss Scarlet",
                                        "Mrs. White",
@@ -77,6 +129,177 @@ session = Session(random.randint(100000, 999999), gamestate)
 
 CORS(app)
 
+
+def validatePlayer(uid):
+    for p in playerarray:
+        if uid != p.getUid():
+            return False
+
+def validatePlayerTurn(uid):
+    if uid != currentNode.getuid():
+        return False
+
+def validatePlayerSuspect(suspect):
+    if suspect not in charactersind:
+        return False
+
+def validateHallwayIsEmpty(loc):
+    if loc in playerturnlist.getPlayersLoc():
+        if loc in hallwaycoordinates:
+            return False
+
+def validatePlayerIsInRoom(uid, room):
+    loc = boardcoordinates[room]
+    if uid == currentNode.getuid():
+        p = currentNode.getplayer()
+        if p.getLocation in roomcoordinates:
+            if p.getLocation() != loc:
+                return False
+
+
+def validateBoardMovement(loc, character):
+    busyLocations = playerturnlist.getPlayersLoc()
+    p = currentNode.getplayer()
+    if character == p.getCharacter():
+        charLoc = p.getLocation()
+        if charLoc in hallwaycoordinates:
+            if charLoc == hallwaycoordinates[0]:
+                if loc not in Study_Hall:
+                    return False
+            elif charLoc == hallwaycoordinates[1]:
+                if loc not in Hall_Lounge:
+                    return False
+            elif charLoc == hallwaycoordinates[2]:
+                if loc not in Library_Study:
+                    return False
+            elif charLoc == hallwaycoordinates[3]:
+                if loc not in Billiard_Hall:
+                    return False
+            elif charLoc == hallwaycoordinates[4]:
+                if loc not in Lounge_Dinning:
+                    return False
+            elif charLoc == hallwaycoordinates[5]:
+                if loc not in Billiard_Library:
+                    return False
+            elif charLoc == hallwaycoordinates[6]:
+                if loc not in Billiard_Dinning:
+                    return False
+            elif charLoc == hallwaycoordinates[7]:
+                if loc not in Conservatory_Library:
+                    return False
+            elif charLoc == hallwaycoordinates[8]:
+                if loc not in Billiard_Ball:
+                    return False
+            elif charLoc == hallwaycoordinates[9]:
+                if loc not in Dinning_Kitchen:
+                    return False
+            elif charLoc == hallwaycoordinates[10]:
+                if loc not in Ball_Conservatory:
+                    return False
+            elif charLoc == hallwaycoordinates[11]:
+                if loc not in Kitchen_Ball:
+                    return False
+        elif charLoc in roomcoordinates:
+            if charLoc == roomcoordinates[0]:
+                if loc not in Kitchen:
+                    return False
+                if loc == Kitchen[1]:
+                    if loc in busyLocations:
+                        return False
+                elif loc == Kitchen[2]:
+                    if loc in busyLocations:
+                        return False
+            elif charLoc == roomcoordinates[1]:
+                if loc not in Conservatory:
+                    return False
+                if loc == Conservatory[1]:
+                    if loc in busyLocations:
+                        return False
+                elif loc == Conservatory[2]:
+                    if loc in busyLocations:
+                        return False
+            elif charLoc == roomcoordinates[2]:
+                if loc not in Dinning:
+                    return False
+                if loc == Dinning[0]:
+                    if loc in busyLocations:
+                        return False
+                elif loc == Dinning[1]:
+                    if loc in busyLocations:
+                        return False
+                elif loc == Dinning[2]:
+                    if loc in busyLocations:
+                        return False
+            elif charLoc == roomcoordinates[3]:
+                if loc not in Ball:
+                    return False
+                if loc == Ball[0]:
+                    if loc in busyLocations:
+                        return False
+                elif loc == Ball[1]:
+                    if loc in busyLocations:
+                        return False
+                elif loc == Ball[2]:
+                    if loc in busyLocations:
+                        return False
+            elif charLoc == roomcoordinates[4]:
+                if loc not in Study:
+                    return False
+                if loc == Study[1]:
+                    if loc in busyLocations:
+                        return False
+                elif loc == Study[2]:
+                    if loc in busyLocations:
+                        return False
+            elif charLoc == roomcoordinates[5]:
+                if loc not in Hall:
+                    return False
+                if loc == Hall[0]:
+                    if loc in busyLocations:
+                        return False
+                elif loc == Hall[1]:
+                    if loc in busyLocations:
+                        return False
+                elif loc == Hall[2]:
+                    if loc in busyLocations:
+                        return False
+            elif charLoc == roomcoordinates[6]:
+                if loc not in Lounge:
+                    return False
+                if loc == Lounge[1]:
+                    if loc in busyLocations:
+                        return False
+                elif loc == Lounge[2]:
+                    if loc in busyLocations:
+                        return False
+            elif charLoc == roomcoordinates[7]:
+                if loc not in Library:
+                    return False
+                if loc == Library[0]:
+                    if loc in busyLocations:
+                        return False
+                elif loc == Library[1]:
+                    if loc in busyLocations:
+                        return False
+                elif loc == Library[2]:
+                    if loc in busyLocations:
+                        return False
+            elif charLoc == roomcoordinates[8]:
+                if loc not in Billiard:
+                    return False
+                if loc == Billiard[0]:
+                    if loc in busyLocations:
+                        return False
+                elif loc == Billiard[1]:
+                    if loc in busyLocations:
+                        return False
+                elif loc == Billiard[2]:
+                    if loc in busyLocations:
+                        return False
+                elif loc == Billiard[3]:
+                    if loc in busyLocations:
+                        return False
+        return True
 
 
 def adduser(uid):
@@ -190,6 +413,7 @@ def adduser(uid):
     session.setPlayernum(playerturnlist.listlength())
     sessionstring = jsonify(
         sessionId=str(session.getSessionid()),
+        uid=str(uid),
         playername=playername,
         totalPlayers=session.getPlayernum(),
         yourcharacter=player.getCharacter(),
@@ -231,7 +455,7 @@ def playersready():
         global node5
         if playerready == "True":
             isReady = True
-            #session.addPlayer(playername)
+            # session.addPlayer(playername)
             if currentNode.uid == playeruid:
                 tempplayer = currentNode.getplayer()
                 tempplayer.setName(playername)
@@ -669,8 +893,8 @@ def hello():
                             'subturn': gamestate.getSubturn(),
                             'gameboard': gamestate.getGameBoard(), 'casefile': gamestate.getCasefile()})
         return jsonify({'numberofplayers': gamestate.getNumOfPlayers(),
-                         'Player1': {'name': playernamecache[0], 'character': tempplayers[0].getCharacter(),
-                                        'location': tempplayers[0].getLocation(), 'hand': tempplayers[0].getHand()},
+                        'Player1': {'name': playernamecache[0], 'character': tempplayers[0].getCharacter(),
+                                    'location': tempplayers[0].getLocation(), 'hand': tempplayers[0].getHand()},
                         'playerturn': gamestate.getPlayerturn(), 'gamestatus': gamestate.getGameWon(),
                         'gamerunning': gamestate.getGameRunning(), 'messages': messages,
                         'subturn': gamestate.getSubturn(),
@@ -693,9 +917,9 @@ def hello():
                             'gameboard': gamestate.getGameBoard(), 'casefile': gamestate.getCasefile()})
         return jsonify({'numberofplayers': gamestate.getNumOfPlayers(),
                         'Player1': {'name': tempplayers[0].getName(), 'character': tempplayers[0].getCharacter(),
-                                        'location': tempplayers[0].getLocation(), 'hand': tempplayers[0].getHand()},
-                            'Player2': {'name': tempplayers[1].getName(), 'character': tempplayers[1].getCharacter(),
-                                        'location': tempplayers[1].getLocation(), 'hand': tempplayers[1].getHand()},
+                                    'location': tempplayers[0].getLocation(), 'hand': tempplayers[0].getHand()},
+                        'Player2': {'name': tempplayers[1].getName(), 'character': tempplayers[1].getCharacter(),
+                                    'location': tempplayers[1].getLocation(), 'hand': tempplayers[1].getHand()},
                         'playerturn': gamestate.getPlayerturn(), 'gamestatus': gamestate.getGameWon(),
                         'gamerunning': gamestate.getGameRunning(), 'messages': messages,
                         'subturn': gamestate.getSubturn(),
@@ -851,12 +1075,25 @@ def move():
     if request.method == 'POST':
         some_json = request.get_json()
         character = some_json["character"]
+        uid = some_json["uid"]
         xcoordinate = some_json["x"]
         ycoordinate = some_json["y"]
         if not isinstance(xcoordinate, int):
             xcoordinate = int(xcoordinate)
         if not isinstance(ycoordinate, int):
             ycoordinate = int(ycoordinate)
+        loc = [xcoordinate, ycoordinate]
+        if validatePlayerTurn(uid) is False:
+            return jsonify(
+                result="error",
+                message="The attempted operation is invalid. Player is out of turn."
+            )
+        if validateBoardMovement(loc, character) is False:
+            return jsonify(
+                result="error",
+                message="The attempted operation is invalid. Please try a valid movement."
+            )
+
         print("Moving player " + character + " to " +
               str(xcoordinate) + ", " + str(ycoordinate))
         newLocation = [xcoordinate, ycoordinate]
@@ -875,11 +1112,13 @@ def move():
             x.setLocation(newLocation)
             gamestate.setGameBoard(board)
         return jsonify(
-            result="success"
+            result="success",
+            message="The player was successfuly moved."
         )
     else:
         return jsonify(
-            result="error"
+            result="error",
+            message="The {0} method is not supported".format(request.method)
         )
 
 
@@ -909,10 +1148,20 @@ def suggest():
         room = some_json["room"]
         character = some_json["suspect"]
         uid = some_json["uid"]
+        if validatePlayerTurn(uid) is False:
+            return jsonify(
+                result="error",
+                message="The attempted operation is invalid. Player is out of turn."
+            )
+        if validatePlayerIsInRoom(uid, room) is False:
+            return jsonify(
+                result="error",
+                message="The attempted operation is invalid. Player must be in the suggestion room."
+            )
         playcounter = 0
         playercounter = 0
         playercharacter = ""
-        global currentNode
+        global currentNode, message
         if currentNode.getuid() == uid:
             currplayer = currentNode.getplayer()
             playercharacter = currplayer.getCharacter()
@@ -1028,12 +1277,12 @@ def accuse():
                 global node4
                 global node5
                 gamestate = GameState(casefile, 0, 1, False, [[["Rope"], [], ["Lead Pipe"], [], ["Knife"]],
-                                              [[], [], [], [], []],
-                                              [["Wrench"], [], ["Candlestick"],
-                                               [], ["Revolver"]],
-                                              [[], [], [], [], []],
-                                              [[], [], [], [], []]],
-                      False, 0)
+                                                              [[], [], [], [], []],
+                                                              [["Wrench"], [], ["Candlestick"],
+                                                               [], ["Revolver"]],
+                                                              [[], [], [], [], []],
+                                                              [[], [], [], [], []]],
+                                      False, 0)
                 session.setGameState(gamestate)
                 rooms = copy.deepcopy(Cards.ROOMS)
                 suggrooms = copy.deepcopy(Cards.ROOMS)
@@ -1066,12 +1315,13 @@ def accuse():
                 result="success",
                 message=message
             )
-    message = "The {0} is not supported by this endpoint. Please try again.".format(
-        str(request.method))
-    return jsonify(
-        result="error",
-        message=message
-    )
+    else:
+        message = "The {0} is not supported by this endpoint. Please try again.".format(
+            str(request.method))
+        return jsonify(
+            result="error",
+            message=message
+        )
 
 
 @app.route('/endturn', methods=['POST'])
@@ -1088,10 +1338,10 @@ def endTurn():
                 currentNode = currentNode.nextval
                 if currentNode is None:
                     currentNode = playerturnlist.headval
-            gamestate.setPlayerturn = currentNode.dataval
+            gamestate.setPlayerturn(currentNode.dataval)
             return jsonify(result="success")
         else:
-            return jsonify(result="It is not currently your turn, you are not allowed to end the trun")
+            return jsonify(result="It is not currently your turn, you are not allowed to end the turn.")
 
 
 @app.route('/cards', methods=['GET'])
