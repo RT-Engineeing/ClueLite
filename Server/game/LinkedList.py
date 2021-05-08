@@ -86,3 +86,4 @@ class SLinkedList:
             if not printval.getready():
                 return checkready
             printval = printval.nextval
+        return True

@@ -101,7 +101,6 @@ def adduser(uid):
             result=" Session is full",
         )
         uids.append(uid)
-        messageManager.addUuid(uid)
         return sessionstring
     if playerturnlist.listlength() == 0:
         initgame()
@@ -172,6 +171,7 @@ def adduser(uid):
         characteruseddict.update(updict)
         characteruseddict.update(updict2)
     player = Players(playername, character, hand, location)
+    playerarray.append(player)
     print("setting hand for " + character + ": " + str(hand))
     if playerturnlist.listlength() == 0:
         playerturnlist.headval = Node(1, uid, player)
@@ -213,6 +213,7 @@ def adduser(uid):
         result=playername + " has been added to the session.",
     )
     uids.append(uid)
+    messageManager.addUuid(uid)
     return sessionstring
 
 
@@ -242,6 +243,7 @@ def playersready():
         playerready = some_json["playerready"]
         playeruid = some_json["uid"]
         global currentNode
+
         if playerready == "True":
             isReady = True
             # session.addPlayer(playername)
