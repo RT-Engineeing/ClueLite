@@ -1,6 +1,7 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./Room.css";
+import getUserUUID from '../../UUID/UUID'
 
 import axios from 'axios';
 import { Redirect } from 'react-router';
@@ -46,15 +47,16 @@ export class Room extends React.Component {
         const response = await axios.post("http://localhost:5000/movement", {
             x: newY,
             y: newX,
-            character: movingPlayer
+            character: movingPlayer,
+            uuid: getUserUUID()
         });
 
     }
 
     render() {
-        
+
         let pieces = this.props.gameState ?
-        this.props.gameState.gameBoard[this.props.y][this.props.x] : [];
+            this.props.gameState.gameBoard[this.props.y][this.props.x] : [];
         return (
             <div className="room" onClick={this.handleClick} onContextMenu={this.handleClick}>
                 <div className="roomName">

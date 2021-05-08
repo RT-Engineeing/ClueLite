@@ -2,6 +2,8 @@ import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./Hallway.css";
 import axios from 'axios';
+import getUserUUID from '../../UUID/UUID'
+
 
 export class Hallway extends React.Component {
 
@@ -13,7 +15,7 @@ export class Hallway extends React.Component {
         this.state = {
             pieces: pieces,
             charactername: this.props.charactername,
-            
+
             playerName: this.props.playerName
         }
     }
@@ -38,7 +40,7 @@ export class Hallway extends React.Component {
         }
     }
 
-    
+
     async sendMoveRequest() {
         let newX = this.props.x;
         let newY = this.props.y;
@@ -48,14 +50,15 @@ export class Hallway extends React.Component {
         const response = await axios.post("http://localhost:5000/movement", {
             x: newY,
             y: newX,
-            character: movingPlayer
+            character: movingPlayer,
+            uid: getUserUUID()
         });
 
     }
 
     render() {
         let pieces = this.props.gameState ?
-        this.props.gameState.gameBoard[this.props.y][this.props.x] : [];
+            this.props.gameState.gameBoard[this.props.y][this.props.x] : [];
         const classNames = `gamePieceContainer ${this.props.orientation === "vertical" ? "hallwayPieceVertical" : "hallwayPieceHorizontal"}`;
         return (
             <div className={this.props.orientation === "vertical" ? "hallway-vertical" : "hallway-horizontal"}
