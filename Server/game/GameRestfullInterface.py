@@ -125,7 +125,7 @@ characteruseddict = {True: [], False: ["Miss Scarlet",
                                        "Mr.Green",
                                        "Colonel Mustard"]}
 
-
+suggestmessage = ""
 playerturn = 1
 messageManager = MessageManager()
 roomzdeck = Roomsdeck(rooms)
@@ -879,7 +879,7 @@ def hello():
     count = 0
     for x in uids:
         if x == uid:
-            messages = messagequeue[count]
+                messages = messagequeue[count]
         count += 1
     global playernamecache
     if playerturnlist.listlength() == 1:
@@ -1195,8 +1195,14 @@ def suggresponse():
     suggestion = some_json["childSuggestion"]
     if suggestion == "":
         message = "There were no cards to display."
-        receiveplayer = gamestate.getPlayerturn()
+        receiveplayer = currentNode.getdataval()
         messagequeue[receiveplayer - 1].append(message)
+        if gamestate.getSubturn() + 1 > gamestate.setNumOfPlayers():
+            gamestate.setSubturn(1)
+            messagequeue[1].append(suggestmessage)
+        else:
+            gamestate.setSubturn(gamestate.getSubturn() + 1)
+            messagequeue[gamestate.getSubturn() + 1].append(suggestmessage)
     else:
         message = suggestion
         receiveplayer = gamestate.getPlayerturn()
@@ -1215,6 +1221,7 @@ def suggest():
         room = some_json["room"]
         character = some_json["suspect"]
         uid = some_json["uid"]
+        global suggestmessage
         if validatePlayerTurn(uid) is False:
             return jsonify(
                 result="error",
@@ -1289,14 +1296,13 @@ def suggest():
                         character,
                         room,
                         weapon)
-
                 suggMessage = "{0} suggest that the murder was committed by {1} in the {2} with a {3}".format(
                         playercharacter,
                         character,
                         room,
                         weapon)
                     
-
+                suggestmessage = message
                 messageManager.addMessage(suggMessage)
                 messagequeue[currentNode.getdataval()].append(message)
                 suggestionmessage.append(message)
@@ -1305,7 +1311,7 @@ def suggest():
                     gamestate.setSubturn(1)
                 else:
                     gamestate.setSubturn(subturnplayer)
-               
+                count += 1
             return jsonify(result='success', message=message)
     else:
         return jsonify(result='error')
@@ -1361,13 +1367,26 @@ def accuse():
                 global node3
                 global node4
                 global node5
+                global playerarray
+                global characteruseddict
+                global uids
+                global suggestmessage
+                suggestmessage = ""
+                uids = []
+                characteruseddict = {True: [], False: ["Miss Scarlet",
+                                       "Mrs. White",
+                                       "Mrs. Peacock",
+                                       "Professor Plum",
+                                       "Mr.Green",
+                                       "Colonel Mustard"]}
+                playerarray = []
                 gamestate = GameState(casefile, 0, 1, False, [[["Rope"], [], ["Lead Pipe"], [], ["Knife"]],
                                                               [[], [], [], [], []],
                                                               [["Wrench"], [], ["Candlestick"],
                                                                [], ["Revolver"]],
                                                               [[], [], [], [], []],
                                                               [[], [], [], [], []]],
-                                      False, 0)
+                                      False, 0, "")
                 session.setGameState(gamestate)
                 rooms = copy.deepcopy(Cards.ROOMS)
                 suggrooms = copy.deepcopy(Cards.ROOMS)
@@ -1383,8 +1402,8 @@ def accuse():
                 node5 = Node(99)
                 return jsonify(
                     result="success",
-                    gamewon=str(gamestate.getGameWon()),
-                    gamerunning=str(gamestate.getGameRunning()),
+                    gamewon=str(True),
+                    gamerunning=str(False),
                     message=message
                 )
             else:
@@ -1401,6 +1420,11 @@ def accuse():
                     result="success",
                     message=message
                 )
+        else:
+            return jsonify(
+                result="error",
+                message="It is not your turn"
+            )
     else:
         message = "The {0} is not supported by this endpoint. Please try again.".format(
             str(request.method))
