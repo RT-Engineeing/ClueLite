@@ -10,6 +10,7 @@ import json
 import Cards
 import copy
 import time
+import math
 
 app = Flask(__name__)
 rooms = copy.deepcopy(Cards.ROOMS)
@@ -39,6 +40,19 @@ roomnames = {
     "42" : "Library",
     "44": "Billiard Room",
 }
+
+roomMap = {
+    "Kitchen" : [0,0],
+    "Conservatory" : [0,2],
+    "Dining Room": [0,4],
+    "Ballroom": [2,0],
+    "Study": [2,2],
+    "Hall": [2,4],
+    "Lounge": [4,0],
+    "Library": [4,2],
+    "Billiard Room": [4,4]
+}
+
 roomcoordinates = [
     [0,0],  # Kitchen
     [0,2],  # Conservatory
@@ -194,148 +208,67 @@ def validatePlayerIsInRoom(uid, room):
 
 
 def validateBoardMovement(loc, character):
-    busyLocations = playerturnlist.getPlayersLoc()
-    p = currentNode.getplayer()
-    if character == p.getCharacter():
-        charLoc = p.getLocation()
-        if charLoc in hallwaycoordinates:
-            if charLoc == hallwaycoordinates[0]:
-                if loc not in Study_Hall:
-                    return False
-            elif charLoc == hallwaycoordinates[1]:
-                if loc not in Hall_Lounge:
-                    return False
-            elif charLoc == hallwaycoordinates[2]:
-                if loc not in Library_Study:
-                    return False
-            elif charLoc == hallwaycoordinates[3]:
-                if loc not in Billiard_Hall:
-                    return False
-            elif charLoc == hallwaycoordinates[4]:
-                if loc not in Lounge_Dinning:
-                    return False
-            elif charLoc == hallwaycoordinates[5]:
-                if loc not in Billiard_Library:
-                    return False
-            elif charLoc == hallwaycoordinates[6]:
-                if loc not in Billiard_Dinning:
-                    return False
-            elif charLoc == hallwaycoordinates[7]:
-                if loc not in Conservatory_Library:
-                    return False
-            elif charLoc == hallwaycoordinates[8]:
-                if loc not in Billiard_Ball:
-                    return False
-            elif charLoc == hallwaycoordinates[9]:
-                if loc not in Dinning_Kitchen:
-                    return False
-            elif charLoc == hallwaycoordinates[10]:
-                if loc not in Ball_Conservatory:
-                    return False
-            elif charLoc == hallwaycoordinates[11]:
-                if loc not in Kitchen_Ball:
-                    return False
-        elif charLoc in roomcoordinates:
-            if charLoc == roomcoordinates[0]:
-                if loc not in Kitchen:
-                    return False
-                if loc == Kitchen[1]:
-                    if loc in busyLocations:
-                        return False
-                elif loc == Kitchen[2]:
-                    if loc in busyLocations:
-                        return False
-            elif charLoc == roomcoordinates[1]:
-                if loc not in Conservatory:
-                    return False
-                if loc == Conservatory[1]:
-                    if loc in busyLocations:
-                        return False
-                elif loc == Conservatory[2]:
-                    if loc in busyLocations:
-                        return False
-            elif charLoc == roomcoordinates[2]:
-                if loc not in Dinning:
-                    return False
-                if loc == Dinning[0]:
-                    if loc in busyLocations:
-                        return False
-                elif loc == Dinning[1]:
-                    if loc in busyLocations:
-                        return False
-                elif loc == Dinning[2]:
-                    if loc in busyLocations:
-                        return False
-            elif charLoc == roomcoordinates[3]:
-                if loc not in Ball:
-                    return False
-                if loc == Ball[0]:
-                    if loc in busyLocations:
-                        return False
-                elif loc == Ball[1]:
-                    if loc in busyLocations:
-                        return False
-                elif loc == Ball[2]:
-                    if loc in busyLocations:
-                        return False
-            elif charLoc == roomcoordinates[4]:
-                if loc not in Study:
-                    return False
-                if loc == Study[1]:
-                    if loc in busyLocations:
-                        return False
-                elif loc == Study[2]:
-                    if loc in busyLocations:
-                        return False
-            elif charLoc == roomcoordinates[5]:
-                if loc not in Hall:
-                    return False
-                if loc == Hall[0]:
-                    if loc in busyLocations:
-                        return False
-                elif loc == Hall[1]:
-                    if loc in busyLocations:
-                        return False
-                elif loc == Hall[2]:
-                    if loc in busyLocations:
-                        return False
-            elif charLoc == roomcoordinates[6]:
-                if loc not in Lounge:
-                    return False
-                if loc == Lounge[1]:
-                    if loc in busyLocations:
-                        return False
-                elif loc == Lounge[2]:
-                    if loc in busyLocations:
-                        return False
-            elif charLoc == roomcoordinates[7]:
-                if loc not in Library:
-                    return False
-                if loc == Library[0]:
-                    if loc in busyLocations:
-                        return False
-                elif loc == Library[1]:
-                    if loc in busyLocations:
-                        return False
-                elif loc == Library[2]:
-                    if loc in busyLocations:
-                        return False
-            elif charLoc == roomcoordinates[8]:
-                if loc not in Billiard:
-                    return False
-                if loc == Billiard[0]:
-                    if loc in busyLocations:
-                        return False
-                elif loc == Billiard[1]:
-                    if loc in busyLocations:
-                        return False
-                elif loc == Billiard[2]:
-                    if loc in busyLocations:
-                        return False
-                elif loc == Billiard[3]:
-                    if loc in busyLocations:
-                        return False
+    characterLoc = []
+    for x in playerarray:
+        if x.getCharacter() == character:
+            characterLoc = x.getLocation()
+    
+    characterLocX = characterLoc[0]
+    characterLocY = characterLoc[1]
+
+    locX = loc[0]
+    locY = loc[1]
+
+    if locX < 0 or locX > 4 or locY < 0 or locY > 4:
+        print("Location: " + str(loc) + " outside of board")
+        return False
+    
+    if locX % 2 == 1 and locY % 2 == 1:
+        print("Location " + str(loc) + " is an invalid square")
+        return False
+    
+    deltaX = locX - characterLocX
+    deltaY = locY - characterLocY
+
+    distance = math.sqrt(deltaX**2 + deltaY**2)
+
+    if distance == 1:
         return True
+
+    print("Distance is not 1")
+
+    if locX == 0 and locY == 0 and characterLocX == 4 and characterLocY == 4:
+        print("Secret path")
+        return True
+    
+    if characterLocX == 0 and characterLocY == 0 and locX == 4 and locY == 4:
+        print("Secret path")
+        return True
+
+    if locX == 4 and locY == 0 and characterLocX == 0 and characterLocY == 4:
+        print("Secret path")
+        return True
+    
+    if characterLocX == 4 and characterLocY == 0 and locX == 0 and locY == 4:
+        print("Secret path")
+        return True
+
+    
+    print("invalid move")
+    return False
+
+def isHallway(x, y):
+    if x % 2 == 0 and y % 2 == 1:
+        return True
+    if x % 2 == 1:
+        return True
+    return False
+
+def isHallwayEmpty(x, y):
+    return not gamestate.getGameBoard()[x][y]
+    
+
+    
 
 
 def adduser(uid):
@@ -1190,6 +1123,8 @@ def move():
             xcoordinate = int(xcoordinate)
         if not isinstance(ycoordinate, int):
             ycoordinate = int(ycoordinate)
+        if xcoordinate % 2 == 1:
+            ycoordinate = ycoordinate * 2
         loc = [xcoordinate, ycoordinate]
         if validatePlayerTurn(uid) is False:
             return jsonify(
@@ -1202,6 +1137,16 @@ def move():
                 result="error",
                 message="The attempted operation is invalid. Please try a valid movement."
             )
+        
+        if(isHallway(xcoordinate, ycoordinate)):
+            print("Moving into a hallway")
+        if isHallway(xcoordinate, ycoordinate) and not isHallwayEmpty(xcoordinate, ycoordinate):
+            print("hallway is occupied")
+            return jsonify(
+                result="error",
+                message="The attempted operation is invalid. A player already occupies this hallway."
+            )
+
 
         print("Moving player " + character + " to " +
               str(xcoordinate) + ", " + str(ycoordinate))
@@ -1286,24 +1231,16 @@ def suggest():
         playercharacter = ""
         global currentNode, message
         if currentNode.getuid() == uid:
-            print("uid's match")
             currplayer = currentNode.getplayer()
             playercharacter = currplayer.getCharacter()
-            xcoordinate = 0
-            ycoordinate = 0
-            tempcounter = 0
-            for temp in suggrooms:
-                if temp == room:
-                    xcoordinate = roomcoordinates[tempcounter][0]
-                    ycoordinate = roomcoordinates[tempcounter][1]
-                tempcounter += 1
-
+            xcoordinate = roomMap.get(room)[0]
+            ycoordinate = roomMap.get(room)[1]
             if not isinstance(xcoordinate, int):
                 xcoordinate = int(xcoordinate)
             if not isinstance(ycoordinate, int):
                 ycoordinate = int(ycoordinate)
 
-            newLocation = [4 - xcoordinate, 4 - ycoordinate]
+            newLocation = [xcoordinate, ycoordinate]
             weaponloc = []
             weaponname = ""
             for x in weaponsarray:
@@ -1312,63 +1249,77 @@ def suggest():
                     weaponname = x.getName()
             count = 1
             value = playerturnlist.headval
-            while value is not None:
-                x = value.getplayer()
-                if x.getCharacter() == character:
-                    oldLocation = x.getLocation()
-                    board = gamestate.getGameBoard()
-                    arr = board[oldLocation[0]][oldLocation[1]]
-                    for character2 in range(len(arr)):
-                        if arr[character2] == x.getCharacter():
-                            arr.pop(character2)
-                    board[oldLocation[0]][oldLocation[1]] = arr
-                    arr2 = board[weaponloc[0]][weaponloc[1]]
-                    for weapon2 in range(len(arr2)):
-                        if arr2[weapon2] == weaponname:
-                            arr2.pop(weapon2)
-                    board[weaponloc[0]][weaponloc[1]] = arr2
-                    arr3 = board[newLocation[0]][newLocation[1]]
-                    print(arr3)
-                    arr3.append(weapon)
-                    print(arr3)
-                    arr3.append(character)
-                    print(arr3)
-                    board[newLocation[0]][newLocation[1]] = arr3
-                    print(board[newLocation[0]][newLocation[1]])
-                    x.setLocation(newLocation)
-                    for z in weaponsarray:
-                        if z.getName() == weapon:
-                            z.setLocation([newLocation[0], newLocation[1]])
-                    gamestate.setGameBoard(board)
-                    message = "[SUGGESTION] {0} suggest that the murder was committed by {1} in the {2} with a {3}".format(
+            message = ""
+            if playerActive(character):
+                while value is not None:
+                    x = value.getplayer()
+                    if x.getCharacter() == character:
+                        oldLocation = x.getLocation()
+                        board = gamestate.getGameBoard()
+                        arr = board[oldLocation[0]][oldLocation[1]]
+                        for character2 in range(len(arr)):
+                            if arr[character2] == x.getCharacter():
+                                arr.pop(character2)
+                        board[oldLocation[0]][oldLocation[1]] = arr
+                        arr3 = board[newLocation[0]][newLocation[1]]
+                        arr3.append(character)
+                        board[newLocation[0]][newLocation[1]] = arr3
+                        x.setLocation(newLocation)
+
+                    value = value.getnextval()
+
+                arr2 = board[weaponloc[0]][weaponloc[1]]
+                for weapon2 in range(len(arr2)):
+                    if arr2[weapon2] == weaponname:
+                        arr2.pop(weapon2)
+                board[weaponloc[0]][weaponloc[1]] = arr2
+                arr3 = board[newLocation[0]][newLocation[1]]
+                print(arr3)
+                arr3.append(weapon)
+                print(arr3)
+                print(arr3)
+                board[newLocation[0]][newLocation[1]] = arr3
+                print(board[newLocation[0]][newLocation[1]])
+                for z in weaponsarray:
+                    if z.getName() == weapon:
+                        z.setLocation([newLocation[0], newLocation[1]])
+                gamestate.setGameBoard(board)
+                message = "[SUGGESTION] {0} suggest that the murder was committed by {1} in the {2} with a {3}".format(
                         playercharacter,
                         character,
                         room,
                         weapon)
 
-                    suggMessage = "{0} suggest that the murder was committed by {1} in the {2} with a {3}".format(
+                suggMessage = "{0} suggest that the murder was committed by {1} in the {2} with a {3}".format(
                         playercharacter,
                         character,
                         room,
                         weapon)
                     
 
-                    messageManager.addMessage(suggMessage)
-                    for i in range(6):
-                        messagequeue[i].append(message)
-                    suggestionmessage.append(message)
-                    subturnplayer = currentNode.getdataval() + 1
-                    if subturnplayer > gamestate.getNumOfPlayers():
-                        gamestate.setSubturn(1)
-                    else:
-                        gamestate.setSubturn(subturnplayer)
-                count += 1
-                value = value.getnextval()
+                messageManager.addMessage(suggMessage)
+                messagequeue[currentNode.getdataval()].append(message)
+                suggestionmessage.append(message)
+                subturnplayer = currentNode.getdataval() + 1
+                if subturnplayer > gamestate.getNumOfPlayers():
+                    gamestate.setSubturn(1)
+                else:
+                    gamestate.setSubturn(subturnplayer)
+               
             return jsonify(result='success', message=message)
     else:
         return jsonify(result='error')
 
-
+def playerActive(character):
+    global currentNode
+    value = playerturnlist.headval
+    while value is not None:
+        x = value.getplayer()
+        if x.getCharacter() == character:
+            return True
+        value = value.getnextval()
+    return False
+        
 @app.route('/accusation', methods=['POST'])
 def accuse():
     if request.method == 'POST':
