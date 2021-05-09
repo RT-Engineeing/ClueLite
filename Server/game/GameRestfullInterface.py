@@ -98,7 +98,7 @@ characteruseddict = {True: [], False: ["Miss Scarlet",
                                        "Mr.Green",
                                        "Colonel Mustard"]}
 
-
+suggmessage = ""
 playerturn = 1
 messageManager = MessageManager()
 roomzdeck = Roomsdeck(rooms)
@@ -924,7 +924,7 @@ def hello():
     count = 0
     for x in uids:
         if x == uid:
-            messages = messagequeue[count]
+                messages = messagequeue[count]
         count += 1
     global playernamecache
     if playerturnlist.listlength() == 1:
@@ -1221,8 +1221,14 @@ def suggresponse():
     suggestion = some_json["childSuggestion"]
     if suggestion == "":
         message = "There were no cards to display."
-        receiveplayer = gamestate.getPlayerturn()
+        receiveplayer = currentNode.getdataval()
         messagequeue[receiveplayer - 1].append(message)
+        if gamestate.getSubturn() + 1 > gamestate.setNumOfPlayers():
+            gamestate.setSubturn(1)
+            messagequeue[1].append(suggmessage)
+        else:
+            gamestate.setSubturn(gamestate.getSubturn() + 1)
+            messagequeue[gamestate.getSubturn() + 1].append(suggmessage)
     else:
         message = suggestion
         receiveplayer = gamestate.getPlayerturn()
@@ -1241,6 +1247,7 @@ def suggest():
         room = some_json["room"]
         character = some_json["suspect"]
         uid = some_json["uid"]
+        global suggmessage
         if validatePlayerTurn(uid) is False:
             return jsonify(
                 result="error",
@@ -1314,7 +1321,7 @@ def suggest():
                         character,
                         room,
                         weapon)
-
+                    suggmessage = message
                     for i in range(6):
                         messagequeue[i].append(message)
                     suggestionmessage.append(message)
@@ -1370,13 +1377,26 @@ def accuse():
                 global node3
                 global node4
                 global node5
+                global playerarray
+                global characteruseddict
+                global uids
+                global suggmessage
+                suggmessage = ""
+                uids = []
+                characteruseddict = {True: [], False: ["Miss Scarlet",
+                                       "Mrs. White",
+                                       "Mrs. Peacock",
+                                       "Professor Plum",
+                                       "Mr.Green",
+                                       "Colonel Mustard"]}
+                playerarray = []
                 gamestate = GameState(casefile, 0, 1, False, [[["Rope"], [], ["Lead Pipe"], [], ["Knife"]],
                                                               [[], [], [], [], []],
                                                               [["Wrench"], [], ["Candlestick"],
                                                                [], ["Revolver"]],
                                                               [[], [], [], [], []],
                                                               [[], [], [], [], []]],
-                                      False, 0)
+                                      False, 0, "")
                 session.setGameState(gamestate)
                 rooms = copy.deepcopy(Cards.ROOMS)
                 suggrooms = copy.deepcopy(Cards.ROOMS)
@@ -1392,8 +1412,8 @@ def accuse():
                 node5 = Node(99)
                 return jsonify(
                     result="success",
-                    gamewon=str(gamestate.getGameWon()),
-                    gamerunning=str(gamestate.getGameRunning()),
+                    gamewon=str(True),
+                    gamerunning=str(False),
                     message=message
                 )
             else:
@@ -1410,6 +1430,11 @@ def accuse():
                     result="success",
                     message=message
                 )
+        else:
+            return jsonify(
+                result="error",
+                message="It is not your turn"
+            )
     else:
         message = "The {0} is not supported by this endpoint. Please try again.".format(
             str(request.method))
